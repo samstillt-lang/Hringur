@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#7ecef5">
+<title>Hringur's Arctic Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --ice-deep:    #0b2e4e;
+  --surface:     #f0f8ff;
+  --card:        #ffffff;
+  --teal:        #1D9E75;
+  --teal-light:  #e1f5ee;
+  --teal-mid:    #5DCAA5;
+  --amber:       #BA7517;
+  --amber-light: #faeeda;
+  --amber-mid:   #FAC775;
+  --blue:        #185FA5;
+  --blue-light:  #e6f1fb;
+  --blue-mid:    #378ADD;
+  --coral:       #993C1D;
+  --coral-light: #faece7;
+  --coral-mid:   #D85A30;
+  --purple:      #534AB7;
+  --purple-light:#eeedfe;
+  --purple-mid:  #7F77DD;
+  --text-main:   #0b2e4e;
+  --text-sub:    #3a6a8a;
+  --text-muted:  #7aabbf;
+  --border:      rgba(11,46,78,0.08);
+  --shadow-sm:   0 2px 8px rgba(11,46,78,0.06);
+  --shadow-md:   0 4px 20px rgba(11,46,78,0.10);
+  --r-sm: 10px; --r-md: 16px; --r-lg: 24px;
+}
+
+html, body { height:100%; overflow:hidden; background:var(--surface); font-family:'Atkinson Hyperlegible', Arial, sans-serif; color:var(--text-main); letter-spacing:0.01em; }
+
+/* ── SCREENS ── */
+.screen { position:fixed; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; background:var(--surface); overflow:hidden; transition:opacity 0.28s ease-out, transform 0.28s ease-out; transform:translateY(0); }
+.screen.active { opacity:1; pointer-events:all; transform:translateY(0) !important; }
+/* Station slides up from below */
+#s-station { transform:translateY(40px); }
+/* Home fall-back only when flagged — applied/removed by JS */
+#s-home.returning { transform:translateY(-12px); }
+.scroll-body { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.scroll-body::-webkit-scrollbar { display:none; }
+
+/* ── HERO ── */
+.hero { position:relative; height:360px; overflow:hidden; flex-shrink:0; background:var(--ice-deep); mask-image:linear-gradient(180deg,black 68%,transparent 100%); -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%); }
+.hero.short { height:300px; }
+.hero.tall  { height:420px; }
+/* hero-img fills the full hero as environment background */
+.hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1; }
+/* aurora overlays the image — atmospheric depth layer */
+.aurora { position:absolute; inset:0; overflow:hidden; z-index:2; }
+.ab { position:absolute; left:-20%; width:140%; border-radius:50%; opacity:0.38; animation:adrift 9s ease-in-out infinite alternate; }
+.ab1 { top:3%;  height:70px; background:linear-gradient(90deg,transparent,rgba(80,210,160,0.75),transparent); animation-delay:0s; }
+.ab2 { top:10%; height:50px; background:linear-gradient(90deg,transparent,rgba(150,130,230,0.55),rgba(100,170,230,0.4),transparent); animation-delay:2.5s; }
+.ab3 { top:17%; height:60px; background:linear-gradient(90deg,transparent,rgba(70,190,240,0.45),transparent); animation-delay:5s; }
+@keyframes adrift { 0%{transform:translateX(-2%) scaleY(1);} 100%{transform:translateX(3%) scaleY(1.15);} }
+.sf-layer { position:absolute; inset:0; pointer-events:none; z-index:3; }
+.sf { position:absolute; color:rgba(255,255,255,0.75); animation:sfall linear infinite; user-select:none; pointer-events:none; }
+@keyframes sfall { 0%{transform:translateY(-10px) rotate(0deg);opacity:0;} 8%{opacity:0.8;} 92%{opacity:0.5;} 100%{transform:translateY(360px) rotate(400deg);opacity:0;} }
+
+/* ── CARDS ── */
+.card { background:var(--card); border-radius:var(--r-lg); border:1px solid var(--border); box-shadow:var(--shadow-sm); padding:18px 20px; }
+.section-label { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
+
+/* ── PROGRESS ── */
+.prog-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.prog-count { font-family:'Nunito',Arial,sans-serif; font-size:24px; font-weight:900; color:var(--ice-deep); line-height:1; }
+.prog-count small { font-size:14px; font-weight:700; color:var(--text-muted); }
+.track { height:8px; background:var(--teal-light); border-radius:99px; overflow:hidden; margin-bottom:14px; }
+.fill { height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,var(--teal-mid),var(--blue-mid)); transition:width 0.6s ease-out; }
+.dots { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+.dot { aspect-ratio:1; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--text-muted); transition:border-color 0.2s, background 0.2s; }
+.dot.done { border-color:var(--teal-mid); background:var(--teal-light); color:var(--teal); animation:gemPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes gemPop { 0%{transform:scale(0); opacity:0;} 60%{transform:scale(1.18);} 100%{transform:scale(1); opacity:1;} }
+
+/* ── PILLS ── */
+.pill-row { display:flex; gap:10px; }
+.pill { flex:1; border-radius:var(--r-md); padding:14px 14px 12px; display:flex; flex-direction:column; gap:3px; }
+.pill.amber  { background:var(--amber-light);  border:1px solid rgba(186,117,23,0.12); }
+.pill.teal   { background:var(--teal-light);   border:1px solid rgba(29,158,117,0.12); }
+.pill-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+.pill.amber .pill-icon { background:rgba(186,117,23,0.15); }
+.pill.teal  .pill-icon { background:rgba(29,158,117,0.15); }
+.pill-icon svg { width:16px; height:16px; }
+.pill.amber .pill-icon svg { fill:var(--amber); }
+.pill.teal  .pill-icon svg { fill:var(--teal); }
+.pill-lbl { font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+.pill.amber .pill-lbl { color:var(--amber); }
+.pill.teal  .pill-lbl { color:var(--teal); }
+.pill-val { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; color:var(--ice-deep); line-height:1.1; }
+.pill-sub { font-size:11px; font-weight:700; }
+.pill.amber .pill-sub { color:var(--amber); }
+.pill.teal  .pill-sub { color:var(--teal); }
+
+/* ── HINT ── */
+.hint { background:var(--blue-light); border-radius:var(--r-md); border:1px solid rgba(55,138,221,0.15); padding:14px 16px; display:flex; align-items:flex-start; gap:12px; }
+.hint-icon { width:32px; height:32px; flex-shrink:0; background:var(--blue-mid); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+.hint-icon svg { width:16px; height:16px; fill:#fff; }
+.hint-text { font-size:13px; font-weight:700; color:var(--blue); line-height:1.55; padding-top:2px; }
+
+/* ── STORAGE WARNING ── */
+.storage-warn { background:#fff8e6; border:1px solid rgba(186,117,23,0.25); border-radius:var(--r-md); padding:12px 16px; display:flex; align-items:flex-start; gap:10px; margin-top:14px; }
+.storage-warn svg { width:18px; height:18px; fill:var(--amber); flex-shrink:0; margin-top:1px; }
+.storage-warn p { font-size:12px; font-weight:700; color:var(--amber); line-height:1.5; }
+
+/* ── BUTTONS ── */
+.btn-primary { display:block; width:100%; background:var(--ice-deep); color:#fff; border:none; border-radius:var(--r-md); padding:17px; font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:800; cursor:pointer; text-align:center; box-shadow:0 4px 16px rgba(11,46,78,0.2); transition:transform 0.12s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.12s ease; letter-spacing:0.3px; }
+.btn-primary:active { transform:scale(0.93) translateY(2px); box-shadow:none; }
+.btn-primary.teal   { background:linear-gradient(135deg,var(--teal),#0F6E56); box-shadow:0 4px 16px rgba(29,158,117,0.25); }
+.btn-primary.coral  { background:linear-gradient(135deg,var(--coral-mid),var(--coral)); box-shadow:0 4px 16px rgba(153,60,29,0.2); }
+.btn-ghost { display:block; width:100%; background:transparent; color:var(--text-muted); border:1.5px solid var(--border); border-radius:var(--r-md); padding:14px; font-family:'Atkinson Hyperlegible',Arial,sans-serif; font-size:14px; font-weight:500; cursor:pointer; text-align:center; transition:all 0.15s; }
+.btn-ghost:hover { border-color:var(--text-muted); }
+
+/* ── SHARED NAV ── */
+#shared-nav { position:fixed; bottom:0; left:0; right:0; z-index:50; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid var(--border); display:none; flex-direction:row; padding:8px 8px 28px; }
+#shared-nav.visible { display:flex; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
+.nav-ic { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.nav-item.on .nav-ic { background:var(--ice-deep); }
+.nav-ic svg { width:22px; height:22px; }
+.nav-item:not(.on) .nav-ic svg { fill:var(--text-muted); }
+.nav-item.on .nav-ic svg { fill:#fff; }
+.nav-lbl { font-size:10px; font-weight:800; letter-spacing:0.3px; color:var(--text-muted); }
+.nav-item.on .nav-lbl { color:var(--ice-deep); }
+.nav-item.on .nav-lbl::before { content:'• '; color:var(--teal-mid); }
+/* Pad scrollable screens above fixed nav */
+.has-nav { padding-bottom:96px; }
+
+/* ── LANG SCREEN ── */
+#s-lang { justify-content:flex-end; align-items:stretch; background:var(--ice-deep); }
+.lang-scene-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:0; }
+.lang-title-overlay { position:absolute; top:6%; left:0; right:0; text-align:center; z-index:5; padding:0 28px; pointer-events:none; }
+.lang-logo-h1 { font-family:'Nunito',Arial,sans-serif; font-size:36px; font-weight:900; color:#fff; line-height:1.1; letter-spacing:-0.5px; text-shadow:0 2px 14px rgba(0,0,0,0.5); }
+.lang-logo-h1 span { color:var(--teal-mid); }
+.lang-logo-sub { font-size:12px; font-weight:700; color:rgba(255,255,255,0.88); margin-top:7px; letter-spacing:1.5px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.5); }
+.lang-panel { position:relative; z-index:5; background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:28px 28px 0 0; padding:20px 28px 48px; box-shadow:0 -8px 40px rgba(11,46,78,0.18); }
+.lang-panel-handle { width:40px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 20px; }
+.lang-btns { display:flex; flex-direction:column; gap:12px; }
+.lang-btn { display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.96); border:1.5px solid var(--border); border-radius:var(--r-md); padding:16px 20px; font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:800; color:var(--ice-deep); cursor:pointer; box-shadow:var(--shadow-sm); transition:all 0.15s; }
+.lang-btn:hover { border-color:var(--teal-mid); transform:translateY(-1px); }
+.lang-btn:active { transform:scale(0.97); }
+.flag { font-size:28px; }
+
+/* ── AGE SCREEN ── */
+#s-age { justify-content:center; align-items:center; background:linear-gradient(180deg,#a8dcf4 0%,var(--surface) 60%); }
+.age-inner { display:flex; flex-direction:column; align-items:center; gap:20px; padding:40px 24px; max-width:380px; width:100%; }
+.age-back { align-self:flex-start; background:rgba(255,255,255,0.85); border:1px solid var(--border); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:800; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; gap:6px; }
+.age-back svg { width:16px; height:16px; fill:var(--text-sub); }
+.age-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:var(--ice-deep); text-align:center; line-height:1.3; }
+.age-cards { display:flex; flex-direction:column; gap:14px; width:100%; }
+.age-card { background:var(--card); border:2px solid var(--border); border-radius:var(--r-lg); padding:20px; display:flex; align-items:center; gap:18px; cursor:pointer; box-shadow:var(--shadow-sm); transition:all 0.15s; }
+.age-card:active { transform:scale(0.97); }
+.age-card.cub:hover  { border-color:var(--coral-mid); }
+.age-card.expl:hover { border-color:var(--teal-mid); }
+.age-emoji-wrap { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
+.age-card.cub  .age-emoji-wrap { background:var(--coral-light); }
+.age-card.expl .age-emoji-wrap { background:var(--teal-light); }
+.age-name { font-family:'Nunito',Arial,sans-serif; font-size:21px; font-weight:900; margin-bottom:2px; }
+.age-card.cub  .age-name { color:var(--coral-mid); }
+.age-card.expl .age-name { color:var(--teal); }
+.age-range { font-size:13px; font-weight:700; color:var(--text-muted); }
+
+/* ── HOME ── */
+.home-title-block { position:absolute; top:38px; left:0; right:0; text-align:center; z-index:10; padding:0 20px; pointer-events:none; }
+.home-eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.92); margin-bottom:4px; text-shadow:0 1px 6px rgba(0,0,0,0.45); }
+.home-h1 { font-family:'Nunito',Arial,sans-serif; font-size:30px; font-weight:900; color:#fff; line-height:1.2; letter-spacing:-0.3px; text-shadow:0 2px 12px rgba(0,0,0,0.4); }
+.home-h1 em { font-style:normal; color:var(--teal-mid); }
+.home-body { padding:24px 20px 20px; }
+
+/* ── STATION ── */
+.back-btn { position:absolute; top:14px; left:14px; z-index:20; width:38px; height:38px; border-radius:12px; background:rgba(255,255,255,0.88); backdrop-filter:blur(8px); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-sm); }
+.back-btn svg { width:20px; height:20px; fill:var(--ice-deep); }
+.station-badge-wrap { position:absolute; top:14px; left:0; right:0; display:flex; justify-content:center; z-index:10; }
+.station-badge { background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border:2px solid var(--teal-mid); border-radius:99px; padding:8px 20px; font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--teal); box-shadow:var(--shadow-sm); }
+.station-badge.badge-amber { border-color:var(--amber-mid); color:var(--amber); }
+.station-badge.badge-coral { border-color:var(--coral-mid); color:var(--coral); }
+.station-body { padding:20px 20px 24px; }
+.found-banner { background:var(--amber-light); border:1px solid rgba(186,117,23,0.2); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.found-banner svg { width:20px; height:20px; fill:var(--amber); flex-shrink:0; }
+.found-banner p { font-size:13px; font-weight:700; color:var(--amber); line-height:1.5; }
+.fact-lbl-el { color:var(--blue); }
+.fact-title { font-family:'Nunito',Arial,sans-serif; font-size:22px; font-weight:900; color:var(--ice-deep); margin:6px 0 8px; line-height:1.25; }
+.fact-text  { font-size:14px; font-weight:600; color:var(--text-sub); line-height:1.7; }
+.cub-card { border-radius:var(--r-lg); padding:22px 20px; text-align:center; background:linear-gradient(135deg,#fef3e8,#fce8d4); border:1px solid rgba(186,117,23,0.15); margin-top:14px; }
+.cub-big-emoji { font-size:52px; display:block; margin-bottom:10px; animation:floatY 2.5s ease-in-out infinite; }
+@keyframes floatY { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
+.cub-card h3 { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; color:var(--amber); margin-bottom:8px; }
+.cub-card p  { font-size:16px; font-weight:500; color:var(--text-main); line-height:1.7; }
+.cub-divider {
+  display:flex; align-items:center; gap:10px;
+  margin:16px 0 14px;
+}
+.cub-divider::before, .cub-divider::after {
+  content:''; flex:1; height:1px;
+  background:rgba(186,117,23,0.2);
+}
+.cub-divider-lbl {
+  font-size:11px; font-weight:600; color:var(--amber);
+  letter-spacing:1.5px; text-transform:uppercase;
+  white-space:nowrap;
+}
+.cub-bed {
+  background:rgba(255,255,255,0.6);
+  border-radius:var(--r-md);
+  padding:14px 16px;
+  display:flex; align-items:flex-start; gap:12px;
+  text-align:left;
+}
+.cub-bed-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+.cub-bed-text { font-size:16px; font-weight:500; color:var(--text-main); line-height:1.7; }
+
+/* ── QUIZ ── */
+.quiz-lbl-el { color:var(--purple-mid); }
+.quiz-q { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:800; color:var(--ice-deep); margin:6px 0 14px; line-height:1.3; }
+.quiz-opts { display:flex; flex-direction:column; gap:10px; }
+.q-opt { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:16px 16px; font-size:15px; font-weight:700; color:var(--text-main); cursor:pointer; text-align:left; width:100%; transition:border-color 0.15s, background 0.15s; display:flex; align-items:center; gap:12px; }
+.q-opt:hover   { border-color:var(--purple-mid); background:#f5f3ff; }
+.q-opt:active  { transform:scale(0.98); background:#eeebff; }
+.q-opt:disabled { cursor:default; transform:none; }
+.opt-letter { width:32px; height:32px; border-radius:8px; flex-shrink:0; background:var(--purple-light); color:var(--purple); font-size:12px; font-weight:800; letter-spacing:1px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.q-opt.correct { border-color:var(--teal-mid); background:var(--teal-light); color:var(--teal); }
+.q-opt.correct .opt-letter { background:var(--teal); color:#fff; }
+.q-opt.wrong   { border-color:var(--coral-mid); background:var(--coral-light); color:var(--coral); }
+.q-opt.wrong   .opt-letter { background:var(--coral-mid); color:#fff; }
+.feedback { border-radius:var(--r-md); padding:16px; text-align:center; margin-top:12px; display:none; }
+.feedback.show { display:block; }
+.feedback.fb-ok  { background:var(--teal-light);  border:1px solid rgba(29,158,117,0.2); }
+.feedback.fb-err { background:var(--coral-light); border:1px solid rgba(153,60,29,0.12); }
+.feedback-ico { font-size:28px; display:block; margin-bottom:6px; }
+.feedback-txt { font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:800; }
+.feedback.fb-ok  .feedback-txt { color:var(--teal); }
+.feedback.fb-err .feedback-txt { color:var(--coral); }
+
+/* ── POINTS BADGE (inline in station) ── */
+.points-earned { display:none; margin-top:12px; border-radius:var(--r-md); padding:14px 16px; background:linear-gradient(135deg,#fffbe6,#fef3c0); border:1px solid rgba(186,117,23,0.2); text-align:center; }
+.points-earned.show { display:block; animation:pointsPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes pointsPop { 0%{opacity:0;transform:scale(0.5) translateY(8px);} 60%{transform:scale(1.08) translateY(-2px);} 100%{opacity:1;transform:scale(1) translateY(0);} }
+.points-earned-val { font-family:'Nunito',Arial,sans-serif; font-size:32px; font-weight:900; color:var(--amber); }
+.points-earned-lbl { font-size:12px; font-weight:800; color:var(--amber); letter-spacing:1px; text-transform:uppercase; }
+
+/* ── REWARD ── */
+.reward-body { padding:24px 20px 32px; }
+.reward-badge-card { background:linear-gradient(135deg,#fffbe6,#fef3c0); border:2px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:0 0 40px rgba(250,199,117,0.2); }
+.reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes starPop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
+.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:28px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; }
+.reward-badge-sub   { font-size:14px; font-weight:700; color:var(--amber); }
+.reward-score-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px; }
+.reward-score-ic { width:52px; height:52px; border-radius:16px; background:var(--amber-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.reward-score-ic svg { width:26px; height:26px; fill:var(--amber); }
+.reward-score-val { font-family:'Nunito',Arial,sans-serif; font-size:32px; font-weight:900; color:var(--ice-deep); line-height:1; }
+.reward-score-lbl { font-size:12px; font-weight:800; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:2px; }
+.reward-score-sub { font-size:12px; font-weight:700; color:var(--teal); }
+.reward-inst { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+.reward-inst-ic { width:44px; height:44px; border-radius:14px; flex-shrink:0; background:var(--teal-light); display:flex; align-items:center; justify-content:center; }
+.reward-inst-ic svg { width:22px; height:22px; fill:var(--teal); }
+.reward-inst-title { font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; }
+.reward-inst-text  { font-size:13px; font-weight:700; color:var(--text-sub); line-height:1.6; }
+
+/* ── BIO ── */
+.bio-body { padding:20px 20px 24px; }
+.bio-name { font-family:'Nunito',Arial,sans-serif; font-size:30px; font-weight:900; color:var(--ice-deep); margin-bottom:2px; }
+.bio-sub  { font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase; }
+.bio-card { padding:16px 18px; }
+.bio-row  { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+.bio-row:last-child { border-bottom:none; }
+.bio-row-ic { width:32px; height:32px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.bio-row-ic svg { width:16px; height:16px; }
+.bio-row-label { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); margin-bottom:2px; }
+.bio-row-val   { font-size:14px; font-weight:700; color:var(--text-main); line-height:1.5; }
+
+/* ── PROGRESS SCREEN ── */
+.prog-screen-body { padding:20px 20px 24px; }
+.prog-screen-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:var(--ice-deep); margin-bottom:16px; }
+.station-list { display:flex; flex-direction:column; gap:10px; }
+.st-row { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-sm); }
+.st-num { width:36px; height:36px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; }
+.st-row.done .st-num { background:var(--teal-light); color:var(--teal); }
+.st-row.todo .st-num { background:var(--surface); color:var(--text-muted); border:1.5px solid var(--border); }
+.st-info { flex:1; }
+.st-name   { font-size:14px; font-weight:800; color:var(--text-main); margin-bottom:1px; }
+.st-pts    { font-size:12px; font-weight:700; }
+.st-row.done .st-pts { color:var(--amber); }
+.st-row.todo .st-pts { color:var(--text-muted); }
+.st-check { width:22px; height:22px; }
+.st-check svg { width:22px; height:22px; }
+.st-row.done .st-check svg { fill:var(--teal); }
+.st-row.todo .st-check svg { fill:var(--border); }
+
+/* ── TOAST ── */
+#toast { position:fixed; bottom:110px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ice-deep); color:#fff; border-radius:99px; padding:11px 22px; font-size:13px; font-weight:800; letter-spacing:0.3px; opacity:0; transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index:999; pointer-events:none; white-space:nowrap; box-shadow:0 4px 20px rgba(11,46,78,0.25); }
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── PARTICLES / FIREWORKS ── */
+.pt { position:fixed; pointer-events:none; z-index:500; border-radius:3px; animation:ptfly var(--d) ease-out forwards; }
+@keyframes ptfly { 0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1;} 100%{transform:translate(var(--x),var(--y)) scale(0) rotate(540deg);opacity:0;} }
+.fw { position:fixed; pointer-events:none; z-index:500; width:5px; height:5px; border-radius:50%; animation:fwfly var(--d) ease-out forwards; }
+@keyframes fwfly { 0%{transform:translate(0,0) scale(1);opacity:1;} 100%{transform:translate(var(--x),var(--y)) scale(0);opacity:0;} }
+</style>
+</head>
+<body>
+
+<!-- ══ LANGUAGE ══ -->
+<div class="screen active" id="s-lang">
+  <img class="lang-scene-img" id="img-lang" src="" alt="Hringur waving in hospital">
+  <div class="lang-title-overlay">
+    <h1 class="lang-logo-h1">Hringur's<br><span>Arctic Adventure</span></h1>
+    <p class="lang-logo-sub">Arctic Hospital Hunt</p>
+  </div>
+  <div class="lang-panel">
+    <div class="lang-panel-handle"></div>
+    <div class="lang-btns">
+      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
+      <button class="lang-btn" onclick="setLang('is')"><span class="flag">🇮🇸</span> Íslenska</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ AGE ══ -->
+<div class="screen" id="s-age">
+  <div class="age-inner">
+    <button class="age-back" onclick="show('s-lang')">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <span id="age-back-lbl">Back</span>
+    </button>
+    <div class="age-title" id="age-q">Veldu aldurshóp</div>
+    <div class="age-cards">
+      <div class="age-card cub" onclick="setAge('cub')">
+        <div class="age-emoji-wrap">🐾</div>
+        <div>
+          <div class="age-name" id="age-cub-lbl">Little Cub</div>
+          <div class="age-range">3 – 6</div>
+        </div>
+      </div>
+      <div class="age-card expl" onclick="setAge('explorer')">
+        <div class="age-emoji-wrap">🧭</div>
+        <div>
+          <div class="age-name" id="age-exp-lbl">Explorer</div>
+          <div class="age-range">7 – 12</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="screen" id="s-home">
+  <div class="hero">
+    <img class="hero-img" id="home-img" src="" alt="Hringur">
+    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
+    <div class="sf-layer" id="sf-home"></div>
+    <div class="home-title-block">
+      <div class="home-eyebrow" id="home-eyebrow">Arctic Explorer</div>
+      <div class="home-h1" id="home-h1">Welcome,<br><em>Explorer!</em></div>
+    </div>
+  </div>
+  <div class="scroll-body">
+    <div class="home-body has-nav">
+      <div class="card">
+        <div class="section-label" id="prog-lbl">Stations Found</div>
+        <div class="prog-row">
+          <div style="font-size:13px;font-weight:700;color:var(--text-muted)" id="prog-sub">Keep exploring!</div>
+          <div class="prog-count"><span id="prog-n">0</span><small> / 6</small></div>
+        </div>
+        <div class="track"><div class="fill" id="prog-fill"></div></div>
+        <div class="dots" id="prog-dots"></div>
+      </div>
+      <div style="margin-top:14px;" class="pill-row">
+        <div class="pill amber">
+          <div class="pill-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="pill-lbl" id="pts-lbl">Points</div>
+          <div class="pill-val" id="pts-val">0</div>
+          <div class="pill-sub" id="pts-sub">Keep going!</div>
+        </div>
+        <div class="pill teal">
+          <div class="pill-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
+          <div class="pill-lbl" id="next-lbl">Next Stop</div>
+          <div class="pill-val" id="next-val">Station 1</div>
+          <div class="pill-sub" id="next-sub">6 to find</div>
+        </div>
+      </div>
+      <div class="hint" style="margin-top:14px;">
+        <div class="hint-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+        <div class="hint-text" id="home-hint">Look for Hringur's paw print stickers around the ward!</div>
+      </div>
+      <div class="storage-warn" id="storage-warn" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        <p id="storage-warn-txt">Progress may not save in this browser. Try opening in Safari or Chrome.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STATION ══ -->
+<div class="screen" id="s-station">
+  <div class="hero short">
+    <img class="hero-img" id="st-img" src="" alt="Hringur">
+    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
+    <div class="sf-layer" id="sf-station"></div>
+    <div class="station-badge-wrap">
+      <button class="back-btn" onclick="goHome()" style="position:relative;top:auto;left:auto;">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      </button>
+      <div class="station-badge" id="st-badge" style="margin-left:10px;">Station 1</div>
+    </div>
+  </div>
+  <div class="scroll-body">
+    <div class="station-body">
+      <div class="found-banner" id="found-banner" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        <p id="found-txt">Already found!</p>
+      </div>
+      <div class="card" id="fact-card">
+        <div class="section-label fact-lbl-el" id="fact-lbl-el">Arctic Fact</div>
+        <div class="fact-title" id="fact-title"></div>
+        <div class="fact-text"  id="fact-text"></div>
+      </div>
+      <div class="cub-card" id="cub-card" style="display:none;">
+        <span class="cub-big-emoji" id="cub-emoji"></span>
+        <h3 id="cub-title">Your Mission!</h3>
+        <p id="cub-text"></p>
+        <div class="cub-divider">
+          <span class="cub-divider-lbl" id="cub-bed-lbl">Or try this from your bed 🛏️</span>
+        </div>
+        <div class="cub-bed">
+          <span class="cub-bed-icon">🛏️</span>
+          <span class="cub-bed-text" id="cub-bed-text"></span>
+        </div>
+      </div>
+      <div class="card" id="quiz-card" style="display:none;margin-top:14px;">
+        <div class="section-label quiz-lbl-el" id="quiz-lbl-el">Quick Quiz!</div>
+        <div class="quiz-q" id="quiz-q"></div>
+        <div class="quiz-opts" id="quiz-opts"></div>
+        <div class="feedback" id="feedback">
+          <span class="feedback-ico" id="fb-ico"></span>
+          <div class="feedback-txt" id="fb-txt"></div>
+        </div>
+      </div>
+      <div class="points-earned" id="points-earned">
+        <div class="points-earned-val" id="pe-val">+150</div>
+        <div class="points-earned-lbl" id="pe-lbl">Points earned!</div>
+      </div>
+      <div style="margin-top:16px;">
+        <button class="btn-primary teal"  id="cont-btn"     style="display:none;" onclick="continueStation()"></button>
+      </div>
+      <div style="margin-top:10px;">
+        <button class="btn-primary coral" id="cub-done-btn" style="display:none;" onclick="cubDone()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REWARD ══ -->
+<div class="screen" id="s-reward">
+  <div class="hero tall">
+    <img class="hero-img" id="img-reward" src="" alt="Hringur celebrating">
+    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
+    <div class="sf-layer" id="sf-reward"></div>
+  </div>
+  <div class="scroll-body">
+    <div class="reward-body">
+      <div class="reward-badge-card">
+        <span class="reward-star">⭐</span>
+        <div class="reward-badge-title" id="rwd-title">Arctic Explorer!</div>
+        <div class="reward-badge-sub"   id="rwd-sub">All 6 stations discovered</div>
+      </div>
+      <div class="reward-score-card">
+        <div class="reward-score-ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+        <div style="flex:1;">
+          <div class="reward-score-lbl" id="rwd-score-lbl">Final Score</div>
+          <div class="reward-score-val" id="rwd-score-val">0</div>
+          <div class="reward-score-sub" id="rwd-score-sub">Excellent explorer!</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;font-weight:800;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;" id="rwd-bonus-lbl">Completion bonus</div>
+          <div style="font-family:'Nunito',Arial,sans-serif;font-size:18px;font-weight:900;color:var(--amber);">+200</div>
+        </div>
+      </div>
+      <div class="reward-inst">
+        <div class="reward-inst-ic"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+        <div>
+          <div class="reward-inst-title" id="rwd-inst-title">Collect Your Sticker!</div>
+          <div class="reward-inst-text"  id="rwd-inst-text">Show this screen to a nurse to collect your very own Arctic Explorer sticker!</div>
+        </div>
+      </div>
+      <button class="btn-ghost" id="rwd-again" onclick="playAgain()">Play again 🔄</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HRINGUR BIO ══ -->
+<div class="screen" id="s-barnaby">
+  <div class="hero" style="height:300px;">
+    <img class="hero-img" id="img-igloo" src="" alt="Hringur">
+    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
+    <div class="sf-layer" id="sf-bio"></div>
+  </div>
+  <div class="scroll-body">
+    <div class="bio-body has-nav">
+      <div class="bio-name">Hringur</div>
+      <div class="bio-sub" id="bio-sub">Arctic Explorer · Your Guide</div>
+      <div class="card bio-card">
+        <div class="bio-row">
+          <div class="bio-row-ic" style="background:var(--blue-light);"><svg viewBox="0 0 24 24" style="fill:var(--blue-mid)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+          <div><div class="bio-row-label" id="bio-l1">About</div><div class="bio-row-val" id="bio-v1"></div></div>
+        </div>
+        <div class="bio-row">
+          <div class="bio-row-ic" style="background:var(--teal-light);"><svg viewBox="0 0 24 24" style="fill:var(--teal)"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div><div class="bio-row-label" id="bio-l2">Superpower</div><div class="bio-row-val" id="bio-v2"></div></div>
+        </div>
+        <div class="bio-row">
+          <div class="bio-row-ic" style="background:var(--amber-light);"><svg viewBox="0 0 24 24" style="fill:var(--amber)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+          <div><div class="bio-row-label" id="bio-l3">Loves</div><div class="bio-row-val" id="bio-v3"></div></div>
+        </div>
+        <div class="bio-row">
+          <div class="bio-row-ic" style="background:var(--purple-light);"><svg viewBox="0 0 24 24" style="fill:var(--purple-mid)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+          <div><div class="bio-row-label" id="bio-l4">Mission</div><div class="bio-row-val" id="bio-v4"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PROGRESS ══ -->
+<div class="screen" id="s-progress">
+  <div class="scroll-body" style="padding-top:56px;">
+    <div class="prog-screen-body has-nav">
+      <div class="prog-screen-title" id="prog-screen-title">Your Journey</div>
+      <div class="station-list" id="station-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SHARED NAV ══ -->
+<div id="shared-nav">
+  <div class="nav-item" id="nav-home" onclick="goTab('home')">
+    <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+    <div class="nav-lbl" id="nav-home-lbl">Home</div>
+  </div>
+  <div class="nav-item" id="nav-barnaby" onclick="goTab('barnaby')">
+    <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div>
+    <div class="nav-lbl" id="nav-bear-lbl">Hringur</div>
+  </div>
+  <div class="nav-item" id="nav-progress" onclick="goTab('progress')">
+    <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></div>
+    <div class="nav-lbl" id="nav-prog-lbl">Progress</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── IMAGES ──
+const IMG = {
+  wave:   'images/hringur-wave.png',
+  igloo:  'images/hringur-igloo.png',
+  fish:   'images/hringur-fish.png',
+  cheer:  'images/hringur-cheer.png',
+  oops:   'images/hringur-oops.png',
+  reward: 'images/hringur-reward.png',
+};
+// Set all bear images on load
+function setImages(){
+  function safeImg(id, src){
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.src=src;
+    el.onerror=()=>{ el.style.display='none'; };
+  }
+  safeImg('img-lang',   IMG.wave);
+  safeImg('home-img',   IMG.wave);
+  safeImg('img-igloo',  IMG.igloo);
+  safeImg('img-reward', IMG.reward);
+}
+
+// ── TRANSLATIONS ──
+const T = {
+  en:{
+    age_q:'Choose your age group',
+    age_back:'Back',
+    age_cub:'Little Cub', age_exp:'Explorer',
+    home_eyebrow_cub:'Little Cub Adventure', home_eyebrow_exp:'Arctic Explorer',
+    home_h1_cub:'Hello,\nLittle Cub!', home_h1_exp:'Welcome,\nExplorer!',
+    prog_lbl:'Stations Found',
+    prog_sub_go:'Keep exploring!', prog_sub_done:'Amazing work!',
+    pts_lbl:'Points', next_lbl:'Next Stop',
+    hint_cub:"Look for Hringur's colourful paw print stickers — each one hides a QR code!",
+    hint_exp:"Look for Hringur's paw print stickers around the ward — scan each QR code to unlock a station!",
+    storage_warn:'Progress may not save in this browser. Try opening the link in Safari or Chrome.',
+    fact_lbl:'Arctic Fact', cub_title:'Your Mission!', quiz_lbl:'Quick Quiz!',
+    cub_bed_lbl:'Or try this from your bed 🛏️',
+    fb_ok:'Amazing! You got it!', fb_ok_first:'Perfect first try! 🌟', fb_err:'Almost there! Try again! 💪',
+    cont:'Continue Adventure 🧭', cub_done:'I did it! 🐾',
+    found_txt:"You've already explored this station! Keep searching.",
+    pts_first:'First try bonus!', pts_retry:'Points earned!', pts_cub:'Activity complete!',
+    rwd_title:'Arctic Explorer!', rwd_sub:'All 6 stations discovered',
+    rwd_score_lbl:'Final Score',
+    rwd_perfect:'Perfect explorer! 🌟', rwd_great:'Great explorer! 🎉', rwd_good:'Excellent explorer!',
+    rwd_bonus_lbl:'Completion bonus',
+    rwd_inst_title:"You're an Arctic Explorer!",
+    rwd_inst_text:'If you see a nurse today, show them your badge for a sticker — or ask a parent to help you find one!',
+    rwd_again:'Play again 🔄',
+    nav_home:'Home', nav_bear:'Hringur', nav_prog:'Progress',
+    st_done:'Completed ✓', st_todo:'Not found yet',
+    prog_screen_title:'Your Journey',
+    bio_sub:'Arctic Explorer · Your Guide',
+    bio_l1:'About',      bio_v1:"A brave polar bear who loves exploring the Arctic — and helping young adventurers like you!",
+    bio_l2:'Superpower', bio_v2:'Can smell a fish from 1 kilometre away and swim for hours without stopping!',
+    bio_l3:'Loves',      bio_v3:'Ice fishing, exploring new places, and making new friends on his adventures!',
+    bio_l4:'Mission',    bio_v4:'Help every young explorer discover the secrets of the Arctic — one station at a time!',
+    toast_found:'Station unlocked! 🌟',
+  },
+  is:{
+    age_q:'Veldu aldurshóp',
+    age_back:'Til baka',
+    age_cub:'Litli björninn', age_exp:'Könnuður',
+    home_eyebrow_cub:'Litli björninn', home_eyebrow_exp:'Norðurskautskönnuður',
+    home_h1_cub:'Halló,\nLitli björn!', home_h1_exp:'Velkomin/n,\nKönnuður!',
+    prog_lbl:'Stöðvar fundnar',
+    prog_sub_go:'Haltu áfram!', prog_sub_done:'Frábært!',
+    pts_lbl:'Stig', next_lbl:'Næsta stöð',
+    hint_cub:'Leitaðu að litlu lappaspor límmiðunum — í hverjum er falinn QR kóði!',
+    hint_exp:'Leitaðu að lappaspor límmiðunum um deildinni — skanaðu til að opna stöð!',
+    storage_warn:'Framfarir gætu ekki vistast í þessum vafra. Reyndu að opna í Safari eða Chrome.',
+    fact_lbl:'Norðurskautsstaðreynd', cub_title:'Verkefnið þitt!', quiz_lbl:'Spurning!',
+    cub_bed_lbl:'Eða prófaðu þetta í rúminu 🛏️',
+    fb_ok:'Frábært! Rétt svar!', fb_ok_first:'Rétt í fyrsta skipti! 🌟', fb_err:'Næstum! Reyndu aftur! 💪',
+    cont:'Halda áfram 🧭', cub_done:'Ég gerði það! 🐾',
+    found_txt:'Þú hefur þegar heimsótt þessa stöð! Haltu áfram.',
+    pts_first:'Fyrsta-skipti bónus!', pts_retry:'Stig fengin!', pts_cub:'Verkefni lokið!',
+    rwd_title:'Norðurskautskönnuður!', rwd_sub:'Allar 6 stöðvar fundnar',
+    rwd_score_lbl:'Lokaeinkunn',
+    rwd_perfect:'Fullkominn könnuður! 🌟', rwd_great:'Frábær könnuður! 🎉', rwd_good:'Góður könnuður!',
+    rwd_bonus_lbl:'Lokaverðlaun',
+    rwd_inst_title:'Þú ert Norðurskautskönnuður!',
+    rwd_inst_text:'Ef þú sérð hjúkrunarfræðing í dag — sýndu þeim merki þitt til að fá límmiða! Foreldrar geta líka hjálpað þér að finna einn.',
+    rwd_again:'Spila aftur 🔄',
+    nav_home:'Heim', nav_bear:'Hringur', nav_prog:'Framfarir',
+    st_done:'Lokið ✓', st_todo:'Ekki fundið',
+    prog_screen_title:'Ferðalag þitt',
+    bio_sub:'Norðurskautskönnuður · Leiðsögumaðurinn þinn',
+    bio_l1:'Um',        bio_v1:'Djarfur ísbjörn sem elskar að kanna Norðurskautið — og hjálpa ungum könnuðum eins og þér!',
+    bio_l2:'Kraftur',   bio_v2:'Getur lykt til fisks í 1 kílómetra fjarlægð og synt í klukkutíma án þess að stoppa!',
+    bio_l3:'Elskar',    bio_v3:'Ísfiski, að kanna ný staði og gera nýja vini á ævintýrum sínum!',
+    bio_l4:'Hlutverk',  bio_v4:'Hjálpa hverjum ungum könnuði að uppgötva leyndarmál Norðurskautsins — eina stöð í einu!',
+    toast_found:'Stöð opnuð! 🌟',
+  }
+};
+
+// ── SCORING ──
+const PTS = { FIRST_TRY: 150, RETRY: 75, CUB: 100, BONUS_ALL: 200 };
+
+// ── STATION DATA ──
+const STATIONS = [
+  {id:1,img_cub:'fish',img_exp:'igloo',
+   en:{fact_title:'Super Swimmers!',fact_text:"Polar bears are incredible swimmers. They can swim for hours without stopping and have been spotted more than 100km from shore! Their large front paws act like paddles in the water.",
+       cub_emoji:'🏊',cub_action:"Stretch your arms out wide and swim like a polar bear! Can you do 10 big arm strokes?",
+       cub_bed:"Float your arms slowly like you're gliding through water 🌊",
+       quiz_q:'What are polar bears really good at?',quiz_opts:['Flying','Swimming','Climbing trees'],quiz_ans:1},
+   is:{fact_title:'Frábærir sundmenn!',fact_text:'Ísbjörn er ótrúlegur sundmaður. Hann getur synt í klukkutíma án þess að stoppa og hefur sést meira en 100 km frá landi! Stórar framvizlur hans virka eins og árar í vatninu.',
+       cub_emoji:'🏊',cub_action:'Seygðu handleggina út og syntu eins og ísbjörn! Geturðu gert 10 stórar handleggjarsveiflur?',
+       cub_bed:'Láttu handleggina fljóta hægt eins og þú sért að líða í gegnum vatnið 🌊',
+       quiz_q:'Hvað er ísbjörn mjög góður í?',quiz_opts:['Að fljúga','Að synta','Að klifra í tré'],quiz_ans:1}},
+  {id:2,img_cub:'igloo',img_exp:'wave',
+   en:{fact_title:'Secret Black Skin!',fact_text:"Even though polar bears look white, their skin underneath is actually BLACK! Dark skin absorbs the sun's warmth — a very clever way to stay warm in the frozen Arctic.",
+       cub_emoji:'🌞',cub_action:"Stand in a sunny spot and feel the warmth! That's what Hringur's black skin does — soaks up the sun like a superhero!",
+       cub_bed:"Close your eyes and imagine the sun on your face — feel Hringur's warmth ☀️",
+       quiz_q:"What colour is a polar bear's skin under its fur?",quiz_opts:['White','Pink','Black'],quiz_ans:2},
+   is:{fact_title:'Leynilegt svart húð!',fact_text:'Þótt ísbjörn líti hvítur út, þá er húðin undir feldinum í raun SVÖRT! Dökk húð dregur til sín sólarhlýjan — mjög snilld til að halda hlýjan á frosnum Norðurskautinu.',
+       cub_emoji:'🌞',cub_action:'Statt á sólríkum stað og finndu hlýjuna! Þetta er nákvæmlega það sem svarta húð Hringurs gerir — sogar upp sólina eins og ofurhetja!',
+       cub_bed:'Lokaðu augunum og ímyndaðu þér sólina á andlitinu — finndu hlýjuna frá Hringi ☀️',
+       quiz_q:'Hvaða lit er húð ísbjarna undir feldinum?',quiz_opts:['Hvít','Bleik','Svört'],quiz_ans:2}},
+  {id:3,img_cub:'wave',img_exp:'fish',
+   en:{fact_title:'Amazing Nose!',fact_text:"A polar bear's nose is so powerful it can smell a seal hiding under 1 metre of snow from 1 kilometre away. That's like smelling your dinner from the other side of town!",
+       cub_emoji:'👃',cub_action:'Sniff the air 5 times like Hringur! What can you smell? Can you find something yummy nearby using just your nose?',
+       cub_bed:'Take 3 deep slow sniffs — what can you smell right now? 👃',
+       quiz_q:'How far away can a polar bear smell its food?',quiz_opts:['1 kilometre','10 metres','Across the room'],quiz_ans:0},
+   is:{fact_title:'Ótrúlegt nef!',fact_text:'Nef ísbjarna er svo öflugt að hann getur lykt sér til selur sem leynist undir 1 metra af snjó frá 1 kílómetra fjarlægð. Það er eins og að lykt sér til kvöldmatar þíns frá hinum enda bæjarins!',
+       cub_emoji:'👃',cub_action:'Þefaðu í loftið 5 sinnum eins og Hringur! Hvað getur þú lykt? Geturðu fundið eitthvað gott með nefinu þínu?',
+       cub_bed:'Taktu 3 djúpa og hæga andardrætti — hvaða lykt finnurðu? 👃',
+       quiz_q:'Hversu langt frá getur ísbjörn lykt sér til matar?',quiz_opts:['1 kílómetri','10 metrar','Um herbergið'],quiz_ans:0}},
+  {id:4,img_cub:'fish',img_exp:'igloo',
+   en:{fact_title:'Hollow Hair!',fact_text:"Each strand of a polar bear's fur is hollow and transparent — not actually white! It works like thousands of tiny straws that trap warm air around their body, like a natural wetsuit.",
+       cub_emoji:'❄️',cub_action:"Blow gently on your arm to feel your own body warmth! Hringur's fur traps warm air exactly like that to stay cosy in the cold.",
+       cub_bed:'Blow gently on the back of your hand — can you feel that warm air? 🌬️',
+       quiz_q:'What is special about polar bear fur?',quiz_opts:['It glows in the dark','Each hair is hollow','It changes colour'],quiz_ans:1},
+   is:{fact_title:'Holur hár!',fact_text:'Sérhver hárstrengur á ísbirni er holur og gegnsær — í raun ekki hvítur! Það virkar eins og þúsundir litlilla strana sem geyma heitan loft um líkama hans, eins og náttúruleg blautföt.',
+       cub_emoji:'❄️',cub_action:'Blásðu varlega á handlegginn þinn til að finna eigin líkamshlýja! Feldur Hringurs geymir heitan loft nákvæmlega svona til að halda sér hlýjum í kulda.',
+       cub_bed:'Blástu varlega á handarbakið — finnurðu hlýja loftið? 🌬️',
+       quiz_q:'Hvað er sérstakt við feld ísbjarna?',quiz_opts:['Hann glóir í myrkri','Sérhver hár er holur','Hann skiptir um lit'],quiz_ans:1}},
+  {id:5,img_cub:'igloo',img_exp:'wave',
+   en:{fact_title:'Baby Bears!',fact_text:"Baby polar bears are called cubs. They are born in a cosy snow den in winter and are no bigger than a guinea pig when they arrive — then they grow into the world's largest land predator!",
+       cub_emoji:'🐣',cub_action:'Curl up into a tiny ball like a newborn polar bear cub! Then slowly stretch out big and tall — you are growing into a mighty explorer!',
+       cub_bed:'Curl your fingers into a tiny fist like a newborn cub — then stretch them wide open 🐾',
+       quiz_q:'What is a baby polar bear called?',quiz_opts:['A pup','A cub','A kit'],quiz_ans:1},
+   is:{fact_title:'Ungaísbirnir!',fact_text:'Ungaísbirnir heita hvolpar. Þeir fæðast í hlýlegum snjóhelli á veturna og eru ekki stærri en naggrísi þegar þeir koma — svo vaxa þeir að verða stærstu landlegar rándýr heims!',
+       cub_emoji:'🐣',cub_action:'Krullast saman í litla kúlu eins og nýfæddur ísbjarnarhvolpur! Svo seygðu þig hægt út stór og há — þú ert að vaxa í öflugur könnuður!',
+       cub_bed:'Krepptu fingurna í lítinn hnefa eins og nýfæddur hvolpur — teygðu svo vel úr þeim 🐾',
+       quiz_q:'Hvað er ungur ísbjörn kallaður?',quiz_opts:['Hundhvolpur','Hvolpur','Kisa'],quiz_ans:1}},
+  {id:6,img_cub:'wave',img_exp:'fish',
+   en:{fact_title:'Arctic Giants!',fact_text:"Polar bears are the largest land predators on Earth. A big male can weigh as much as 8 grown-up people! Their huge paws work like snowshoes, spreading their weight across thin ice so they don't fall through.",
+       cub_emoji:'🦶',cub_action:'Stomp your feet as LOUD as you can like a giant polar bear! Then stand as tall and as wide as you possibly can. You are a mighty Arctic giant!',
+       cub_bed:'Spread your arms as wide as you can — you are a giant polar bear! 🐻',
+       quiz_q:'Polar bears are the largest what on Earth?',quiz_opts:['Sea animal','Land predator','Arctic bird'],quiz_ans:1},
+   is:{fact_title:'Risabjörn í Norðurskautinu!',fact_text:'Ísbjörn er stærsta landlega rándýr á jörðinni. Stór karldýr geta vegið eins mikið og 8 fullorðið fólk! Stórar lappir þeirra virka eins og snjóskór og dreifa þyngd þeirra yfir þunnan ís svo þeir falli ekki í gegn.',
+       cub_emoji:'🦶',cub_action:'Þrættu fæturna eins HÁTT og þú getur eins og risaísbjörn! Svo statt eins há og víð og mögulegt er. Þú ert öflugur norðurskautsrisi!',
+       cub_bed:'Breiddu út faðminn eins mikið og þú getur — þú ert risaísbjörn! 🐻',
+       quiz_q:'Ísbjörn er stærst af hverju á jörðinni?',quiz_opts:['Sjávardýr','Landlegt rándýr','Norðurskautsfugl'],quiz_ans:1}}
+];
+
+const ST_NAMES = {
+  en:['Super Swimmers!','Secret Black Skin!','Amazing Nose!','Hollow Hair!','Baby Bears!','Arctic Giants!'],
+  is:['Frábærir sundmenn!','Leynilegt svart húð!','Ótrúlegt nef!','Holur hár!','Ungaísbirnir!','Risabjörn!']
+};
+
+// ── STATE ── (null defaults = proper first-time detection)
+let lang = null;
+let age  = null;
+let found = [];
+let points = 0;
+let bonusPaid = false; // guard against reward bonus stacking
+let stationAttempts = {};
+let currentSt = null;
+let stationLocked = false;
+
+// ── STORAGE ──
+let storageAvailable = false;
+function checkStorage(){
+  try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); storageAvailable=true; }
+  catch(e){ storageAvailable=false; }
+}
+function load(){
+  checkStorage();
+  if(!storageAvailable) return;
+  try {
+    const s = JSON.parse(localStorage.getItem('hringur_v2')||'{}');
+    lang   = s.lang   || null;
+    age    = s.age    || null;
+    found  = s.found  || [];
+    points = s.points || 0;
+    bonusPaid = s.bonusPaid || false;
+    stationAttempts = s.stationAttempts || {};
+  } catch(e) { found=[]; points=0; stationAttempts={}; }
+}
+function save(){
+  if(!storageAvailable) return;
+  try { localStorage.setItem('hringur_v2', JSON.stringify({lang,age,found,points,bonusPaid,stationAttempts})); }
+  catch(e){}
+}
+
+// ── SNOWFLAKES ──
+function makeSnow(id){
+  const c=document.getElementById(id); if(!c) return;
+  c.innerHTML='';
+  const glyphs=['❄','❅','❆'];
+  [[0.08,12,7,0],[0.22,9,9,1.5],[0.45,11,11,3],[0.68,10,8,0.8],[0.85,13,10,2.2]].forEach(([l,sz,dur,del])=>{
+    const d=document.createElement('div');
+    d.className='sf';
+    d.textContent=glyphs[Math.floor(Math.random()*3)];
+    d.style.cssText=`left:${l*100}%;font-size:${sz}px;animation-duration:${dur}s;animation-delay:${del}s`;
+    c.appendChild(d);
+  });
+}
+
+// ── SCREENS ──
+const NAV_SCREENS = ['s-home','s-barnaby','s-progress'];
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // Nav visibility
+  const nav = document.getElementById('shared-nav');
+  if(NAV_SCREENS.includes(id)){
+    nav.classList.add('visible');
+    // Set active tab
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+    const map = {'s-home':'nav-home','s-barnaby':'nav-barnaby','s-progress':'nav-progress'};
+    if(map[id]) document.getElementById(map[id]).classList.add('on');
+  } else {
+    nav.classList.remove('visible');
+  }
+  // Scroll reset
+  try{ document.getElementById(id).querySelector('.scroll-body').scrollTop=0; }catch(e){}
+}
+
+// ── LANG ──
+function setLang(l){
+  lang=l; save();
+  applyStrings();
+  if(!age){ show('s-age'); return; }
+  renderHome(); show('s-home');
+}
+
+function applyStrings(){
+  const t = T[lang||'en'];
+  document.getElementById('age-q').textContent       = t.age_q;
+  document.getElementById('age-back-lbl').textContent= t.age_back;
+  document.getElementById('age-cub-lbl').textContent = t.age_cub;
+  document.getElementById('age-exp-lbl').textContent = t.age_exp;
+  document.getElementById('nav-home-lbl').textContent = t.nav_home;
+  document.getElementById('nav-bear-lbl').textContent = t.nav_bear;
+  document.getElementById('nav-prog-lbl').textContent = t.nav_prog;
+  document.getElementById('bio-sub').textContent  = t.bio_sub;
+  document.getElementById('bio-l1').textContent   = t.bio_l1;
+  document.getElementById('bio-v1').textContent   = t.bio_v1;
+  document.getElementById('bio-l2').textContent   = t.bio_l2;
+  document.getElementById('bio-v2').textContent   = t.bio_v2;
+  document.getElementById('bio-l3').textContent   = t.bio_l3;
+  document.getElementById('bio-v3').textContent   = t.bio_v3;
+  document.getElementById('bio-l4').textContent   = t.bio_l4;
+  document.getElementById('bio-v4').textContent   = t.bio_v4;
+  document.getElementById('prog-screen-title').textContent = t.prog_screen_title;
+  document.getElementById('rwd-title').textContent      = t.rwd_title;
+  document.getElementById('rwd-sub').textContent        = t.rwd_sub;
+  document.getElementById('rwd-score-lbl').textContent  = t.rwd_score_lbl;
+  document.getElementById('rwd-bonus-lbl').textContent  = t.rwd_bonus_lbl;
+  document.getElementById('rwd-inst-title').textContent = t.rwd_inst_title;
+  document.getElementById('rwd-inst-text').textContent  = t.rwd_inst_text;
+  document.getElementById('rwd-again').textContent      = t.rwd_again;
+  document.getElementById('storage-warn-txt').textContent = t.storage_warn;
+}
+
+// ── AGE ──
+function setAge(a){
+  age=a; save(); renderHome(); show('s-home');
+}
+
+// ── HOME ──
+function goHome(){
+  renderHome();
+  // Scope fall-back animation to station→home only
+  const h=document.getElementById('s-home');
+  h.classList.add('returning');
+  show('s-home');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>h.classList.remove('returning')));
+}
+
+function renderHome(){
+  const t=T[lang||'en']; const isCub=age==='cub';
+  document.getElementById('home-eyebrow').textContent = isCub?t.home_eyebrow_cub:t.home_eyebrow_exp;
+  const parts=(isCub?t.home_h1_cub:t.home_h1_exp).split('\n');
+  document.getElementById('home-h1').innerHTML=parts[0]+'<br><em>'+parts[1]+'</em>';
+  document.getElementById('prog-lbl').textContent  = t.prog_lbl;
+  document.getElementById('prog-sub').textContent  = found.length===6?t.prog_sub_done:t.prog_sub_go;
+  document.getElementById('prog-n').textContent    = found.length;
+  document.getElementById('prog-fill').style.width = (found.length/6*100)+'%';
+  document.getElementById('pts-lbl').textContent   = t.pts_lbl;
+  document.getElementById('pts-val').textContent   = points;
+  document.getElementById('pts-sub').textContent   = found.length===6?t.prog_sub_done:t.prog_sub_go;
+  document.getElementById('next-lbl').textContent  = t.next_lbl;
+  const next=STATIONS.find(s=>!found.includes(s.id));
+  document.getElementById('next-val').textContent  = next?(lang==='is'?'Stöð '+next.id:'Station '+next.id):(lang==='is'?'Lokið!':'All done!');
+  document.getElementById('next-sub').textContent  = (6-found.length)+' '+(lang==='is'?'eftir':'to find');
+  document.getElementById('home-hint').textContent = isCub?t.hint_cub:t.hint_exp;
+  document.getElementById('storage-warn').style.display = storageAvailable?'none':'flex';
+  renderDots();
+  renderProgressScreen();
+}
+
+function renderDots(){
+  const el=document.getElementById('prog-dots'); el.innerHTML='';
+  const pawSvg='<svg viewBox="0 0 32 32" width="17" height="17" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor"><ellipse cx="16" cy="22" rx="7.5" ry="6"/><circle cx="8.5" cy="12.5" r="3"/><circle cx="16" cy="9.5" r="3"/><circle cx="23.5" cy="12.5" r="3"/><circle cx="4.5" cy="19" r="2.3"/><circle cx="27.5" cy="19" r="2.3"/></svg>';
+  for(let i=1;i<=6;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(found.includes(i)?' done':'');
+    if(found.includes(i)){ d.innerHTML=pawSvg; }
+    else { d.textContent=i; }
+    el.appendChild(d);
+  }
+}
+
+function renderProgressScreen(){
+  const t=T[lang||'en'];
+  const list=document.getElementById('station-list'); if(!list) return;
+  list.innerHTML='';
+  STATIONS.forEach(st=>{
+    const done=found.includes(st.id);
+    const a = stationAttempts[st.id];
+    let pts = 0;
+    if(a){
+      if(a.type==='cub')                  pts = PTS.CUB;
+      else if(a.count===1)                pts = PTS.FIRST_TRY;
+      else                                pts = PTS.RETRY;
+    }
+    const row=document.createElement('div');
+    row.className='st-row '+(done?'done':'todo');
+    row.innerHTML=`
+      <div class="st-num">${st.id}</div>
+      <div class="st-info">
+        <div class="st-name">${ST_NAMES[lang||'en'][st.id-1]}</div>
+        <div class="st-pts">${done?('+'+pts+' pts'):t.st_todo}</div>
+      </div>
+      <div class="st-check">
+        <svg viewBox="0 0 24 24">${done?'<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>':'<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>'}
+        </svg>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+// ── TABS ──
+function goTab(tab){
+  applyStrings();
+  if(tab==='home'){ renderHome(); show('s-home'); }
+  else if(tab==='barnaby'){ show('s-barnaby'); }
+  else if(tab==='progress'){ renderProgressScreen(); show('s-progress'); }
+}
+
+// ── STATION ──
+function openStation(id){
+  if(stationLocked) return;
+  stationLocked=true;
+  setTimeout(()=>stationLocked=false, 600); // double-tap guard
+
+  currentSt=id;
+  const st=STATIONS[id-1];
+  const t=T[lang||'en'];
+  const isCub=age==='cub';
+  const d=st[lang||'en'];
+  const alreadyFound=found.includes(id);
+
+  // Station image — by design, not coincidence
+  const stImg=document.getElementById('st-img');
+  stImg.src=isCub?IMG[st.img_cub]:IMG[st.img_exp];
+  stImg.onerror=()=>{ stImg.style.display='none'; };
+
+  // Badge — text + colour tier (stations 1-2 teal, 3-4 amber, 5-6 coral)
+  const badgeEl=document.getElementById('st-badge');
+  badgeEl.textContent=(lang==='is'?'Stöð ':'Station ')+id;
+  const badgeTier={1:'',2:'',3:'badge-amber',4:'badge-amber',5:'badge-coral',6:'badge-coral'};
+  badgeEl.className='station-badge '+(badgeTier[id]||'');
+  document.getElementById('found-banner').style.display=alreadyFound?'flex':'none';
+  document.getElementById('found-txt').textContent=t.found_txt;
+  document.getElementById('fact-lbl-el').textContent=t.fact_lbl;
+  document.getElementById('fact-title').textContent=d.fact_title;
+  document.getElementById('fact-text').textContent=d.fact_text;
+
+  // Reset all interactive elements — clear classes as well as display
+  ['cub-card','quiz-card','cub-done-btn','cont-btn','points-earned'].forEach(el=>{
+    document.getElementById(el).style.display='none';
+  });
+  document.getElementById('points-earned').classList.remove('show');
+  document.getElementById('feedback').className='feedback';
+
+  if(alreadyFound){
+    const cb=document.getElementById('cont-btn');
+    cb.textContent=t.age_back;
+    cb.style.display='block';
+    cb.onclick=goHome;
+  } else if(isCub){
+    document.getElementById('cub-emoji').textContent=d.cub_emoji;
+    document.getElementById('cub-title').textContent=t.cub_title;
+    document.getElementById('cub-text').textContent=d.cub_action;
+    document.getElementById('cub-bed-lbl').textContent=t.cub_bed_lbl;
+    document.getElementById('cub-bed-text').textContent=d.cub_bed;
+    document.getElementById('cub-card').style.display='block';
+    const db=document.getElementById('cub-done-btn');
+    db.textContent=t.cub_done; db.style.display='block';
+  } else {
+    document.getElementById('quiz-lbl-el').textContent=t.quiz_lbl;
+    document.getElementById('quiz-q').textContent=d.quiz_q;
+    const opts=document.getElementById('quiz-opts'); opts.innerHTML='';
+    const letters=['A','B','C','D'];
+    // Init attempt tracker for this station
+    if(!stationAttempts[id]) stationAttempts[id] = { count:0, type:'explorer' };
+    d.quiz_opts.forEach((opt,i)=>{
+      const btn=document.createElement('button');
+      btn.className='q-opt';
+      btn.innerHTML=`<span class="opt-letter">${letters[i]}</span>${opt}`;
+      btn.onclick=()=>answerQuiz(i,d.quiz_ans);
+      opts.appendChild(btn);
+    });
+    document.getElementById('quiz-card').style.display='block';
+  }
+
+  // Clean URL so refresh doesn't reopen station
+  if(window.history && window.history.replaceState){
+    window.history.replaceState({},'',window.location.pathname);
+  }
+
+  makeSnow('sf-station');
+  show('s-station');
+}
+
+function answerQuiz(chosen, correct){
+  const t=T[lang||'en'];
+  const opts=document.querySelectorAll('.q-opt');
+  opts.forEach(o=>o.disabled=true);
+  stationAttempts[currentSt] = stationAttempts[currentSt] || { count:0, type:'explorer' };
+  stationAttempts[currentSt].count++;
+  const isFirst = stationAttempts[currentSt].count === 1;
+
+  if(chosen===correct){
+    opts[chosen].classList.add('correct');
+    const ptsEarned = isFirst ? PTS.FIRST_TRY : PTS.RETRY;
+    document.getElementById('fb-ico').textContent='🎉';
+    document.getElementById('fb-txt').textContent=isFirst?t.fb_ok_first:t.fb_ok;
+    document.getElementById('feedback').className='feedback show fb-ok';
+    document.getElementById('st-img').src=IMG.cheer;
+    markFound(ptsEarned);
+    showPointsBadge('+'+ptsEarned, isFirst?t.pts_first:t.pts_retry);
+    spawnParticles();
+    const cb=document.getElementById('cont-btn');
+    cb.textContent=t.cont; cb.onclick=continueStation;
+    setTimeout(()=>cb.style.display='block', 500);
+  } else {
+    opts[chosen].classList.add('wrong');
+    document.getElementById('fb-ico').textContent='😅';
+    document.getElementById('fb-txt').textContent=t.fb_err;
+    document.getElementById('feedback').className='feedback show fb-err';
+    document.getElementById('st-img').src=IMG.oops;
+    setTimeout(()=>{
+      // Reset by design — use station data, not age assumption
+      const st=STATIONS[currentSt-1];
+      document.getElementById('st-img').src=age==='cub'?IMG[st.img_cub]:IMG[st.img_exp];
+      opts.forEach(o=>{ o.disabled=false; o.classList.remove('wrong','correct'); });
+      document.getElementById('feedback').className='feedback';
+    }, 1800);
+  }
+}
+
+function cubDone(){
+  const t=T[lang||'en'];
+  document.getElementById('st-img').src=IMG.cheer;
+  document.getElementById('cub-done-btn').style.display='none';
+  // Store as cub type so progress screen shows PTS.CUB not PTS.FIRST_TRY
+  stationAttempts[currentSt] = { count:1, type:'cub' };
+  markFound(PTS.CUB);
+  showPointsBadge('+'+PTS.CUB, t.pts_cub);
+  spawnParticles();
+  const cb=document.getElementById('cont-btn');
+  cb.textContent=t.cont; cb.onclick=continueStation; cb.style.display='block';
+}
+
+function showPointsBadge(val, lbl){
+  document.getElementById('pe-val').textContent=val;
+  document.getElementById('pe-lbl').textContent=lbl;
+  document.getElementById('points-earned').classList.add('show');
+}
+
+function markFound(ptsEarned){
+  if(!found.includes(currentSt)){
+    found.push(currentSt);
+    points+=ptsEarned;
+    save();
+    toast(T[lang||'en'].toast_found);
+  }
+}
+
+function continueStation(){
+  if(found.length===6){ showReward(); }
+  else { renderHome(); show('s-home'); }
+}
+
+// ── REWARD ──
+function showReward(){
+  const t=T[lang||'en'];
+  if(!bonusPaid){
+    points += PTS.BONUS_ALL;
+    bonusPaid = true;
+    save();
+  }
+  const total = points;
+  document.getElementById('rwd-score-val').textContent=total;
+  const sub=total>=900?t.rwd_perfect:total>=600?t.rwd_great:t.rwd_good;
+  document.getElementById('rwd-score-sub').textContent=sub;
+  applyStrings();
+  makeSnow('sf-reward');
+  show('s-reward');
+  setTimeout(launchFireworks,500);
+}
+
+function playAgain(){
+  // Language preserved intentionally — everything else reset
+  found=[]; points=0; bonusPaid=false; stationAttempts={}; age=null;
+  save(); applyStrings(); show('s-age');
+}
+
+// ── PARTICLES ──
+function spawnParticles(){
+  const cols=['#FAC775','#5DCAA5','#7F77DD','#378ADD','#D85A30'];
+  const cx=window.innerWidth/2, cy=window.innerHeight/3;
+  for(let i=0;i<24;i++){
+    const p=document.createElement('div'); p.className='pt';
+    const a=(i/24)*Math.PI*2, dist=70+Math.random()*100, dur=0.5+Math.random()*0.5;
+    p.style.cssText=`left:${cx}px;top:${cy}px;width:8px;height:8px;background:${cols[i%cols.length]};--x:${Math.cos(a)*dist}px;--y:${Math.sin(a)*dist}px;--d:${dur}s`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),(dur*1000)+50);
+  }
+}
+function launchFireworks(){
+  const cols=['#FAC775','#5DCAA5','#7F77DD','#378ADD','#D85A30','#fff'];
+  let c=0;
+  const iv=setInterval(()=>{
+    for(let i=0;i<18;i++){
+      const fw=document.createElement('div'); fw.className='fw';
+      const sx=Math.random()*window.innerWidth, sy=Math.random()*window.innerHeight*0.6;
+      const a=Math.random()*Math.PI*2, dist=60+Math.random()*120, dur=0.5+Math.random()*0.7;
+      fw.style.cssText=`left:${sx}px;top:${sy}px;background:${cols[Math.floor(Math.random()*cols.length)]};--x:${Math.cos(a)*dist}px;--y:${Math.sin(a)*dist}px;--d:${dur}s`;
+      document.body.appendChild(fw);
+      setTimeout(()=>fw.remove(),(dur*1000)+100);
+    }
+    if(++c>10)clearInterval(iv);
+  },350);
+}
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ── INIT ──
+function init(){
+  load();
+  setImages();
+  makeSnow('sf-home');
+  makeSnow('sf-bio');
+
+  // Validate all station image keys exist in IMG — catches future typos silently
+  STATIONS.forEach(st=>{
+    if(!IMG[st.img_cub]) console.warn('Missing IMG key:',st.img_cub,'on station',st.id);
+    if(!IMG[st.img_exp]) console.warn('Missing IMG key:',st.img_exp,'on station',st.id);
+  });
+
+  // Check for QR station param
+  const id=parseInt(new URLSearchParams(window.location.search).get('id'));
+  const validStation = id>=1 && id<=6;
+
+  if(!lang){
+    // Truly first-time visitor
+    show('s-lang');
+    return;
+  }
+
+  applyStrings();
+
+  if(!age){
+    show('s-age');
+    return;
+  }
+
+  if(validStation){
+    renderHome();
+    openStation(id);
+  } else {
+    renderHome();
+    show('s-home');
+  }
+}
+
+init();
+</script>
+</body>
+</html>
