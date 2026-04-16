@@ -32,8 +32,10 @@
   --text-sub:    #3a6a8a;
   --text-muted:  #7aabbf;
   --border:      rgba(11,46,78,0.08);
-  --shadow-sm:   0 2px 8px rgba(11,46,78,0.06);
-  --shadow-md:   0 4px 20px rgba(11,46,78,0.10);
+  --shadow-sm:   0 2px 8px rgba(11,46,78,0.08);
+  --shadow-md:   0 6px 24px rgba(11,46,78,0.13);
+  --shadow-lg:   0 12px 40px rgba(11,46,78,0.18);
+  --inner-top:   inset 0 1px 0 rgba(255,255,255,0.85);
   --r-sm: 10px; --r-md: 16px; --r-lg: 24px;
 }
 
@@ -50,24 +52,27 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .scroll-body::-webkit-scrollbar { display:none; }
 
 /* ── HERO ── */
-.hero { position:relative; height:360px; overflow:hidden; flex-shrink:0; background:var(--ice-deep); mask-image:linear-gradient(180deg,black 68%,transparent 100%); -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%); }
+.hero {
+  position:relative; height:360px; overflow:hidden; flex-shrink:0;
+  background:#020608;
+  mask-image:linear-gradient(180deg,black 68%,transparent 100%);
+  -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%);
+}
 .hero.short { height:300px; }
 .hero.tall  { height:420px; }
+/* Canvas aurora sits at z-index 0, image fades in above it */
+.aurora-cvs { position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block; }
 /* hero-img fills the full hero as environment background */
-.hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1; }
-/* aurora overlays the image — atmospheric depth layer */
-.aurora { position:absolute; inset:0; overflow:hidden; z-index:2; }
-.ab { position:absolute; left:-20%; width:140%; border-radius:50%; opacity:0.38; animation:adrift 9s ease-in-out infinite alternate; }
-.ab1 { top:3%;  height:70px; background:linear-gradient(90deg,transparent,rgba(80,210,160,0.75),transparent); animation-delay:0s; }
-.ab2 { top:10%; height:50px; background:linear-gradient(90deg,transparent,rgba(150,130,230,0.55),rgba(100,170,230,0.4),transparent); animation-delay:2.5s; }
-.ab3 { top:17%; height:60px; background:linear-gradient(90deg,transparent,rgba(70,190,240,0.45),transparent); animation-delay:5s; }
-@keyframes adrift { 0%{transform:translateX(-2%) scaleY(1);} 100%{transform:translateX(3%) scaleY(1.15);} }
+.hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1; opacity:0; transition:opacity 0.45s ease-out; }
+.hero-img.loaded { opacity:1; }
+@keyframes cheerBounce { 0%{transform:scale(1);} 40%{transform:scale(1.055);} 70%{transform:scale(0.98);} 100%{transform:scale(1);} }
+.hero-img.cheer-bounce { animation:cheerBounce 0.45s cubic-bezier(0.34,1.3,0.64,1); }
 .sf-layer { position:absolute; inset:0; pointer-events:none; z-index:3; }
 .sf { position:absolute; color:rgba(255,255,255,0.75); animation:sfall linear infinite; user-select:none; pointer-events:none; }
 @keyframes sfall { 0%{transform:translateY(-10px) rotate(0deg);opacity:0;} 8%{opacity:0.8;} 92%{opacity:0.5;} 100%{transform:translateY(360px) rotate(400deg);opacity:0;} }
 
 /* ── CARDS ── */
-.card { background:var(--card); border-radius:var(--r-lg); border:1px solid var(--border); box-shadow:var(--shadow-sm); padding:18px 20px; }
+.card { background:var(--card); border-radius:var(--r-lg); border:1.5px solid rgba(55,138,221,0.18); box-shadow:var(--inner-top), var(--shadow-md); padding:18px 20px; }
 .section-label { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
 
 /* ── PROGRESS ── */
@@ -78,14 +83,14 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .fill { height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,var(--teal-mid),var(--blue-mid)); transition:width 0.6s ease-out; }
 .dots { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
 .dot { aspect-ratio:1; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--text-muted); transition:border-color 0.2s, background 0.2s; }
-.dot.done { border-color:var(--teal-mid); background:var(--teal-light); color:var(--teal); animation:gemPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+.dot.done { border-color:var(--teal-mid); background:linear-gradient(145deg,#d0f5e8,var(--teal-light)); color:var(--teal); animation:gemPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; box-shadow:var(--inner-top), 0 2px 8px rgba(29,158,117,0.2); }
 @keyframes gemPop { 0%{transform:scale(0); opacity:0;} 60%{transform:scale(1.18);} 100%{transform:scale(1); opacity:1;} }
 
 /* ── PILLS ── */
 .pill-row { display:flex; gap:10px; }
 .pill { flex:1; border-radius:var(--r-md); padding:14px 14px 12px; display:flex; flex-direction:column; gap:3px; }
-.pill.amber  { background:var(--amber-light);  border:1px solid rgba(186,117,23,0.12); }
-.pill.teal   { background:var(--teal-light);   border:1px solid rgba(29,158,117,0.12); }
+.pill.amber  { background:var(--amber-light);  border:1.5px solid rgba(186,117,23,0.22); box-shadow:var(--inner-top); }
+.pill.teal   { background:var(--teal-light);   border:1.5px solid rgba(29,158,117,0.22); box-shadow:var(--inner-top); }
 .pill-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
 .pill.amber .pill-icon { background:rgba(186,117,23,0.15); }
 .pill.teal  .pill-icon { background:rgba(29,158,117,0.15); }
@@ -112,10 +117,12 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .storage-warn p { font-size:12px; font-weight:700; color:var(--amber); line-height:1.5; }
 
 /* ── BUTTONS ── */
-.btn-primary { display:block; width:100%; background:var(--ice-deep); color:#fff; border:none; border-radius:var(--r-md); padding:17px; font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:800; cursor:pointer; text-align:center; box-shadow:0 4px 16px rgba(11,46,78,0.2); transition:transform 0.12s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.12s ease; letter-spacing:0.3px; }
-.btn-primary:active { transform:scale(0.93) translateY(2px); box-shadow:none; }
-.btn-primary.teal   { background:linear-gradient(135deg,var(--teal),#0F6E56); box-shadow:0 4px 16px rgba(29,158,117,0.25); }
-.btn-primary.coral  { background:linear-gradient(135deg,var(--coral-mid),var(--coral)); box-shadow:0 4px 16px rgba(153,60,29,0.2); }
+.btn-primary { display:block; width:100%; background:linear-gradient(180deg,#1a3f62 0%,var(--ice-deep) 100%); color:#fff; border:none; border-radius:var(--r-md); padding:17px; font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:800; cursor:pointer; text-align:center; box-shadow:var(--inner-top), 0 5px 0 rgba(0,0,0,0.25), 0 8px 20px rgba(11,46,78,0.25); transition:transform 0.1s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.1s ease; letter-spacing:0.3px; -webkit-text-stroke:0.5px rgba(255,255,255,0.15); }
+.btn-primary:active { transform:translateY(3px); box-shadow:var(--inner-top), 0 2px 0 rgba(0,0,0,0.25), 0 4px 10px rgba(11,46,78,0.15); }
+.btn-primary.teal   { background:linear-gradient(180deg,#24b887 0%,#0F6E56 100%); box-shadow:var(--inner-top), 0 5px 0 rgba(0,60,40,0.3), 0 8px 24px rgba(29,158,117,0.3); }
+.btn-primary.teal:active { box-shadow:var(--inner-top), 0 2px 0 rgba(0,60,40,0.3), 0 4px 12px rgba(29,158,117,0.2); }
+.btn-primary.coral  { background:linear-gradient(180deg,#e8633a 0%,var(--coral) 100%); box-shadow:var(--inner-top), 0 5px 0 rgba(80,20,0,0.25), 0 8px 20px rgba(153,60,29,0.25); }
+.btn-primary.coral:active { box-shadow:var(--inner-top), 0 2px 0 rgba(80,20,0,0.25), 0 4px 10px rgba(153,60,29,0.15); }
 .btn-ghost { display:block; width:100%; background:transparent; color:var(--text-muted); border:1.5px solid var(--border); border-radius:var(--r-md); padding:14px; font-family:'Atkinson Hyperlegible',Arial,sans-serif; font-size:14px; font-weight:500; cursor:pointer; text-align:center; transition:all 0.15s; }
 .btn-ghost:hover { border-color:var(--text-muted); }
 
@@ -144,29 +151,150 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .lang-panel { position:relative; z-index:5; background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:28px 28px 0 0; padding:20px 28px 48px; box-shadow:0 -8px 40px rgba(11,46,78,0.18); }
 .lang-panel-handle { width:40px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 20px; }
 .lang-btns { display:flex; flex-direction:column; gap:12px; }
-.lang-btn { display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.96); border:1.5px solid var(--border); border-radius:var(--r-md); padding:16px 20px; font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:800; color:var(--ice-deep); cursor:pointer; box-shadow:var(--shadow-sm); transition:all 0.15s; }
-.lang-btn:hover { border-color:var(--teal-mid); transform:translateY(-1px); }
-.lang-btn:active { transform:scale(0.97); }
+.lang-btn { display:flex; align-items:center; gap:16px; background:white; border:2px solid rgba(11,46,78,0.1); border-radius:var(--r-md); padding:16px 20px; font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:800; color:var(--ice-deep); cursor:pointer; box-shadow:var(--inner-top), 0 4px 0 rgba(11,46,78,0.1), var(--shadow-sm); transition:all 0.12s; }
+.lang-btn:active { transform:translateY(3px); box-shadow:var(--inner-top), 0 1px 0 rgba(11,46,78,0.1), 0 2px 8px rgba(11,46,78,0.08); }
 .flag { font-size:28px; }
 
-/* ── AGE SCREEN ── */
-#s-age { justify-content:center; align-items:center; background:linear-gradient(180deg,#a8dcf4 0%,var(--surface) 60%); }
-.age-inner { display:flex; flex-direction:column; align-items:center; gap:20px; padding:40px 24px; max-width:380px; width:100%; }
-.age-back { align-self:flex-start; background:rgba(255,255,255,0.85); border:1px solid var(--border); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:800; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; gap:6px; }
-.age-back svg { width:16px; height:16px; fill:var(--text-sub); }
-.age-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:var(--ice-deep); text-align:center; line-height:1.3; }
+/* ── AGE SCREEN — Illustrated arctic aurora scene ── */
+#s-age {
+  justify-content:center; align-items:center;
+  background:linear-gradient(180deg,
+    #03091a 0%, #060d2a 15%, #081535 25%,
+    #0a1f45 40%, #0d2a50 55%,
+    #0f3358 65%, #143d5e 75%,
+    #1a4a62 85%, #1e5068 92%, #244d5a 100%
+  );
+  overflow:hidden;
+}
+/* Star field */
+#s-age::before {
+  content:'';
+  position:absolute; inset:0; z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 28%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 22% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 31% 18%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 38% 5%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 22%, rgba(255,255,255,0.85) 0%, transparent 100%),
+    radial-gradient(1px 1px at 54% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 62% 30%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 6%, rgba(255,255,255,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 78% 20%, rgba(255,255,255,0.65) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 14%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 91% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 96% 25%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 40%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(1px 1px at 12% 52%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 27% 45%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 48% 38%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 66% 48%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 83% 42%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 93% 35%, rgba(255,255,255,0.7) 0%, transparent 100%);
+}
+/* Aurora arcs */
+.age-aurora { position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
+.age-arc {
+  position:absolute; left:-30%; width:160%;
+  border-radius:50%; opacity:0;
+  animation:ageArcDrift 14s ease-in-out infinite;
+}
+.age-arc1 {
+  top:-10%; height:55%;
+  background:radial-gradient(ellipse at 50% 100%,
+    rgba(32,210,140,0.0) 0%,
+    rgba(32,210,140,0.55) 35%,
+    rgba(32,210,140,0.3) 55%,
+    transparent 75%
+  );
+  animation-delay:0s; animation-duration:16s;
+}
+.age-arc2 {
+  top:-5%; height:50%;
+  background:radial-gradient(ellipse at 50% 100%,
+    rgba(100,160,230,0.0) 0%,
+    rgba(100,160,230,0.35) 30%,
+    rgba(140,100,220,0.25) 55%,
+    transparent 75%
+  );
+  animation-delay:4s; animation-duration:20s;
+}
+.age-arc3 {
+  top:-15%; height:60%;
+  background:radial-gradient(ellipse at 40% 100%,
+    rgba(50,200,160,0.0) 0%,
+    rgba(50,200,160,0.25) 30%,
+    rgba(60,180,200,0.2) 55%,
+    transparent 72%
+  );
+  animation-delay:8s; animation-duration:18s;
+}
+@keyframes ageArcDrift {
+  0%   { opacity:0; transform:translateX(-3%) scaleY(0.95); }
+  15%  { opacity:1; }
+  50%  { transform:translateX(3%) scaleY(1.05); }
+  85%  { opacity:1; }
+  100% { opacity:0; transform:translateX(-3%) scaleY(0.95); }
+}
+/* Mountain silhouettes */
+.age-mountains { position:absolute; bottom:0; left:0; right:0; z-index:2; pointer-events:none; }
+.age-mtns-back { /* far range — darker, shorter */
+  position:absolute; bottom:0; left:0; right:0; height:32%;
+  background:linear-gradient(180deg,transparent 0%,#0a1828 100%);
+  clip-path:polygon(
+    0% 100%, 0% 72%, 4% 65%, 8% 72%, 12% 58%, 16% 68%, 20% 52%,
+    24% 60%, 28% 46%, 32% 56%, 36% 42%, 40% 54%, 44% 48%,
+    48% 38%, 52% 50%, 56% 36%, 60% 48%, 64% 40%, 68% 52%,
+    72% 44%, 76% 56%, 80% 48%, 84% 58%, 88% 50%, 92% 62%,
+    96% 54%, 100% 66%, 100% 100%
+  );
+  opacity:0.7;
+}
+.age-mtns-mid { /* mid range — brighter teal tint, taller peaks */
+  position:absolute; bottom:0; left:0; right:0; height:26%;
+  background:linear-gradient(180deg,#0d2535 20%,#091520 100%);
+  clip-path:polygon(
+    0% 100%, 0% 80%, 3% 70%, 7% 80%, 11% 60%, 15% 75%,
+    19% 50%, 23% 65%, 27% 42%, 31% 58%, 35% 35%,
+    39% 52%, 43% 30%, 47% 48%, 51% 22%, 55% 42%,
+    59% 28%, 63% 46%, 67% 32%, 71% 50%, 75% 38%,
+    79% 55%, 83% 40%, 87% 58%, 91% 44%, 95% 62%,
+    100% 50%, 100% 100%
+  );
+}
+.age-mtns-fore { /* foreground — deepest, slight teal tint at edges */
+  position:absolute; bottom:0; left:0; right:0; height:18%;
+  background:linear-gradient(180deg,#0b1e2d 0%,#060e17 100%);
+  clip-path:polygon(
+    0% 100%, 0% 60%, 6% 75%, 12% 50%, 18% 68%, 24% 40%,
+    30% 62%, 36% 30%, 42% 55%, 48% 25%, 54% 50%,
+    60% 20%, 66% 48%, 72% 28%, 78% 52%, 84% 35%,
+    90% 58%, 96% 42%, 100% 55%, 100% 100%
+  );
+}
+/* Snow shimmer on mountaintops */
+.age-snow-caps {
+  position:absolute; bottom:0; left:0; right:0; height:28%;
+  background:radial-gradient(ellipse at 51% 0%, rgba(180,220,255,0.12) 0%, transparent 60%);
+  z-index:3; pointer-events:none;
+}
+/* Age screen content sits above scene */
+.age-inner { position:relative; z-index:4; display:flex; flex-direction:column; align-items:center; gap:20px; padding:40px 24px; max-width:380px; width:100%; }
+.age-back { align-self:flex-start; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:800; color:rgba(255,255,255,0.9); cursor:pointer; display:flex; align-items:center; gap:6px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+.age-back svg { width:16px; height:16px; fill:rgba(255,255,255,0.9); }
+.age-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:#fff; text-align:center; line-height:1.3; text-shadow:0 2px 16px rgba(0,0,0,0.5); -webkit-text-stroke:0.5px rgba(255,255,255,0.15); }
 .age-cards { display:flex; flex-direction:column; gap:14px; width:100%; }
-.age-card { background:var(--card); border:2px solid var(--border); border-radius:var(--r-lg); padding:20px; display:flex; align-items:center; gap:18px; cursor:pointer; box-shadow:var(--shadow-sm); transition:all 0.15s; }
-.age-card:active { transform:scale(0.97); }
-.age-card.cub:hover  { border-color:var(--coral-mid); }
-.age-card.expl:hover { border-color:var(--teal-mid); }
+.age-card { background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.2); border-radius:var(--r-lg); padding:20px; display:flex; align-items:center; gap:18px; cursor:pointer; box-shadow:var(--inner-top), 0 8px 32px rgba(0,0,0,0.3); transition:all 0.15s cubic-bezier(0.34,1.2,0.64,1); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+.age-card:active { transform:scale(0.97) translateY(2px); }
+.age-card.cub:hover  { border-color:rgba(216,90,48,0.7); background:rgba(216,90,48,0.18); box-shadow:var(--inner-top), 0 10px 36px rgba(216,90,48,0.3); transform:translateY(-3px); }
+.age-card.expl:hover { border-color:rgba(93,202,165,0.7); background:rgba(29,158,117,0.2);  box-shadow:var(--inner-top), 0 10px 36px rgba(29,158,117,0.3);  transform:translateY(-3px); }
 .age-emoji-wrap { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
-.age-card.cub  .age-emoji-wrap { background:var(--coral-light); }
-.age-card.expl .age-emoji-wrap { background:var(--teal-light); }
-.age-name { font-family:'Nunito',Arial,sans-serif; font-size:21px; font-weight:900; margin-bottom:2px; }
-.age-card.cub  .age-name { color:var(--coral-mid); }
-.age-card.expl .age-name { color:var(--teal); }
-.age-range { font-size:13px; font-weight:700; color:var(--text-muted); }
+.age-card.cub  .age-emoji-wrap { background:rgba(216,90,48,0.25); }
+.age-card.expl .age-emoji-wrap { background:rgba(29,158,117,0.25); }
+.age-name { font-family:'Nunito',Arial,sans-serif; font-size:21px; font-weight:900; margin-bottom:2px; text-shadow:0 1px 6px rgba(0,0,0,0.3); }
+.age-card.cub  .age-name { color:#ff9a7a; }
+.age-card.expl .age-name { color:#5DCAA5; }
+.age-range { font-size:13px; font-weight:700; color:rgba(255,255,255,0.7); }
 
 /* ── HOME ── */
 .home-title-block { position:absolute; top:38px; left:0; right:0; text-align:center; z-index:10; padding:0 20px; pointer-events:none; }
@@ -179,17 +307,17 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .back-btn { position:absolute; top:14px; left:14px; z-index:20; width:38px; height:38px; border-radius:12px; background:rgba(255,255,255,0.88); backdrop-filter:blur(8px); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-sm); }
 .back-btn svg { width:20px; height:20px; fill:var(--ice-deep); }
 .station-badge-wrap { position:absolute; top:14px; left:0; right:0; display:flex; justify-content:center; z-index:10; }
-.station-badge { background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border:2px solid var(--teal-mid); border-radius:99px; padding:8px 20px; font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--teal); box-shadow:var(--shadow-sm); }
-.station-badge.badge-amber { border-color:var(--amber-mid); color:var(--amber); }
-.station-badge.badge-coral { border-color:var(--coral-mid); color:var(--coral); }
+.station-badge { background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); border:2.5px solid var(--teal-mid); border-radius:99px; padding:8px 20px; font-size:13px; font-weight:900; letter-spacing:1px; text-transform:uppercase; color:var(--teal); box-shadow:var(--inner-top), 0 4px 16px rgba(29,158,117,0.25); }
+.station-badge.badge-amber { border-color:var(--amber-mid); color:var(--amber); box-shadow:var(--inner-top), 0 4px 16px rgba(186,117,23,0.25); }
+.station-badge.badge-coral { border-color:var(--coral-mid); color:var(--coral); box-shadow:var(--inner-top), 0 4px 16px rgba(216,90,48,0.25); }
 .station-body { padding:20px 20px 24px; }
 .found-banner { background:var(--amber-light); border:1px solid rgba(186,117,23,0.2); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:12px; margin-bottom:14px; }
 .found-banner svg { width:20px; height:20px; fill:var(--amber); flex-shrink:0; }
 .found-banner p { font-size:13px; font-weight:700; color:var(--amber); line-height:1.5; }
 .fact-lbl-el { color:var(--blue); }
-.fact-title { font-family:'Nunito',Arial,sans-serif; font-size:22px; font-weight:900; color:var(--ice-deep); margin:6px 0 8px; line-height:1.25; }
+.fact-title { font-family:'Nunito',Arial,sans-serif; font-size:22px; font-weight:900; color:var(--ice-deep); margin:6px 0 8px; line-height:1.25; -webkit-text-stroke:0.6px rgba(11,46,78,0.2); }
 .fact-text  { font-size:14px; font-weight:600; color:var(--text-sub); line-height:1.7; }
-.cub-card { border-radius:var(--r-lg); padding:22px 20px; text-align:center; background:linear-gradient(135deg,#fef3e8,#fce8d4); border:1px solid rgba(186,117,23,0.15); margin-top:14px; }
+.cub-card { border-radius:var(--r-lg); padding:22px 20px; text-align:center; background:linear-gradient(145deg,#fff4e8,#fde8ce); border:2px solid rgba(186,117,23,0.28); margin-top:14px; box-shadow:var(--inner-top), 0 6px 24px rgba(186,117,23,0.12); }
 .cub-big-emoji { font-size:52px; display:block; margin-bottom:10px; animation:floatY 2.5s ease-in-out infinite; }
 @keyframes floatY { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
 .cub-card h3 { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; color:var(--amber); margin-bottom:8px; }
@@ -219,11 +347,11 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 /* ── QUIZ ── */
 .quiz-lbl-el { color:var(--purple-mid); }
-.quiz-q { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:800; color:var(--ice-deep); margin:6px 0 14px; line-height:1.3; }
+.quiz-q { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:800; color:var(--ice-deep); margin:6px 0 14px; line-height:1.3; -webkit-text-stroke:0.5px rgba(11,46,78,0.18); }
 .quiz-opts { display:flex; flex-direction:column; gap:10px; }
-.q-opt { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:16px 16px; font-size:15px; font-weight:700; color:var(--text-main); cursor:pointer; text-align:left; width:100%; transition:border-color 0.15s, background 0.15s; display:flex; align-items:center; gap:12px; }
-.q-opt:hover   { border-color:var(--purple-mid); background:#f5f3ff; }
-.q-opt:active  { transform:scale(0.98); background:#eeebff; }
+.q-opt { background:white; border:2px solid rgba(127,119,221,0.18); border-radius:var(--r-sm); padding:16px 16px; font-size:15px; font-weight:700; color:var(--text-main); cursor:pointer; text-align:left; width:100%; transition:all 0.15s cubic-bezier(0.34,1.2,0.64,1); display:flex; align-items:center; gap:12px; box-shadow:var(--inner-top), 0 2px 8px rgba(11,46,78,0.06); }
+.q-opt:hover   { border-color:var(--purple-mid); box-shadow:var(--inner-top), 0 6px 18px rgba(127,119,221,0.2); transform:translateY(-2px); background:#faf9ff; }
+.q-opt:active  { transform:translateY(1px); box-shadow:var(--inner-top), 0 1px 4px rgba(11,46,78,0.1); }
 .q-opt:disabled { cursor:default; transform:none; }
 .opt-letter { width:32px; height:32px; border-radius:8px; flex-shrink:0; background:var(--purple-light); color:var(--purple); font-size:12px; font-weight:800; letter-spacing:1px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
 .q-opt.correct { border-color:var(--teal-mid); background:var(--teal-light); color:var(--teal); }
@@ -248,19 +376,19 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 /* ── REWARD ── */
 .reward-body { padding:24px 20px 32px; }
-.reward-badge-card { background:linear-gradient(135deg,#fffbe6,#fef3c0); border:2px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:0 0 40px rgba(250,199,117,0.2); }
-.reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+.reward-badge-card { background:linear-gradient(145deg,#fffbe6,#fef0b0); border:3px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:var(--inner-top), 0 6px 0 rgba(186,117,23,0.2), 0 12px 40px rgba(250,199,117,0.3); }
+.reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; filter:drop-shadow(0 4px 8px rgba(186,117,23,0.4)); }
 @keyframes starPop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
-.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:28px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; }
+.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:30px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; -webkit-text-stroke:0.8px rgba(11,46,78,0.2); }
 .reward-badge-sub   { font-size:14px; font-weight:700; color:var(--amber); }
-.reward-score-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px; }
-.reward-score-ic { width:52px; height:52px; border-radius:16px; background:var(--amber-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.reward-score-card { background:var(--card); border:1.5px solid rgba(55,138,221,0.18); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; box-shadow:var(--inner-top), var(--shadow-md); display:flex; align-items:center; gap:16px; }
+.reward-score-ic { width:52px; height:52px; border-radius:16px; background:linear-gradient(145deg,#fdf0c8,var(--amber-light)); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:var(--inner-top); }
 .reward-score-ic svg { width:26px; height:26px; fill:var(--amber); }
-.reward-score-val { font-family:'Nunito',Arial,sans-serif; font-size:32px; font-weight:900; color:var(--ice-deep); line-height:1; }
+.reward-score-val { font-family:'Nunito',Arial,sans-serif; font-size:32px; font-weight:900; color:var(--ice-deep); line-height:1; -webkit-text-stroke:0.5px rgba(11,46,78,0.15); }
 .reward-score-lbl { font-size:12px; font-weight:800; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:2px; }
 .reward-score-sub { font-size:12px; font-weight:700; color:var(--teal); }
-.reward-inst { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
-.reward-inst-ic { width:44px; height:44px; border-radius:14px; flex-shrink:0; background:var(--teal-light); display:flex; align-items:center; justify-content:center; }
+.reward-inst { background:var(--card); border:1.5px solid rgba(55,138,221,0.18); border-radius:var(--r-lg); padding:20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:14px; box-shadow:var(--inner-top), var(--shadow-sm); }
+.reward-inst-ic { width:44px; height:44px; border-radius:14px; flex-shrink:0; background:linear-gradient(145deg,#d4f5ea,var(--teal-light)); display:flex; align-items:center; justify-content:center; box-shadow:var(--inner-top); }
 .reward-inst-ic svg { width:22px; height:22px; fill:var(--teal); }
 .reward-inst-title { font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; }
 .reward-inst-text  { font-size:13px; font-weight:700; color:var(--text-sub); line-height:1.6; }
@@ -281,9 +409,9 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .prog-screen-body { padding:20px 20px 24px; }
 .prog-screen-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:var(--ice-deep); margin-bottom:16px; }
 .station-list { display:flex; flex-direction:column; gap:10px; }
-.st-row { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-sm); }
+.st-row { background:var(--card); border:1.5px solid rgba(55,138,221,0.14); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:14px; box-shadow:var(--inner-top), var(--shadow-sm); }
 .st-num { width:36px; height:36px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; }
-.st-row.done .st-num { background:var(--teal-light); color:var(--teal); }
+.st-row.done .st-num { background:linear-gradient(145deg,#d4f5ea,var(--teal-light)); color:var(--teal); box-shadow:var(--inner-top); }
 .st-row.todo .st-num { background:var(--surface); color:var(--text-muted); border:1.5px solid var(--border); }
 .st-info { flex:1; }
 .st-name   { font-size:14px; font-weight:800; color:var(--text-main); margin-bottom:1px; }
@@ -304,6 +432,30 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 @keyframes ptfly { 0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1;} 100%{transform:translate(var(--x),var(--y)) scale(0) rotate(540deg);opacity:0;} }
 .fw { position:fixed; pointer-events:none; z-index:500; width:5px; height:5px; border-radius:50%; animation:fwfly var(--d) ease-out forwards; }
 @keyframes fwfly { 0%{transform:translate(0,0) scale(1);opacity:1;} 100%{transform:translate(var(--x),var(--y)) scale(0);opacity:0;} }
+
+/* ── DEV TESTING PANEL ── */
+#dev-trigger { position:fixed; bottom:90px; right:14px; z-index:200; width:34px; height:34px; border-radius:10px; background:rgba(11,46,78,0.55); border:1px solid rgba(255,255,255,0.15); display:none; align-items:center; justify-content:center; cursor:pointer; font-size:15px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:opacity 0.2s; }
+#dev-trigger.visible { display:flex; }
+#dev-overlay { position:fixed; inset:0; z-index:900; background:rgba(0,0,0,0.6); display:none; }
+#dev-overlay.open { display:block; }
+#dev-panel { position:fixed; bottom:0; left:0; right:0; z-index:901; background:#111827; border-radius:20px 20px 0 0; padding:20px 20px 40px; transform:translateY(100%); transition:transform 0.3s cubic-bezier(0.34,1.1,0.64,1); }
+#dev-panel.open { transform:translateY(0); }
+.dev-handle { width:36px; height:3px; background:rgba(255,255,255,0.2); border-radius:99px; margin:0 auto 18px; }
+.dev-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.dev-title { font-family:monospace; font-size:12px; font-weight:700; color:#f59e0b; letter-spacing:2px; text-transform:uppercase; }
+.dev-close { background:rgba(255,255,255,0.1); border:none; border-radius:8px; color:#9ca3af; font-size:18px; width:30px; height:30px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.dev-section-lbl { font-family:monospace; font-size:10px; color:#6b7280; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+.dev-stations { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:16px; }
+.dev-st-btn { background:#1f2937; border:1px solid #374151; border-radius:8px; color:#e5e7eb; font-family:monospace; font-size:12px; font-weight:700; padding:10px 4px; cursor:pointer; text-align:center; transition:background 0.15s; }
+.dev-st-btn:active { background:#374151; }
+.dev-st-btn.found { border-color:#059669; color:#34d399; }
+.dev-toggles { display:flex; gap:8px; margin-bottom:16px; }
+.dev-toggle-group { flex:1; background:#1f2937; border-radius:10px; padding:4px; display:flex; gap:4px; }
+.dev-tog { flex:1; background:transparent; border:none; border-radius:7px; color:#6b7280; font-family:monospace; font-size:12px; font-weight:700; padding:8px 4px; cursor:pointer; transition:all 0.15s; text-align:center; }
+.dev-tog.active { background:#374151; color:#e5e7eb; }
+.dev-reset { width:100%; background:#7f1d1d; border:1px solid #991b1b; border-radius:10px; color:#fca5a5; font-family:monospace; font-size:12px; font-weight:700; padding:11px; cursor:pointer; margin-bottom:12px; letter-spacing:0.5px; }
+.dev-reset:active { background:#991b1b; }
+.dev-state { background:#1f2937; border-radius:8px; padding:10px 12px; font-family:monospace; font-size:10px; color:#6b7280; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -326,6 +478,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 <!-- ══ AGE ══ -->
 <div class="screen" id="s-age">
+  <canvas id="cv-age" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;"></canvas>
   <div class="age-inner">
     <button class="age-back" onclick="show('s-lang')">
       <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -354,8 +507,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 <!-- ══ HOME ══ -->
 <div class="screen" id="s-home">
   <div class="hero">
+    <canvas class="aurora-cvs" id="cv-home"></canvas>
     <img class="hero-img" id="home-img" src="" alt="Hringur">
-    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
     <div class="sf-layer" id="sf-home"></div>
     <div class="home-title-block">
       <div class="home-eyebrow" id="home-eyebrow">Arctic Explorer</div>
@@ -402,8 +555,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 <!-- ══ STATION ══ -->
 <div class="screen" id="s-station">
   <div class="hero short">
+    <canvas class="aurora-cvs" id="cv-station"></canvas>
     <img class="hero-img" id="st-img" src="" alt="Hringur">
-    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
     <div class="sf-layer" id="sf-station"></div>
     <div class="station-badge-wrap">
       <button class="back-btn" onclick="goHome()" style="position:relative;top:auto;left:auto;">
@@ -461,8 +614,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 <!-- ══ REWARD ══ -->
 <div class="screen" id="s-reward">
   <div class="hero tall">
+    <canvas class="aurora-cvs" id="cv-reward"></canvas>
     <img class="hero-img" id="img-reward" src="" alt="Hringur celebrating">
-    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
     <div class="sf-layer" id="sf-reward"></div>
   </div>
   <div class="scroll-body">
@@ -499,8 +652,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 <!-- ══ HRINGUR BIO ══ -->
 <div class="screen" id="s-barnaby">
   <div class="hero" style="height:300px;">
+    <canvas class="aurora-cvs" id="cv-bio"></canvas>
     <img class="hero-img" id="img-igloo" src="" alt="Hringur">
-    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
     <div class="sf-layer" id="sf-bio"></div>
   </div>
   <div class="scroll-body">
@@ -557,28 +710,305 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 <div id="toast"></div>
 
+<!-- ══ DEV TESTING PANEL (remove before final launch) ══ -->
+<button id="dev-trigger" onclick="openDev()" title="Test panel">🔧</button>
+<div id="dev-overlay" onclick="closeDev()"></div>
+<div id="dev-panel">
+  <div class="dev-handle"></div>
+  <div class="dev-header">
+    <div class="dev-title">⚡ Test Mode</div>
+    <button class="dev-close" onclick="closeDev()">✕</button>
+  </div>
+  <div class="dev-section-lbl">Open Station</div>
+  <div class="dev-stations" id="dev-stations"></div>
+  <div class="dev-section-lbl">Language &amp; Age</div>
+  <div class="dev-toggles">
+    <div class="dev-toggle-group">
+      <button class="dev-tog" id="dev-en" onclick="devSetLang('en')">EN</button>
+      <button class="dev-tog" id="dev-is" onclick="devSetLang('is')">IS</button>
+    </div>
+    <div class="dev-toggle-group">
+      <button class="dev-tog" id="dev-cub" onclick="devSetAge('cub')">Cub</button>
+      <button class="dev-tog" id="dev-exp" onclick="devSetAge('explorer')">Explorer</button>
+    </div>
+  </div>
+  <button class="dev-reset" onclick="devReset()">🔄 Reset all state</button>
+  <div class="dev-state" id="dev-state"></div>
+</div>
+
+<script>
+// ── CANVAS AURORA ENGINE ──
+// One offscreen canvas renders the scene. All visible canvases copy from it each frame.
+const AURORA = (function(){
+  const palette = [
+    [38,225,145],[55,210,200],[70,195,240],[108,88,238],
+    [38,200,120],[80,230,178],[45,215,165],[88,190,240]
+  ];
+
+  // Fixed random state — same bands and stars every session
+  function seededRand(seed){ return Math.abs((Math.sin(seed) * 43758.5453) % 1); }
+
+  const bands = Array.from({length:28}, (_,i) => ({
+    xn:   (i/28)*1.08 - 0.04,
+    wn:   seededRand(i*7.3)  * 0.030 + 0.010,
+    topn: seededRand(i*3.1)  * 0.10  + 0.04,
+    botn: seededRand(i*5.7)  * 0.20  + 0.50,
+    col:  palette[i % palette.length],
+    op:   seededRand(i*11.3) * 0.42  + 0.22,
+    ph:   seededRand(i*2.9)  * Math.PI*2,
+    sp:   seededRand(i*4.1)  * 0.007 + 0.003,
+    wph:  seededRand(i*6.7)  * Math.PI*2,
+    wsp:  seededRand(i*8.3)  * 0.005 + 0.002,
+  }));
+
+  const stars = Array.from({length:140}, (_,i) => ({
+    xn:   seededRand(i*1.7),
+    yn:   seededRand(i*2.3) * 0.62,
+    r:    seededRand(i*3.7) * 1.2 + 0.3,
+    base: seededRand(i*4.1) * 0.50 + 0.32,
+    ph:   seededRand(i*5.3) * Math.PI*2,
+    sp:   seededRand(i*6.9) * 0.022 + 0.005,
+  }));
+
+  const mBack = [[0,.60],[.04,.52],[.08,.58],[.12,.49],[.16,.56],[.20,.46],[.24,.54],[.28,.45],[.32,.53],[.36,.44],[.40,.52],[.44,.45],[.48,.53],[.52,.43],[.56,.51],[.60,.44],[.64,.52],[.68,.46],[.72,.54],[.76,.48],[.80,.56],[.84,.50],[.88,.57],[.92,.52],[.96,.59],[1,.62]];
+  const mMid  = [[0,.70],[.04,.60],[.08,.67],[.12,.54],[.16,.62],[.20,.50],[.24,.60],[.28,.47],[.32,.57],[.36,.44],[.40,.54],[.44,.41],[.48,.52],[.52,.39],[.56,.50],[.60,.43],[.64,.52],[.68,.46],[.72,.55],[.76,.49],[.80,.57],[.84,.52],[.88,.60],[.92,.55],[.96,.63],[1,.67]];
+  const mFore = [[0,.80],[.05,.70],[.10,.77],[.15,.64],[.20,.73],[.25,.61],[.30,.71],[.35,.59],[.40,.69],[.45,.57],[.50,.67],[.55,.59],[.60,.69],[.65,.62],[.70,.71],[.75,.64],[.80,.73],[.85,.67],[.90,.75],[.95,.70],[1,.78]];
+
+  const off = document.createElement('canvas');
+  let offCtx, allCvs = [], W = 0, H = 0;
+
+  function drawScene(ctx, cW, cH) {
+    // Sky
+    const sg = ctx.createLinearGradient(0,0,0,cH);
+    sg.addColorStop(0,   '#020508');
+    sg.addColorStop(0.3, '#040c16');
+    sg.addColorStop(0.65,'#061220');
+    sg.addColorStop(1,   '#081828');
+    ctx.fillStyle = sg;
+    ctx.fillRect(0,0,cW,cH);
+
+    // Stars
+    stars.forEach(s => {
+      s.ph += s.sp;
+      const op = s.base * (0.65 + Math.sin(s.ph) * 0.35);
+      ctx.beginPath();
+      ctx.arc(s.xn*cW, s.yn*cH, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${op})`;
+      ctx.fill();
+    });
+
+    // Aurora curtains — screen blend for natural glow
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    bands.forEach(b => {
+      b.ph  += b.sp;
+      b.wph += b.wsp;
+      const wave  = Math.sin(b.ph) * 0.028;
+      const pulse = 0.72 + Math.sin(b.ph*1.4) * 0.28;
+      const xPx   = (b.xn + wave) * cW;
+      const wPx   = b.wn * cW;
+      const yTop  = b.topn * cH;
+      const yBot  = b.botn * cH;
+      const midW  = Math.sin(b.wph) * 5;
+      const [r,g,bl] = b.col;
+      const op = b.op * pulse;
+      const gr = ctx.createLinearGradient(0,yTop,0,yBot);
+      gr.addColorStop(0,    `rgba(${r},${g},${bl},0)`);
+      gr.addColorStop(0.06, `rgba(${r},${g},${bl},${op})`);
+      gr.addColorStop(0.45, `rgba(${r},${g},${bl},${op*0.55})`);
+      gr.addColorStop(0.82, `rgba(${r},${g},${bl},${op*0.15})`);
+      gr.addColorStop(1,    `rgba(${r},${g},${bl},0)`);
+      ctx.beginPath();
+      ctx.moveTo(xPx, yTop);
+      ctx.quadraticCurveTo(xPx+midW, (yTop+yBot)*0.5, xPx, yBot);
+      ctx.lineTo(xPx+wPx, yBot);
+      ctx.quadraticCurveTo(xPx+wPx+midW, (yTop+yBot)*0.5, xPx+wPx, yTop);
+      ctx.closePath();
+      ctx.fillStyle = gr;
+      ctx.fill();
+    });
+    // Wide ambient glow every 4th band
+    bands.forEach((b,i) => {
+      if(i%4!==0) return;
+      const [r,g,bl] = b.col;
+      const xPx = b.xn*cW, wPx = b.wn*cW*4, yTop = b.topn*cH, yBot = b.botn*0.75*cH;
+      const gr = ctx.createLinearGradient(0,yTop,0,yBot);
+      gr.addColorStop(0,  `rgba(${r},${g},${bl},0)`);
+      gr.addColorStop(0.3,`rgba(${r},${g},${bl},0.06)`);
+      gr.addColorStop(1,  `rgba(${r},${g},${bl},0)`);
+      ctx.fillStyle = gr; ctx.fillRect(xPx-wPx/4,yTop,wPx,yBot-yTop);
+    });
+    ctx.restore();
+
+    // Moon
+    const mx=cW*0.78, my=cH*0.18;
+    const mg=ctx.createRadialGradient(mx,my,0,mx,my,68);
+    mg.addColorStop(0,'rgba(200,228,255,0.38)');
+    mg.addColorStop(0.5,'rgba(150,190,240,0.12)');
+    mg.addColorStop(1,'rgba(100,150,220,0)');
+    ctx.fillStyle=mg; ctx.fillRect(mx-68,my-68,136,136);
+    ctx.beginPath(); ctx.arc(mx,my,22,0,Math.PI*2);
+    const mb=ctx.createRadialGradient(mx-4,my-4,1,mx,my,22);
+    mb.addColorStop(0,'#f0f8ff'); mb.addColorStop(0.65,'#cce0f8'); mb.addColorStop(1,'#aac8f0');
+    ctx.fillStyle=mb; ctx.fill();
+
+    // Mountains
+    function mtn(pts,col){
+      ctx.beginPath(); ctx.moveTo(0,cH);
+      pts.forEach(([px,py])=>ctx.lineTo(px*cW,py*cH));
+      ctx.lineTo(cW,cH); ctx.closePath(); ctx.fillStyle=col; ctx.fill();
+    }
+    mtn(mBack,'#0c1d2e'); mtn(mMid,'#071218'); mtn(mFore,'#030809');
+
+    // Snow caps on mid peaks
+    ctx.save(); ctx.globalAlpha=0.18;
+    mMid.forEach(([px,py],i)=>{
+      if(!i||i===mMid.length-1) return;
+      const p=mMid[i-1],n=mMid[i+1];
+      if(py<p[1]&&py<n[1]){
+        ctx.beginPath(); ctx.moveTo(px*cW,py*cH);
+        ctx.lineTo((px-.025)*cW,(py+.035)*cH);
+        ctx.lineTo((px+.025)*cW,(py+.035)*cH);
+        ctx.closePath(); ctx.fillStyle='rgba(200,228,255,0.9)'; ctx.fill();
+      }
+    });
+    ctx.restore();
+  }
+
+  function resize(){
+    W = window.innerWidth || 390;
+    H = window.innerHeight || 780;
+    off.width=W; off.height=H;
+    allCvs = document.querySelectorAll('.aurora-cvs, #cv-age');
+    allCvs.forEach(cv=>{ cv.width=cv.offsetWidth||W; cv.height=cv.offsetHeight||300; });
+  }
+
+  function tick(){
+    drawScene(offCtx, W, H);
+    allCvs.forEach(cv=>{
+      const cc=cv.getContext('2d');
+      const ch=cv.height, cw=cv.width;
+      // Crop top portion of full scene into each canvas (heroes see sky+aurora+mountains)
+      cc.drawImage(off, 0,0,W,ch, 0,0,cw,ch);
+    });
+    requestAnimationFrame(tick);
+  }
+
+  function init(){
+    offCtx = off.getContext('2d');
+    resize();
+    window.addEventListener('resize', resize);
+    tick();
+  }
+
+  return { init };
+})();
+</script>
+
+<!-- ══ DEV TESTING PANEL (remove before final launch) ══ -->
+<button id="dev-trigger" onclick="openDev()" title="Test panel">🔧</button>
+<div id="dev-overlay" onclick="closeDev()"></div>
+<div id="dev-panel">
+  <div class="dev-handle"></div>
+  <div class="dev-header">
+    <div class="dev-title">⚡ Test Mode</div>
+    <button class="dev-close" onclick="closeDev()">✕</button>
+  </div>
+  <div class="dev-section-lbl">Open Station</div>
+  <div class="dev-stations" id="dev-stations"></div>
+  <div class="dev-section-lbl">Language &amp; Age</div>
+  <div class="dev-toggles">
+    <div class="dev-toggle-group">
+      <button class="dev-tog" id="dev-en" onclick="devSetLang('en')">EN</button>
+      <button class="dev-tog" id="dev-is" onclick="devSetLang('is')">IS</button>
+    </div>
+    <div class="dev-toggle-group">
+      <button class="dev-tog" id="dev-cub" onclick="devSetAge('cub')">Cub</button>
+      <button class="dev-tog" id="dev-exp" onclick="devSetAge('explorer')">Explorer</button>
+    </div>
+  </div>
+  <button class="dev-reset" onclick="devReset()">🔄 Reset all state</button>
+  <div class="dev-state" id="dev-state"></div>
+</div>
+
+<script>
+// ── DEV PANEL ──
+function openDev(){
+  renderDevPanel();
+  document.getElementById('dev-overlay').classList.add('open');
+  document.getElementById('dev-panel').classList.add('open');
+}
+function closeDev(){
+  document.getElementById('dev-overlay').classList.remove('open');
+  document.getElementById('dev-panel').classList.remove('open');
+}
+function renderDevPanel(){
+  // Station buttons
+  const grid=document.getElementById('dev-stations'); grid.innerHTML='';
+  for(let i=1;i<=6;i++){
+    const b=document.createElement('button');
+    b.className='dev-st-btn'+(found.includes(i)?' found':'');
+    b.textContent=(found.includes(i)?'✓ ':'')+'S'+i;
+    b.onclick=(()=>{ const id=i; return ()=>{ closeDev(); openStation(id); }; })();
+    grid.appendChild(b);
+  }
+  // Lang toggles
+  document.getElementById('dev-en').className='dev-tog'+(lang==='en'||!lang?' active':'');
+  document.getElementById('dev-is').className='dev-tog'+(lang==='is'?' active':'');
+  // Age toggles
+  document.getElementById('dev-cub').className='dev-tog'+(age==='cub'?' active':'');
+  document.getElementById('dev-exp').className='dev-tog'+(age==='explorer'?' active':'');
+  // State readout
+  document.getElementById('dev-state').textContent=
+    'lang: '+(lang||'null')+'  |  age: '+(age||'null')+'\n'+
+    'found: ['+found.join(',')+']  |  pts: '+points+'\n'+
+    'bonus: '+bonusPaid+'  |  storage: '+storageAvailable;
+}
+function devSetLang(l){
+  lang=l; save(); applyStrings();
+  if(age){ renderHome(); }
+  renderDevPanel();
+}
+function devSetAge(a){
+  age=a; save(); renderHome();
+  renderDevPanel();
+}
+function devReset(){
+  if(!confirm('Reset all game state?')) return;
+  lang=null; age=null; found=[]; points=0; bonusPaid=false; stationAttempts={};
+  save(); closeDev(); show('s-lang');
+}
+</script>
+
 <script>
 // ── IMAGES ──
 const IMG = {
-  wave:   'images/hringur-wave.png',
-  igloo:  'images/hringur-igloo.png',
-  fish:   'images/hringur-fish.png',
-  cheer:  'images/hringur-cheer.png',
-  oops:   'images/hringur-oops.png',
-  reward: 'images/hringur-reward.png',
+  wave:            'images/hringur-wave.png',
+  igloo:           'images/hringur-igloo.png',
+  fish:            'images/hringur-fish.png',
+  cheer:           'images/hringur-cheer.png',
+  oops:            'images/hringur-oops.png',
+  reward:          'images/hringur-reward.png',
+  // New assets (v8) — rename files to match before Cloudflare deploy:
+  reykjavik:       'images/hringur-reykjavik.png',       // Gemini_Generated_Image_uabcq6...
+  wheelchair:      'images/hringur-wheelchair.png',      // Gemini_Generated_Image_rwxjoj...
+  wheelchair_fish: 'images/hringur-wheelchair-fish.png', // Gemini_Generated_Image_hf2rms...
+  igloo_build:     'images/hringur-igloo-build.png',     // Gemini_Generated_Image_thvz5v...
 };
-// Set all bear images on load
+// Set all static bear images on load
 function setImages(){
   function safeImg(id, src){
     const el=document.getElementById(id);
     if(!el) return;
+    el.classList.remove('loaded');
     el.src=src;
+    el.onload=()=>el.classList.add('loaded');
     el.onerror=()=>{ el.style.display='none'; };
   }
   safeImg('img-lang',   IMG.wave);
-  safeImg('home-img',   IMG.wave);
   safeImg('img-igloo',  IMG.igloo);
   safeImg('img-reward', IMG.reward);
+  // home-img set by renderHome() so it can respond to language choice
 }
 
 // ── TRANSLATIONS ──
@@ -660,7 +1090,7 @@ const PTS = { FIRST_TRY: 150, RETRY: 75, CUB: 100, BONUS_ALL: 200 };
 
 // ── STATION DATA ──
 const STATIONS = [
-  {id:1,img_cub:'fish',img_exp:'igloo',
+  {id:1,img_cub:'wheelchair',img_exp:'igloo_build',
    en:{fact_title:'Super Swimmers!',fact_text:"Polar bears are incredible swimmers. They can swim for hours without stopping and have been spotted more than 100km from shore! Their large front paws act like paddles in the water.",
        cub_emoji:'🏊',cub_action:"Stretch your arms out wide and swim like a polar bear! Can you do 10 big arm strokes?",
        cub_bed:"Float your arms slowly like you're gliding through water 🌊",
@@ -678,7 +1108,7 @@ const STATIONS = [
        cub_emoji:'🌞',cub_action:'Statt á sólríkum stað og finndu hlýjuna! Þetta er nákvæmlega það sem svarta húð Hringurs gerir — sogar upp sólina eins og ofurhetja!',
        cub_bed:'Lokaðu augunum og ímyndaðu þér sólina á andlitinu — finndu hlýjuna frá Hringi ☀️',
        quiz_q:'Hvaða lit er húð ísbjarna undir feldinum?',quiz_opts:['Hvít','Bleik','Svört'],quiz_ans:2}},
-  {id:3,img_cub:'wave',img_exp:'fish',
+  {id:3,img_cub:'wheelchair_fish',img_exp:'igloo_build',
    en:{fact_title:'Amazing Nose!',fact_text:"A polar bear's nose is so powerful it can smell a seal hiding under 1 metre of snow from 1 kilometre away. That's like smelling your dinner from the other side of town!",
        cub_emoji:'👃',cub_action:'Sniff the air 5 times like Hringur! What can you smell? Can you find something yummy nearby using just your nose?',
        cub_bed:'Take 3 deep slow sniffs — what can you smell right now? 👃',
@@ -696,7 +1126,7 @@ const STATIONS = [
        cub_emoji:'❄️',cub_action:'Blásðu varlega á handlegginn þinn til að finna eigin líkamshlýja! Feldur Hringurs geymir heitan loft nákvæmlega svona til að halda sér hlýjum í kulda.',
        cub_bed:'Blástu varlega á handarbakið — finnurðu hlýja loftið? 🌬️',
        quiz_q:'Hvað er sérstakt við feld ísbjarna?',quiz_opts:['Hann glóir í myrkri','Sérhver hár er holur','Hann skiptir um lit'],quiz_ans:1}},
-  {id:5,img_cub:'igloo',img_exp:'wave',
+  {id:5,img_cub:'wheelchair',img_exp:'wave',
    en:{fact_title:'Baby Bears!',fact_text:"Baby polar bears are called cubs. They are born in a cosy snow den in winter and are no bigger than a guinea pig when they arrive — then they grow into the world's largest land predator!",
        cub_emoji:'🐣',cub_action:'Curl up into a tiny ball like a newborn polar bear cub! Then slowly stretch out big and tall — you are growing into a mighty explorer!',
        cub_bed:'Curl your fingers into a tiny fist like a newborn cub — then stretch them wide open 🐾',
@@ -779,13 +1209,15 @@ function show(id){
   const nav = document.getElementById('shared-nav');
   if(NAV_SCREENS.includes(id)){
     nav.classList.add('visible');
-    // Set active tab
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
     const map = {'s-home':'nav-home','s-barnaby':'nav-barnaby','s-progress':'nav-progress'};
     if(map[id]) document.getElementById(map[id]).classList.add('on');
   } else {
     nav.classList.remove('visible');
   }
+  // Dev trigger — only visible on home screen
+  const devBtn = document.getElementById('dev-trigger');
+  if(devBtn) devBtn.classList.toggle('visible', id==='s-home');
   // Scroll reset
   try{ document.getElementById(id).querySelector('.scroll-body').scrollTop=0; }catch(e){}
 }
@@ -847,6 +1279,17 @@ function renderHome(){
   document.getElementById('home-eyebrow').textContent = isCub?t.home_eyebrow_cub:t.home_eyebrow_exp;
   const parts=(isCub?t.home_h1_cub:t.home_h1_exp).split('\n');
   document.getElementById('home-h1').innerHTML=parts[0]+'<br><em>'+parts[1]+'</em>';
+  // Hero image: Reykjavik skyline for Icelandic, hospital for English
+  const homeImgEl=document.getElementById('home-img');
+  if(homeImgEl){
+    homeImgEl.style.display='';
+    homeImgEl.classList.remove('loaded');
+    const newSrc=(lang==='is')?IMG.reykjavik:IMG.wave;
+    if(homeImgEl.src!==newSrc){ homeImgEl.src=newSrc; }
+    homeImgEl.onload=()=>homeImgEl.classList.add('loaded');
+    homeImgEl.onerror=()=>{ homeImgEl.style.display='none'; };
+    if(homeImgEl.complete&&homeImgEl.naturalWidth) homeImgEl.classList.add('loaded');
+  }
   document.getElementById('prog-lbl').textContent  = t.prog_lbl;
   document.getElementById('prog-sub').textContent  = found.length===6?t.prog_sub_done:t.prog_sub_go;
   document.getElementById('prog-n').textContent    = found.length;
@@ -928,7 +1371,10 @@ function openStation(id){
 
   // Station image — by design, not coincidence
   const stImg=document.getElementById('st-img');
+  stImg.classList.remove('loaded','cheer-bounce');
+  stImg.style.display='';
   stImg.src=isCub?IMG[st.img_cub]:IMG[st.img_exp];
+  stImg.onload=()=>stImg.classList.add('loaded');
   stImg.onerror=()=>{ stImg.style.display='none'; };
 
   // Badge — text + colour tier (stations 1-2 teal, 3-4 amber, 5-6 coral)
@@ -1003,7 +1449,11 @@ function answerQuiz(chosen, correct){
     document.getElementById('fb-ico').textContent='🎉';
     document.getElementById('fb-txt').textContent=isFirst?t.fb_ok_first:t.fb_ok;
     document.getElementById('feedback').className='feedback show fb-ok';
-    document.getElementById('st-img').src=IMG.cheer;
+    // Swap to cheer bear with bounce
+    const si=document.getElementById('st-img');
+    si.classList.remove('cheer-bounce');
+    si.src=IMG.cheer;
+    si.onload=()=>{ si.classList.add('loaded'); void si.offsetWidth; si.classList.add('cheer-bounce'); };
     markFound(ptsEarned);
     showPointsBadge('+'+ptsEarned, isFirst?t.pts_first:t.pts_retry);
     spawnParticles();
@@ -1015,11 +1465,15 @@ function answerQuiz(chosen, correct){
     document.getElementById('fb-ico').textContent='😅';
     document.getElementById('fb-txt').textContent=t.fb_err;
     document.getElementById('feedback').className='feedback show fb-err';
-    document.getElementById('st-img').src=IMG.oops;
+    const siErr=document.getElementById('st-img');
+    siErr.classList.remove('cheer-bounce'); siErr.src=IMG.oops;
+    siErr.onload=()=>siErr.classList.add('loaded');
     setTimeout(()=>{
-      // Reset by design — use station data, not age assumption
       const st=STATIONS[currentSt-1];
-      document.getElementById('st-img').src=age==='cub'?IMG[st.img_cub]:IMG[st.img_exp];
+      const siReset=document.getElementById('st-img');
+      siReset.classList.remove('loaded','cheer-bounce');
+      siReset.src=age==='cub'?IMG[st.img_cub]:IMG[st.img_exp];
+      siReset.onload=()=>siReset.classList.add('loaded');
       opts.forEach(o=>{ o.disabled=false; o.classList.remove('wrong','correct'); });
       document.getElementById('feedback').className='feedback';
     }, 1800);
@@ -1028,7 +1482,10 @@ function answerQuiz(chosen, correct){
 
 function cubDone(){
   const t=T[lang||'en'];
-  document.getElementById('st-img').src=IMG.cheer;
+  const siCub=document.getElementById('st-img');
+  siCub.classList.remove('cheer-bounce');
+  siCub.src=IMG.cheer;
+  siCub.onload=()=>{ siCub.classList.add('loaded'); void siCub.offsetWidth; siCub.classList.add('cheer-bounce'); };
   document.getElementById('cub-done-btn').style.display='none';
   // Store as cub type so progress screen shows PTS.CUB not PTS.FIRST_TRY
   stationAttempts[currentSt] = { count:1, type:'cub' };
@@ -1122,6 +1579,7 @@ function toast(msg){
 
 // ── INIT ──
 function init(){
+  AURORA.init();
   load();
   setImages();
   makeSnow('sf-home');
