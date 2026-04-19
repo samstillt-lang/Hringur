@@ -304,12 +304,16 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .home-body { padding:24px 20px 20px; }
 
 /* ── STATION ── */
-.back-btn { position:absolute; top:14px; left:14px; z-index:20; width:38px; height:38px; border-radius:12px; background:rgba(255,255,255,0.88); backdrop-filter:blur(8px); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-sm); }
-.back-btn svg { width:20px; height:20px; fill:var(--ice-deep); }
-.station-badge-wrap { position:absolute; top:14px; left:0; right:0; display:flex; justify-content:center; z-index:10; }
-.station-badge { background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); border:2.5px solid var(--teal-mid); border-radius:99px; padding:8px 20px; font-size:13px; font-weight:900; letter-spacing:1px; text-transform:uppercase; color:var(--teal); box-shadow:var(--inner-top), 0 4px 16px rgba(29,158,117,0.25); }
-.station-badge.badge-amber { border-color:var(--amber-mid); color:var(--amber); box-shadow:var(--inner-top), 0 4px 16px rgba(186,117,23,0.25); }
-.station-badge.badge-coral { border-color:var(--coral-mid); color:var(--coral); box-shadow:var(--inner-top), 0 4px 16px rgba(216,90,48,0.25); }
+/* ── STATION HEADER (minimal left-aligned) ── */
+.station-header { position:absolute; top:14px; left:14px; z-index:20; display:flex; align-items:center; gap:10px; }
+.stn-back { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.88); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-sm); flex-shrink:0; }
+.stn-back svg { width:18px; height:18px; fill:var(--ice-deep); }
+.stn-pin { display:flex; flex-direction:column; align-items:center; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.22)); cursor:default; }
+.stn-pin-circle { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; font-family:'Nunito',Arial,sans-serif; font-size:14px; font-weight:900; color:var(--teal); border:2.5px solid var(--teal-mid); }
+.stn-pin-tip { width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:10px solid rgba(255,255,255,0.95); margin-top:-1px; }
+.stn-pin.pin-amber .stn-pin-circle { color:var(--amber); border-color:var(--amber-mid); }
+.stn-pin.pin-amber .stn-pin-tip { border-top-color:rgba(255,255,255,0.95); }
+.stn-pin.pin-coral .stn-pin-circle { color:var(--coral); border-color:var(--coral-mid); }
 .station-body { padding:20px 20px 24px; }
 .found-banner { background:var(--amber-light); border:1px solid rgba(186,117,23,0.2); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:12px; margin-bottom:14px; }
 .found-banner svg { width:20px; height:20px; fill:var(--amber); flex-shrink:0; }
@@ -379,7 +383,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .reward-badge-card { background:linear-gradient(145deg,#fffbe6,#fef0b0); border:3px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:var(--inner-top), 0 6px 0 rgba(186,117,23,0.2), 0 12px 40px rgba(250,199,117,0.3); }
 .reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; filter:drop-shadow(0 4px 8px rgba(186,117,23,0.4)); }
 @keyframes starPop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
-.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:24px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; -webkit-text-stroke:0.8px rgba(11,46,78,0.2); word-break:break-word; overflow-wrap:anywhere; }
+.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:clamp(18px,5vw,24px); font-weight:900; color:var(--ice-deep); margin-bottom:4px; -webkit-text-stroke:0.6px rgba(11,46,78,0.2); }
 .reward-badge-sub   { font-size:14px; font-weight:700; color:var(--amber); }
 .reward-score-card { background:var(--card); border:1.5px solid rgba(55,138,221,0.18); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; box-shadow:var(--inner-top), var(--shadow-md); display:flex; align-items:center; gap:16px; }
 .reward-score-ic { width:52px; height:52px; border-radius:16px; background:linear-gradient(145deg,#fdf0c8,var(--amber-light)); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:var(--inner-top); }
@@ -558,11 +562,14 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
     <canvas class="aurora-cvs" id="cv-station"></canvas>
     <img class="hero-img" id="st-img" src="" alt="Hringur">
     <div class="sf-layer" id="sf-station"></div>
-    <div class="station-badge-wrap">
-      <button class="back-btn" onclick="goHome()" style="position:relative;top:auto;left:auto;">
+    <div class="station-header">
+      <button class="stn-back" onclick="goHome()">
         <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       </button>
-      <div class="station-badge" id="st-badge" style="margin-left:10px;">Station 1</div>
+      <div class="stn-pin" id="st-badge">
+        <div class="stn-pin-circle" id="st-badge-num">1</div>
+        <div class="stn-pin-tip"></div>
+      </div>
     </div>
   </div>
   <div class="scroll-body">
@@ -1381,11 +1388,12 @@ function openStation(id){
   stImg.onload=()=>stImg.classList.add('loaded');
   stImg.onerror=()=>{ stImg.style.display='none'; };
 
-  // Badge — text + colour tier (stations 1-2 teal, 3-4 amber, 5-6 coral)
-  const badgeEl=document.getElementById('st-badge');
-  badgeEl.textContent=(lang==='is'?'Stöð ':'Station ')+id;
-  const badgeTier={1:'',2:'',3:'badge-amber',4:'badge-amber',5:'badge-coral',6:'badge-coral'};
-  badgeEl.className='station-badge '+(badgeTier[id]||'');
+  // Station pin — number + colour tier
+  const pinEl=document.getElementById('st-badge');
+  const pinNum=document.getElementById('st-badge-num');
+  if(pinNum) pinNum.textContent=id;
+  const pinTier={1:'',2:'',3:'pin-amber',4:'pin-amber',5:'pin-coral',6:'pin-coral'};
+  if(pinEl) pinEl.className='stn-pin '+(pinTier[id]||'');
   document.getElementById('found-banner').style.display=alreadyFound?'flex':'none';
   document.getElementById('found-txt').textContent=t.found_txt;
   document.getElementById('fact-lbl-el').textContent=t.fact_lbl;
