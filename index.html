@@ -53,13 +53,13 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 /* ── HERO ── */
 .hero {
-  position:relative; height:360px; overflow:hidden; flex-shrink:0;
+  position:relative; height:240px; overflow:hidden; flex-shrink:0;
   background:#020608;
   mask-image:linear-gradient(180deg,black 68%,transparent 100%);
   -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%);
 }
-.hero.short { height:300px; }
-.hero.tall  { height:420px; }
+.hero.short { height:210px; }
+.hero.tall  { height:380px; }
 /* Canvas aurora sits at z-index 0, image fades in above it */
 .aurora-cvs { position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block; }
 /* hero-img fills the full hero as environment background */
@@ -144,7 +144,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 /* ── LANG SCREEN ── */
 #s-lang { justify-content:flex-end; align-items:stretch; background:var(--ice-deep); }
 .lang-scene-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:0; }
-.lang-title-overlay { position:absolute; top:6%; left:0; right:0; text-align:center; z-index:5; padding:0 28px; pointer-events:none; }
+.lang-title-overlay { position:absolute; top:2%; left:0; right:0; text-align:center; z-index:5; padding:0 28px; pointer-events:none; }
 .lang-logo-h1 { font-family:'Nunito',Arial,sans-serif; font-size:36px; font-weight:900; color:#fff; line-height:1.1; letter-spacing:-0.5px; text-shadow:0 2px 14px rgba(0,0,0,0.5); }
 .lang-logo-h1 span { color:var(--teal-mid); }
 .lang-logo-sub { font-size:12px; font-weight:700; color:rgba(255,255,255,0.88); margin-top:7px; letter-spacing:1.5px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.5); }
@@ -279,22 +279,22 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
   z-index:3; pointer-events:none;
 }
 /* Age screen content sits above scene */
-.age-inner { position:relative; z-index:4; display:flex; flex-direction:column; align-items:center; gap:20px; padding:40px 24px; max-width:380px; width:100%; }
-.age-back { align-self:flex-start; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:800; color:rgba(255,255,255,0.9); cursor:pointer; display:flex; align-items:center; gap:6px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
-.age-back svg { width:16px; height:16px; fill:rgba(255,255,255,0.9); }
-.age-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:#fff; text-align:center; line-height:1.3; text-shadow:0 2px 16px rgba(0,0,0,0.5); -webkit-text-stroke:0.5px rgba(255,255,255,0.15); }
+.age-inner { position:relative; z-index:4; display:flex; flex-direction:column; align-items:center; gap:20px; padding:20px 24px 24px; max-width:380px; width:100%; margin-top:auto; margin-bottom:auto; }
+.age-back { align-self:flex-start; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:800; color:#fff; cursor:pointer; display:flex; align-items:center; gap:6px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+.age-back svg { width:16px; height:16px; fill:#fff; }
+.age-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:#fff; text-align:center; line-height:1.3; text-shadow:0 2px 16px rgba(0,0,0,0.5); }
 .age-cards { display:flex; flex-direction:column; gap:14px; width:100%; }
-.age-card { background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.2); border-radius:var(--r-lg); padding:20px; display:flex; align-items:center; gap:18px; cursor:pointer; box-shadow:var(--inner-top), 0 8px 32px rgba(0,0,0,0.3); transition:all 0.15s cubic-bezier(0.34,1.2,0.64,1); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
-.age-card:active { transform:scale(0.97) translateY(2px); }
-.age-card.cub:hover  { border-color:rgba(216,90,48,0.7); background:rgba(216,90,48,0.18); box-shadow:var(--inner-top), 0 10px 36px rgba(216,90,48,0.3); transform:translateY(-3px); }
-.age-card.expl:hover { border-color:rgba(93,202,165,0.7); background:rgba(29,158,117,0.2);  box-shadow:var(--inner-top), 0 10px 36px rgba(29,158,117,0.3);  transform:translateY(-3px); }
+.age-card { background:white; border:2px solid rgba(11,46,78,0.1); border-radius:var(--r-lg); padding:20px; display:flex; align-items:center; gap:18px; cursor:pointer; box-shadow:var(--inner-top), 0 4px 0 rgba(11,46,78,0.1), 0 8px 24px rgba(0,0,0,0.2); transition:all 0.12s cubic-bezier(0.34,1.2,0.64,1); }
+.age-card:active { transform:translateY(3px); box-shadow:var(--inner-top), 0 1px 0 rgba(11,46,78,0.1), 0 4px 12px rgba(0,0,0,0.15); }
+.age-card.cub:hover  { border-color:var(--coral-mid); }
+.age-card.expl:hover { border-color:var(--teal-mid); }
 .age-emoji-wrap { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
-.age-card.cub  .age-emoji-wrap { background:rgba(216,90,48,0.25); }
-.age-card.expl .age-emoji-wrap { background:rgba(29,158,117,0.25); }
-.age-name { font-family:'Nunito',Arial,sans-serif; font-size:21px; font-weight:900; margin-bottom:2px; text-shadow:0 1px 6px rgba(0,0,0,0.3); }
-.age-card.cub  .age-name { color:#ff9a7a; }
-.age-card.expl .age-name { color:#5DCAA5; }
-.age-range { font-size:13px; font-weight:700; color:rgba(255,255,255,0.7); }
+.age-card.cub  .age-emoji-wrap { background:var(--coral-light); }
+.age-card.expl .age-emoji-wrap { background:var(--teal-light); }
+.age-name { font-family:'Nunito',Arial,sans-serif; font-size:21px; font-weight:900; margin-bottom:2px; }
+.age-card.cub  .age-name { color:var(--coral-mid); }
+.age-card.expl .age-name { color:var(--teal); }
+.age-range { font-size:13px; font-weight:700; color:var(--text-muted); }
 
 /* ── HOME ── */
 .home-title-block { position:absolute; top:38px; left:0; right:0; text-align:center; z-index:10; padding:0 20px; pointer-events:none; }
@@ -379,7 +379,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .reward-badge-card { background:linear-gradient(145deg,#fffbe6,#fef0b0); border:3px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:var(--inner-top), 0 6px 0 rgba(186,117,23,0.2), 0 12px 40px rgba(250,199,117,0.3); }
 .reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; filter:drop-shadow(0 4px 8px rgba(186,117,23,0.4)); }
 @keyframes starPop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
-.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:30px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; -webkit-text-stroke:0.8px rgba(11,46,78,0.2); }
+.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:24px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; -webkit-text-stroke:0.8px rgba(11,46,78,0.2); word-break:break-word; overflow-wrap:anywhere; }
 .reward-badge-sub   { font-size:14px; font-weight:700; color:var(--amber); }
 .reward-score-card { background:var(--card); border:1.5px solid rgba(55,138,221,0.18); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; box-shadow:var(--inner-top), var(--shadow-md); display:flex; align-items:center; gap:16px; }
 .reward-score-ic { width:52px; height:52px; border-radius:16px; background:linear-gradient(145deg,#fdf0c8,var(--amber-light)); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:var(--inner-top); }
@@ -470,8 +470,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
   <div class="lang-panel">
     <div class="lang-panel-handle"></div>
     <div class="lang-btns">
-      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
       <button class="lang-btn" onclick="setLang('is')"><span class="flag">🇮🇸</span> Íslenska</button>
+      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
     </div>
   </div>
 </div>
@@ -651,7 +651,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 <!-- ══ HRINGUR BIO ══ -->
 <div class="screen" id="s-barnaby">
-  <div class="hero" style="height:300px;">
+  <div class="hero" style="height:220px;">
     <canvas class="aurora-cvs" id="cv-bio"></canvas>
     <img class="hero-img" id="img-igloo" src="" alt="Hringur">
     <div class="sf-layer" id="sf-bio"></div>
@@ -994,6 +994,10 @@ const IMG = {
   wheelchair:      'images/hringur-wheelchair.png',      // Gemini_Generated_Image_rwxjoj...
   wheelchair_fish: 'images/hringur-wheelchair-fish.png', // Gemini_Generated_Image_hf2rms...
   igloo_build:     'images/hringur-igloo-build.png',     // Gemini_Generated_Image_thvz5v...
+  // New station-specific assets (v12):
+  swim:            'images/hringur-swim.png',            // Gemini_Generated_Image_t7rw8t...
+  sniff:           'images/hringur-sniff.png',           // Gemini_Generated_Image_s4zf1i...
+  magnify:         'images/hringur-magnify.png',         // Gemini_Generated_Image_849m0z...
 };
 // Set all static bear images on load
 function setImages(){
@@ -1036,16 +1040,16 @@ const T = {
     rwd_perfect:'Perfect explorer! 🌟', rwd_great:'Great explorer! 🎉', rwd_good:'Excellent explorer!',
     rwd_bonus_lbl:'Completion bonus',
     rwd_inst_title:"You're an Arctic Explorer!",
-    rwd_inst_text:'If you see a nurse today, show them your badge for a sticker — or ask a parent to help you find one!',
+    rwd_inst_text:'If you see a nurse today — show them your badge and ask for a high five! 🙌',
     rwd_again:'Play again 🔄',
     nav_home:'Home', nav_bear:'Hringur', nav_prog:'Progress',
     st_done:'Completed ✓', st_todo:'Not found yet',
     prog_screen_title:'Your Journey',
     bio_sub:'Arctic Explorer · Your Guide',
-    bio_l1:'About',      bio_v1:"A brave polar bear who loves exploring the Arctic — and helping young adventurers like you!",
-    bio_l2:'Superpower', bio_v2:'Can smell a fish from 1 kilometre away and swim for hours without stopping!',
-    bio_l3:'Loves',      bio_v3:'Ice fishing, exploring new places, and making new friends on his adventures!',
-    bio_l4:'Mission',    bio_v4:'Help every young explorer discover the secrets of the Arctic — one station at a time!',
+    bio_l1:'About',      bio_v1:'A brave polar bear and guide to young explorers.',
+    bio_l2:'Superpower', bio_v2:'Can smell a fish from 1 kilometre away!',
+    bio_l3:'Loves',      bio_v3:'Ice fishing, exploring and making new friends.',
+    bio_l4:'Mission',    bio_v4:'Help you discover the Arctic — one station at a time!',
     toast_found:'Station unlocked! 🌟',
   },
   is:{
@@ -1071,16 +1075,16 @@ const T = {
     rwd_perfect:'Fullkominn könnuður! 🌟', rwd_great:'Frábær könnuður! 🎉', rwd_good:'Góður könnuður!',
     rwd_bonus_lbl:'Lokaverðlaun',
     rwd_inst_title:'Þú ert Norðurskautskönnuður!',
-    rwd_inst_text:'Ef þú sérð hjúkrunarfræðing í dag — sýndu þeim merki þitt til að fá límmiða! Foreldrar geta líka hjálpað þér að finna einn.',
+    rwd_inst_text:'Ef þú sérð hjúkrunarfræðing í dag — sýndu þeim merki þitt og biðtu um high five! 🙌',
     rwd_again:'Spila aftur 🔄',
     nav_home:'Heim', nav_bear:'Hringur', nav_prog:'Framfarir',
     st_done:'Lokið ✓', st_todo:'Ekki fundið',
     prog_screen_title:'Ferðalag þitt',
     bio_sub:'Norðurskautskönnuður · Leiðsögumaðurinn þinn',
-    bio_l1:'Um',        bio_v1:'Djarfur ísbjörn sem elskar að kanna Norðurskautið — og hjálpa ungum könnuðum eins og þér!',
-    bio_l2:'Kraftur',   bio_v2:'Getur lykt til fisks í 1 kílómetra fjarlægð og synt í klukkutíma án þess að stoppa!',
-    bio_l3:'Elskar',    bio_v3:'Ísfiski, að kanna ný staði og gera nýja vini á ævintýrum sínum!',
-    bio_l4:'Hlutverk',  bio_v4:'Hjálpa hverjum ungum könnuði að uppgötva leyndarmál Norðurskautsins — eina stöð í einu!',
+    bio_l1:'Um',        bio_v1:'Djarfur ísbjörn og leiðsögumaður ungra könnuða.',
+    bio_l2:'Kraftur',   bio_v2:'Getur lykt til fisks í 1 km fjarlægð!',
+    bio_l3:'Elskar',    bio_v3:'Ísfiski, könnun og nýja vini.',
+    bio_l4:'Hlutverk',  bio_v4:'Hjálpa þér að uppgötva Norðurskautið!',
     toast_found:'Stöð opnuð! 🌟',
   }
 };
@@ -1090,7 +1094,7 @@ const PTS = { FIRST_TRY: 150, RETRY: 75, CUB: 100, BONUS_ALL: 200 };
 
 // ── STATION DATA ──
 const STATIONS = [
-  {id:1,img_cub:'wheelchair',img_exp:'igloo_build',
+  {id:1,img_cub:'swim',img_exp:'swim',
    en:{fact_title:'Super Swimmers!',fact_text:"Polar bears are incredible swimmers. They can swim for hours without stopping and have been spotted more than 100km from shore! Their large front paws act like paddles in the water.",
        cub_emoji:'🏊',cub_action:"Stretch your arms out wide and swim like a polar bear! Can you do 10 big arm strokes?",
        cub_bed:"Float your arms slowly like you're gliding through water 🌊",
@@ -1108,7 +1112,7 @@ const STATIONS = [
        cub_emoji:'🌞',cub_action:'Statt á sólríkum stað og finndu hlýjuna! Þetta er nákvæmlega það sem svarta húð Hringurs gerir — sogar upp sólina eins og ofurhetja!',
        cub_bed:'Lokaðu augunum og ímyndaðu þér sólina á andlitinu — finndu hlýjuna frá Hringi ☀️',
        quiz_q:'Hvaða lit er húð ísbjarna undir feldinum?',quiz_opts:['Hvít','Bleik','Svört'],quiz_ans:2}},
-  {id:3,img_cub:'wheelchair_fish',img_exp:'igloo_build',
+  {id:3,img_cub:'sniff',img_exp:'sniff',
    en:{fact_title:'Amazing Nose!',fact_text:"A polar bear's nose is so powerful it can smell a seal hiding under 1 metre of snow from 1 kilometre away. That's like smelling your dinner from the other side of town!",
        cub_emoji:'👃',cub_action:'Sniff the air 5 times like Hringur! What can you smell? Can you find something yummy nearby using just your nose?',
        cub_bed:'Take 3 deep slow sniffs — what can you smell right now? 👃',
@@ -1117,7 +1121,7 @@ const STATIONS = [
        cub_emoji:'👃',cub_action:'Þefaðu í loftið 5 sinnum eins og Hringur! Hvað getur þú lykt? Geturðu fundið eitthvað gott með nefinu þínu?',
        cub_bed:'Taktu 3 djúpa og hæga andardrætti — hvaða lykt finnurðu? 👃',
        quiz_q:'Hversu langt frá getur ísbjörn lykt sér til matar?',quiz_opts:['1 kílómetri','10 metrar','Um herbergið'],quiz_ans:0}},
-  {id:4,img_cub:'fish',img_exp:'igloo',
+  {id:4,img_cub:'magnify',img_exp:'magnify',
    en:{fact_title:'Hollow Hair!',fact_text:"Each strand of a polar bear's fur is hollow and transparent — not actually white! It works like thousands of tiny straws that trap warm air around their body, like a natural wetsuit.",
        cub_emoji:'❄️',cub_action:"Blow gently on your arm to feel your own body warmth! Hringur's fur traps warm air exactly like that to stay cosy in the cold.",
        cub_bed:'Blow gently on the back of your hand — can you feel that warm air? 🌬️',
@@ -1596,7 +1600,8 @@ function init(){
   const validStation = id>=1 && id<=6;
 
   if(!lang){
-    // Truly first-time visitor
+    // Default to Icelandic for first-time visitors
+    lang='is';
     show('s-lang');
     return;
   }
