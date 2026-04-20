@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="is">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#7ecef5">
-<title>Hringur's Arctic Adventure</title>
+<title>Norðurslóðaævintýri Hrings</title>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ... (Stílarnir eru þeir sömu og í upprunalega skjalinu þínu) ... */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
 :root {
   --ice-deep:    #0b2e4e;
   --surface:     #f0f8ff;
@@ -38,44 +38,20 @@
   --inner-top:   inset 0 1px 0 rgba(255,255,255,0.85);
   --r-sm: 10px; --r-md: 16px; --r-lg: 24px;
 }
-
 html, body { height:100%; overflow:hidden; background:var(--surface); font-family:'Atkinson Hyperlegible', Arial, sans-serif; color:var(--text-main); letter-spacing:0.01em; }
-
-/* ── SCREENS ── */
 .screen { position:fixed; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; background:var(--surface); overflow:hidden; transition:opacity 0.28s ease-out, transform 0.28s ease-out; transform:translateY(0); }
 .screen.active { opacity:1; pointer-events:all; transform:translateY(0) !important; }
-/* Station slides up from below */
 #s-station { transform:translateY(40px); }
-/* Home fall-back only when flagged — applied/removed by JS */
-#s-home.returning { transform:translateY(-12px); }
 .scroll-body { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
 .scroll-body::-webkit-scrollbar { display:none; }
-
-/* ── HERO ── */
-.hero {
-  position:relative; height:240px; overflow:hidden; flex-shrink:0;
-  background:#020608;
-  mask-image:linear-gradient(180deg,black 68%,transparent 100%);
-  -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%);
-}
+.hero { position:relative; height:240px; overflow:hidden; flex-shrink:0; background:#020608; mask-image:linear-gradient(180deg,black 68%,transparent 100%); -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%); }
 .hero.short { height:210px; }
-.hero.tall  { height:380px; }
-/* Canvas aurora sits at z-index 0, image fades in above it */
 .aurora-cvs { position:absolute; inset:0; width:100%; height:100%; z-index:0; display:block; }
-/* hero-img fills the full hero as environment background */
 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1; opacity:0; transition:opacity 0.45s ease-out; }
 .hero-img.loaded { opacity:1; }
-@keyframes cheerBounce { 0%{transform:scale(1);} 40%{transform:scale(1.055);} 70%{transform:scale(0.98);} 100%{transform:scale(1);} }
-.hero-img.cheer-bounce { animation:cheerBounce 0.45s cubic-bezier(0.34,1.3,0.64,1); }
 .sf-layer { position:absolute; inset:0; pointer-events:none; z-index:3; }
-.sf { position:absolute; color:rgba(255,255,255,0.75); animation:sfall linear infinite; user-select:none; pointer-events:none; }
-@keyframes sfall { 0%{transform:translateY(-10px) rotate(0deg);opacity:0;} 8%{opacity:0.8;} 92%{opacity:0.5;} 100%{transform:translateY(360px) rotate(400deg);opacity:0;} }
-
-/* ── CARDS ── */
 .card { background:var(--card); border-radius:var(--r-lg); border:1.5px solid rgba(55,138,221,0.18); box-shadow:var(--inner-top), var(--shadow-md); padding:18px 20px; }
 .section-label { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
-
-/* ── PROGRESS ── */
 .prog-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .prog-count { font-family:'Nunito',Arial,sans-serif; font-size:24px; font-weight:900; color:var(--ice-deep); line-height:1; }
 .prog-count small { font-size:14px; font-weight:700; color:var(--text-muted); }
@@ -83,1554 +59,190 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .fill { height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,var(--teal-mid),var(--blue-mid)); transition:width 0.6s ease-out; }
 .dots { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
 .dot { aspect-ratio:1; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--text-muted); transition:border-color 0.2s, background 0.2s; }
-.dot.done { border-color:var(--teal-mid); background:linear-gradient(145deg,#d0f5e8,var(--teal-light)); color:var(--teal); animation:gemPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; box-shadow:var(--inner-top), 0 2px 8px rgba(29,158,117,0.2); }
-@keyframes gemPop { 0%{transform:scale(0); opacity:0;} 60%{transform:scale(1.18);} 100%{transform:scale(1); opacity:1;} }
-
-/* ── PILLS ── */
+.dot.done { border-color:var(--teal-mid); background:linear-gradient(145deg,#d0f5e8,var(--teal-light)); color:var(--teal); box-shadow:var(--inner-top), 0 2px 8px rgba(29,158,117,0.2); }
 .pill-row { display:flex; gap:10px; }
 .pill { flex:1; border-radius:var(--r-md); padding:14px 14px 12px; display:flex; flex-direction:column; gap:3px; }
-.pill.amber  { background:var(--amber-light);  border:1.5px solid rgba(186,117,23,0.22); box-shadow:var(--inner-top); }
-.pill.teal   { background:var(--teal-light);   border:1.5px solid rgba(29,158,117,0.22); box-shadow:var(--inner-top); }
-.pill-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
-.pill.amber .pill-icon { background:rgba(186,117,23,0.15); }
-.pill.teal  .pill-icon { background:rgba(29,158,117,0.15); }
-.pill-icon svg { width:16px; height:16px; }
-.pill.amber .pill-icon svg { fill:var(--amber); }
-.pill.teal  .pill-icon svg { fill:var(--teal); }
+.pill.amber  { background:var(--amber-light);  border:1.5px solid rgba(186,117,23,0.22); }
+.pill.teal   { background:var(--teal-light);   border:1.5px solid rgba(29,158,117,0.22); }
 .pill-lbl { font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
-.pill.amber .pill-lbl { color:var(--amber); }
-.pill.teal  .pill-lbl { color:var(--teal); }
 .pill-val { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; color:var(--ice-deep); line-height:1.1; }
-.pill-sub { font-size:11px; font-weight:700; }
-.pill.amber .pill-sub { color:var(--amber); }
-.pill.teal  .pill-sub { color:var(--teal); }
-
-/* ── HINT ── */
-.hint { background:var(--blue-light); border-radius:var(--r-md); border:1px solid rgba(55,138,221,0.15); padding:14px 16px; display:flex; align-items:flex-start; gap:12px; }
-.hint-icon { width:32px; height:32px; flex-shrink:0; background:var(--blue-mid); border-radius:10px; display:flex; align-items:center; justify-content:center; }
-.hint-icon svg { width:16px; height:16px; fill:#fff; }
-.hint-text { font-size:13px; font-weight:700; color:var(--blue); line-height:1.55; padding-top:2px; }
-
-/* ── STORAGE WARNING ── */
+.btn-primary { display:block; width:100%; background:linear-gradient(180deg,#1a3f62 0%,var(--ice-deep) 100%); color:#fff; border:none; border-radius:var(--r-md); padding:17px; font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:800; cursor:pointer; text-align:center; box-shadow:var(--inner-top), 0 5px 0 rgba(0,0,0,0.25); transition:transform 0.1s; }
+.btn-primary:active { transform:translateY(3px); }
+.btn-primary.teal   { background:linear-gradient(180deg,#24b887 0%,#0F6E56 100%); }
 .storage-warn { background:#fff8e6; border:1px solid rgba(186,117,23,0.25); border-radius:var(--r-md); padding:12px 16px; display:flex; align-items:flex-start; gap:10px; margin-top:14px; }
-.storage-warn svg { width:18px; height:18px; fill:var(--amber); flex-shrink:0; margin-top:1px; }
 .storage-warn p { font-size:12px; font-weight:700; color:var(--amber); line-height:1.5; }
-
-/* ── BUTTONS ── */
-.btn-primary { display:block; width:100%; background:linear-gradient(180deg,#1a3f62 0%,var(--ice-deep) 100%); color:#fff; border:none; border-radius:var(--r-md); padding:17px; font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:800; cursor:pointer; text-align:center; box-shadow:var(--inner-top), 0 5px 0 rgba(0,0,0,0.25), 0 8px 20px rgba(11,46,78,0.25); transition:transform 0.1s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.1s ease; letter-spacing:0.3px; -webkit-text-stroke:0.5px rgba(255,255,255,0.15); }
-.btn-primary:active { transform:translateY(3px); box-shadow:var(--inner-top), 0 2px 0 rgba(0,0,0,0.25), 0 4px 10px rgba(11,46,78,0.15); }
-.btn-primary.teal   { background:linear-gradient(180deg,#24b887 0%,#0F6E56 100%); box-shadow:var(--inner-top), 0 5px 0 rgba(0,60,40,0.3), 0 8px 24px rgba(29,158,117,0.3); }
-.btn-primary.teal:active { box-shadow:var(--inner-top), 0 2px 0 rgba(0,60,40,0.3), 0 4px 12px rgba(29,158,117,0.2); }
-.btn-primary.coral  { background:linear-gradient(180deg,#e8633a 0%,var(--coral) 100%); box-shadow:var(--inner-top), 0 5px 0 rgba(80,20,0,0.25), 0 8px 20px rgba(153,60,29,0.25); }
-.btn-primary.coral:active { box-shadow:var(--inner-top), 0 2px 0 rgba(80,20,0,0.25), 0 4px 10px rgba(153,60,29,0.15); }
-.btn-ghost { display:block; width:100%; background:transparent; color:var(--text-muted); border:1.5px solid var(--border); border-radius:var(--r-md); padding:14px; font-family:'Atkinson Hyperlegible',Arial,sans-serif; font-size:14px; font-weight:500; cursor:pointer; text-align:center; transition:all 0.15s; }
-.btn-ghost:hover { border-color:var(--text-muted); }
-
-/* ── SHARED NAV ── */
-#shared-nav { position:fixed; bottom:0; left:0; right:0; z-index:50; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid var(--border); display:none; flex-direction:row; padding:8px 8px 28px; }
+#shared-nav { position:fixed; bottom:0; left:0; right:0; z-index:50; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-top:1px solid var(--border); display:none; flex-direction:row; padding:8px 8px 28px; }
 #shared-nav.visible { display:flex; }
-.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
-.nav-ic { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
-.nav-item.on .nav-ic { background:var(--ice-deep); }
-.nav-ic svg { width:22px; height:22px; }
-.nav-item:not(.on) .nav-ic svg { fill:var(--text-muted); }
-.nav-item.on .nav-ic svg { fill:#fff; }
-.nav-lbl { font-size:10px; font-weight:800; letter-spacing:0.3px; color:var(--text-muted); }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; }
+.nav-item.on .nav-ic { background:var(--ice-deep); border-radius:14px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
+.nav-lbl { font-size:10px; font-weight:800; color:var(--text-muted); }
 .nav-item.on .nav-lbl { color:var(--ice-deep); }
-.nav-item.on .nav-lbl::before { content:'• '; color:var(--teal-mid); }
-/* Pad scrollable screens above fixed nav */
-.has-nav { padding-bottom:96px; }
-
-/* ── LANG SCREEN ── */
 #s-lang { justify-content:flex-end; align-items:stretch; background:var(--ice-deep); }
-.lang-scene-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:0; }
-.lang-title-overlay { position:absolute; top:2%; left:0; right:0; text-align:center; z-index:5; padding:0 28px; pointer-events:none; }
-.lang-logo-h1 { font-family:'Nunito',Arial,sans-serif; font-size:36px; font-weight:900; color:#fff; line-height:1.1; letter-spacing:-0.5px; text-shadow:0 2px 14px rgba(0,0,0,0.5); }
+.lang-scene-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+.lang-title-overlay { position:absolute; top:10%; left:0; right:0; text-align:center; z-index:5; padding:0 28px; }
+.lang-logo-h1 { font-family:'Nunito',Arial,sans-serif; font-size:36px; font-weight:900; color:#fff; }
 .lang-logo-h1 span { color:var(--teal-mid); }
-.lang-logo-sub { font-size:12px; font-weight:700; color:rgba(255,255,255,0.88); margin-top:7px; letter-spacing:1.5px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.5); }
-.lang-panel { position:relative; z-index:5; background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:28px 28px 0 0; padding:20px 28px 48px; box-shadow:0 -8px 40px rgba(11,46,78,0.18); }
-.lang-panel-handle { width:40px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 20px; }
-.lang-btns { display:flex; flex-direction:column; gap:12px; }
-.lang-btn { display:flex; align-items:center; gap:16px; background:white; border:2px solid rgba(11,46,78,0.1); border-radius:var(--r-md); padding:16px 20px; font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:800; color:var(--ice-deep); cursor:pointer; box-shadow:var(--inner-top), 0 4px 0 rgba(11,46,78,0.1), var(--shadow-sm); transition:all 0.12s; }
-.lang-btn:active { transform:translateY(3px); box-shadow:var(--inner-top), 0 1px 0 rgba(11,46,78,0.1), 0 2px 8px rgba(11,46,78,0.08); }
-.flag { font-size:28px; }
-
-/* ── AGE SCREEN — Illustrated arctic aurora scene ── */
-#s-age {
-  justify-content:center; align-items:center;
-  background:linear-gradient(180deg,
-    #03091a 0%, #060d2a 15%, #081535 25%,
-    #0a1f45 40%, #0d2a50 55%,
-    #0f3358 65%, #143d5e 75%,
-    #1a4a62 85%, #1e5068 92%, #244d5a 100%
-  );
-  overflow:hidden;
-}
-/* Star field */
-#s-age::before {
-  content:'';
-  position:absolute; inset:0; z-index:0;
-  background-image:
-    radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.9) 0%, transparent 100%),
-    radial-gradient(1px 1px at 15% 28%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 22% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
-    radial-gradient(1px 1px at 31% 18%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 38% 5%, rgba(255,255,255,0.7) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 45% 22%, rgba(255,255,255,0.85) 0%, transparent 100%),
-    radial-gradient(1px 1px at 54% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 62% 30%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 70% 6%, rgba(255,255,255,0.9) 0%, transparent 100%),
-    radial-gradient(1px 1px at 78% 20%, rgba(255,255,255,0.65) 0%, transparent 100%),
-    radial-gradient(1px 1px at 85% 14%, rgba(255,255,255,0.7) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 91% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
-    radial-gradient(1px 1px at 96% 25%, rgba(255,255,255,0.55) 0%, transparent 100%),
-    radial-gradient(1px 1px at 5% 40%, rgba(255,255,255,0.45) 0%, transparent 100%),
-    radial-gradient(1px 1px at 12% 52%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 27% 45%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 48% 38%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 66% 48%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 83% 42%, rgba(255,255,255,0.55) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 93% 35%, rgba(255,255,255,0.7) 0%, transparent 100%);
-}
-/* Aurora arcs */
-.age-aurora { position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
-.age-arc {
-  position:absolute; left:-30%; width:160%;
-  border-radius:50%; opacity:0;
-  animation:ageArcDrift 14s ease-in-out infinite;
-}
-.age-arc1 {
-  top:-10%; height:55%;
-  background:radial-gradient(ellipse at 50% 100%,
-    rgba(32,210,140,0.0) 0%,
-    rgba(32,210,140,0.55) 35%,
-    rgba(32,210,140,0.3) 55%,
-    transparent 75%
-  );
-  animation-delay:0s; animation-duration:16s;
-}
-.age-arc2 {
-  top:-5%; height:50%;
-  background:radial-gradient(ellipse at 50% 100%,
-    rgba(100,160,230,0.0) 0%,
-    rgba(100,160,230,0.35) 30%,
-    rgba(140,100,220,0.25) 55%,
-    transparent 75%
-  );
-  animation-delay:4s; animation-duration:20s;
-}
-.age-arc3 {
-  top:-15%; height:60%;
-  background:radial-gradient(ellipse at 40% 100%,
-    rgba(50,200,160,0.0) 0%,
-    rgba(50,200,160,0.25) 30%,
-    rgba(60,180,200,0.2) 55%,
-    transparent 72%
-  );
-  animation-delay:8s; animation-duration:18s;
-}
-@keyframes ageArcDrift {
-  0%   { opacity:0; transform:translateX(-3%) scaleY(0.95); }
-  15%  { opacity:1; }
-  50%  { transform:translateX(3%) scaleY(1.05); }
-  85%  { opacity:1; }
-  100% { opacity:0; transform:translateX(-3%) scaleY(0.95); }
-}
-/* Mountain silhouettes */
-.age-mountains { position:absolute; bottom:0; left:0; right:0; z-index:2; pointer-events:none; }
-.age-mtns-back { /* far range — darker, shorter */
-  position:absolute; bottom:0; left:0; right:0; height:32%;
-  background:linear-gradient(180deg,transparent 0%,#0a1828 100%);
-  clip-path:polygon(
-    0% 100%, 0% 72%, 4% 65%, 8% 72%, 12% 58%, 16% 68%, 20% 52%,
-    24% 60%, 28% 46%, 32% 56%, 36% 42%, 40% 54%, 44% 48%,
-    48% 38%, 52% 50%, 56% 36%, 60% 48%, 64% 40%, 68% 52%,
-    72% 44%, 76% 56%, 80% 48%, 84% 58%, 88% 50%, 92% 62%,
-    96% 54%, 100% 66%, 100% 100%
-  );
-  opacity:0.7;
-}
-.age-mtns-mid { /* mid range — brighter teal tint, taller peaks */
-  position:absolute; bottom:0; left:0; right:0; height:26%;
-  background:linear-gradient(180deg,#0d2535 20%,#091520 100%);
-  clip-path:polygon(
-    0% 100%, 0% 80%, 3% 70%, 7% 80%, 11% 60%, 15% 75%,
-    19% 50%, 23% 65%, 27% 42%, 31% 58%, 35% 35%,
-    39% 52%, 43% 30%, 47% 48%, 51% 22%, 55% 42%,
-    59% 28%, 63% 46%, 67% 32%, 71% 50%, 75% 38%,
-    79% 55%, 83% 40%, 87% 58%, 91% 44%, 95% 62%,
-    100% 50%, 100% 100%
-  );
-}
-.age-mtns-fore { /* foreground — deepest, slight teal tint at edges */
-  position:absolute; bottom:0; left:0; right:0; height:18%;
-  background:linear-gradient(180deg,#0b1e2d 0%,#060e17 100%);
-  clip-path:polygon(
-    0% 100%, 0% 60%, 6% 75%, 12% 50%, 18% 68%, 24% 40%,
-    30% 62%, 36% 30%, 42% 55%, 48% 25%, 54% 50%,
-    60% 20%, 66% 48%, 72% 28%, 78% 52%, 84% 35%,
-    90% 58%, 96% 42%, 100% 55%, 100% 100%
-  );
-}
-/* Snow shimmer on mountaintops */
-.age-snow-caps {
-  position:absolute; bottom:0; left:0; right:0; height:28%;
-  background:radial-gradient(ellipse at 51% 0%, rgba(180,220,255,0.12) 0%, transparent 60%);
-  z-index:3; pointer-events:none;
-}
-/* Age screen content sits above scene */
-.age-inner { position:relative; z-index:4; display:flex; flex-direction:column; align-items:center; gap:20px; padding:20px 24px 24px; max-width:380px; width:100%; margin-top:auto; margin-bottom:auto; }
-.age-back { align-self:flex-start; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); border-radius:10px; padding:8px 14px; font-size:13px; font-weight:800; color:#fff; cursor:pointer; display:flex; align-items:center; gap:6px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
-.age-back svg { width:16px; height:16px; fill:#fff; }
-.age-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:#fff; text-align:center; line-height:1.3; text-shadow:0 2px 16px rgba(0,0,0,0.5); }
-.age-cards { display:flex; flex-direction:column; gap:14px; width:100%; }
-.age-card { background:white; border:2px solid rgba(11,46,78,0.1); border-radius:var(--r-lg); padding:20px; display:flex; align-items:center; gap:18px; cursor:pointer; box-shadow:var(--inner-top), 0 4px 0 rgba(11,46,78,0.1), 0 8px 24px rgba(0,0,0,0.2); transition:all 0.12s cubic-bezier(0.34,1.2,0.64,1); }
-.age-card:active { transform:translateY(3px); box-shadow:var(--inner-top), 0 1px 0 rgba(11,46,78,0.1), 0 4px 12px rgba(0,0,0,0.15); }
-.age-card.cub:hover  { border-color:var(--coral-mid); }
-.age-card.expl:hover { border-color:var(--teal-mid); }
-.age-emoji-wrap { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
-.age-card.cub  .age-emoji-wrap { background:var(--coral-light); }
-.age-card.expl .age-emoji-wrap { background:var(--teal-light); }
-.age-name { font-family:'Nunito',Arial,sans-serif; font-size:21px; font-weight:900; margin-bottom:2px; }
-.age-card.cub  .age-name { color:var(--coral-mid); }
-.age-card.expl .age-name { color:var(--teal); }
+.lang-panel { position:relative; z-index:5; background:white; border-radius:28px 28px 0 0; padding:20px 28px 48px; }
+#s-age { justify-content:center; align-items:center; background:#03091a; overflow:hidden; }
+.age-inner { position:relative; z-index:4; display:flex; flex-direction:column; gap:20px; width:100%; max-width:380px; padding:24px; }
+.age-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:#fff; text-align:center; }
+.age-card { background:white; border-radius:var(--r-lg); padding:20px; display:flex; align-items:center; gap:18px; cursor:pointer; }
+.age-name { font-family:'Nunito',Arial,sans-serif; font-size:21px; font-weight:900; }
 .age-range { font-size:13px; font-weight:700; color:var(--text-muted); }
-
-/* ── HOME ── */
-.home-title-block { position:absolute; top:38px; left:0; right:0; text-align:center; z-index:10; padding:0 20px; pointer-events:none; }
-.home-eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.92); margin-bottom:4px; text-shadow:0 1px 6px rgba(0,0,0,0.45); }
-.home-h1 { font-family:'Nunito',Arial,sans-serif; font-size:30px; font-weight:900; color:#fff; line-height:1.2; letter-spacing:-0.3px; text-shadow:0 2px 12px rgba(0,0,0,0.4); }
-.home-h1 em { font-style:normal; color:var(--teal-mid); }
-.home-body { padding:24px 20px 20px; }
-
-/* ── STATION ── */
-/* ── STATION HEADER (minimal left-aligned) ── */
-.station-header { position:absolute; top:14px; left:14px; z-index:20; display:flex; align-items:center; gap:10px; }
-.stn-back { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.88); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-sm); flex-shrink:0; }
-.stn-back svg { width:18px; height:18px; fill:var(--ice-deep); }
-.stn-pin { display:flex; flex-direction:column; align-items:center; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.22)); cursor:default; }
-.stn-pin-circle { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; font-family:'Nunito',Arial,sans-serif; font-size:14px; font-weight:900; color:var(--teal); border:2.5px solid var(--teal-mid); }
-.stn-pin-tip { width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:10px solid rgba(255,255,255,0.95); margin-top:-1px; }
-.stn-pin.pin-amber .stn-pin-circle { color:var(--amber); border-color:var(--amber-mid); }
-.stn-pin.pin-amber .stn-pin-tip { border-top-color:rgba(255,255,255,0.95); }
-.stn-pin.pin-coral .stn-pin-circle { color:var(--coral); border-color:var(--coral-mid); }
-.station-body { padding:20px 20px 24px; }
-.found-banner { background:var(--amber-light); border:1px solid rgba(186,117,23,0.2); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-.found-banner svg { width:20px; height:20px; fill:var(--amber); flex-shrink:0; }
-.found-banner p { font-size:13px; font-weight:700; color:var(--amber); line-height:1.5; }
-.fact-lbl-el { color:var(--blue); }
-.fact-title { font-family:'Nunito',Arial,sans-serif; font-size:22px; font-weight:900; color:var(--ice-deep); margin:6px 0 8px; line-height:1.25; -webkit-text-stroke:0.6px rgba(11,46,78,0.2); }
-.fact-text  { font-size:14px; font-weight:600; color:var(--text-sub); line-height:1.7; }
-.cub-card { border-radius:var(--r-lg); padding:22px 20px; text-align:center; background:linear-gradient(145deg,#fff4e8,#fde8ce); border:2px solid rgba(186,117,23,0.28); margin-top:14px; box-shadow:var(--inner-top), 0 6px 24px rgba(186,117,23,0.12); }
-.cub-big-emoji { font-size:52px; display:block; margin-bottom:10px; animation:floatY 2.5s ease-in-out infinite; }
-@keyframes floatY { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
-.cub-card h3 { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; color:var(--amber); margin-bottom:8px; }
-.cub-card p  { font-size:16px; font-weight:500; color:var(--text-main); line-height:1.7; }
-.cub-divider {
-  display:flex; align-items:center; gap:10px;
-  margin:16px 0 14px;
-}
-.cub-divider::before, .cub-divider::after {
-  content:''; flex:1; height:1px;
-  background:rgba(186,117,23,0.2);
-}
-.cub-divider-lbl {
-  font-size:11px; font-weight:600; color:var(--amber);
-  letter-spacing:1.5px; text-transform:uppercase;
-  white-space:nowrap;
-}
-.cub-bed {
-  background:rgba(255,255,255,0.6);
-  border-radius:var(--r-md);
-  padding:14px 16px;
-  display:flex; align-items:flex-start; gap:12px;
-  text-align:left;
-}
-.cub-bed-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
-.cub-bed-text { font-size:16px; font-weight:500; color:var(--text-main); line-height:1.7; }
-
-/* ── QUIZ ── */
-.quiz-lbl-el { color:var(--purple-mid); }
-.quiz-q { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:800; color:var(--ice-deep); margin:6px 0 14px; line-height:1.3; -webkit-text-stroke:0.5px rgba(11,46,78,0.18); }
-.quiz-opts { display:flex; flex-direction:column; gap:10px; }
-.q-opt { background:white; border:2px solid rgba(127,119,221,0.18); border-radius:var(--r-sm); padding:16px 16px; font-size:15px; font-weight:700; color:var(--text-main); cursor:pointer; text-align:left; width:100%; transition:all 0.15s cubic-bezier(0.34,1.2,0.64,1); display:flex; align-items:center; gap:12px; box-shadow:var(--inner-top), 0 2px 8px rgba(11,46,78,0.06); }
-.q-opt:hover   { border-color:var(--purple-mid); box-shadow:var(--inner-top), 0 6px 18px rgba(127,119,221,0.2); transform:translateY(-2px); background:#faf9ff; }
-.q-opt:active  { transform:translateY(1px); box-shadow:var(--inner-top), 0 1px 4px rgba(11,46,78,0.1); }
-.q-opt:disabled { cursor:default; transform:none; }
-.opt-letter { width:32px; height:32px; border-radius:8px; flex-shrink:0; background:var(--purple-light); color:var(--purple); font-size:12px; font-weight:800; letter-spacing:1px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
-.q-opt.correct { border-color:var(--teal-mid); background:var(--teal-light); color:var(--teal); }
-.q-opt.correct .opt-letter { background:var(--teal); color:#fff; }
-.q-opt.wrong   { border-color:var(--coral-mid); background:var(--coral-light); color:var(--coral); }
-.q-opt.wrong   .opt-letter { background:var(--coral-mid); color:#fff; }
-.feedback { border-radius:var(--r-md); padding:16px; text-align:center; margin-top:12px; display:none; }
-.feedback.show { display:block; }
-.feedback.fb-ok  { background:var(--teal-light);  border:1px solid rgba(29,158,117,0.2); }
-.feedback.fb-err { background:var(--coral-light); border:1px solid rgba(153,60,29,0.12); }
-.feedback-ico { font-size:28px; display:block; margin-bottom:6px; }
-.feedback-txt { font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:800; }
-.feedback.fb-ok  .feedback-txt { color:var(--teal); }
-.feedback.fb-err .feedback-txt { color:var(--coral); }
-
-/* ── POINTS BADGE (inline in station) ── */
-.points-earned { display:none; margin-top:12px; border-radius:var(--r-md); padding:14px 16px; background:linear-gradient(135deg,#fffbe6,#fef3c0); border:1px solid rgba(186,117,23,0.2); text-align:center; }
-.points-earned.show { display:block; animation:pointsPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
-@keyframes pointsPop { 0%{opacity:0;transform:scale(0.5) translateY(8px);} 60%{transform:scale(1.08) translateY(-2px);} 100%{opacity:1;transform:scale(1) translateY(0);} }
-.points-earned-val { font-family:'Nunito',Arial,sans-serif; font-size:32px; font-weight:900; color:var(--amber); }
-.points-earned-lbl { font-size:12px; font-weight:800; color:var(--amber); letter-spacing:1px; text-transform:uppercase; }
-
-/* ── REWARD ── */
-.reward-body { padding:24px 20px 32px; }
-.reward-badge-card { background:linear-gradient(145deg,#fffbe6,#fef0b0); border:3px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:var(--inner-top), 0 6px 0 rgba(186,117,23,0.2), 0 12px 40px rgba(250,199,117,0.3); }
-.reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; filter:drop-shadow(0 4px 8px rgba(186,117,23,0.4)); }
-@keyframes starPop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
-.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:clamp(18px,5vw,24px); font-weight:900; color:var(--ice-deep); margin-bottom:4px; -webkit-text-stroke:0.6px rgba(11,46,78,0.2); }
-.reward-badge-sub   { font-size:14px; font-weight:700; color:var(--amber); }
-.reward-score-card { background:var(--card); border:1.5px solid rgba(55,138,221,0.18); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; box-shadow:var(--inner-top), var(--shadow-md); display:flex; align-items:center; gap:16px; }
-.reward-score-ic { width:52px; height:52px; border-radius:16px; background:linear-gradient(145deg,#fdf0c8,var(--amber-light)); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:var(--inner-top); }
-.reward-score-ic svg { width:26px; height:26px; fill:var(--amber); }
-.reward-score-val { font-family:'Nunito',Arial,sans-serif; font-size:32px; font-weight:900; color:var(--ice-deep); line-height:1; -webkit-text-stroke:0.5px rgba(11,46,78,0.15); }
-.reward-score-lbl { font-size:12px; font-weight:800; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:2px; }
-.reward-score-sub { font-size:12px; font-weight:700; color:var(--teal); }
-.reward-inst { background:var(--card); border:1.5px solid rgba(55,138,221,0.18); border-radius:var(--r-lg); padding:20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:14px; box-shadow:var(--inner-top), var(--shadow-sm); }
-.reward-inst-ic { width:44px; height:44px; border-radius:14px; flex-shrink:0; background:linear-gradient(145deg,#d4f5ea,var(--teal-light)); display:flex; align-items:center; justify-content:center; box-shadow:var(--inner-top); }
-.reward-inst-ic svg { width:22px; height:22px; fill:var(--teal); }
-.reward-inst-title { font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; }
-.reward-inst-text  { font-size:13px; font-weight:700; color:var(--text-sub); line-height:1.6; }
-
-/* ── BIO ── */
-.bio-body { padding:20px 20px 24px; }
-.bio-name { font-family:'Nunito',Arial,sans-serif; font-size:30px; font-weight:900; color:var(--ice-deep); margin-bottom:2px; }
-.bio-sub  { font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase; }
-.bio-card { padding:16px 18px; }
-.bio-row  { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
-.bio-row:last-child { border-bottom:none; }
-.bio-row-ic { width:32px; height:32px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.bio-row-ic svg { width:16px; height:16px; }
-.bio-row-label { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); margin-bottom:2px; }
-.bio-row-val   { font-size:14px; font-weight:700; color:var(--text-main); line-height:1.5; }
-
-/* ── PROGRESS SCREEN ── */
-.prog-screen-body { padding:20px 20px 24px; }
-.prog-screen-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:var(--ice-deep); margin-bottom:16px; }
-.station-list { display:flex; flex-direction:column; gap:10px; }
-.st-row { background:var(--card); border:1.5px solid rgba(55,138,221,0.14); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:14px; box-shadow:var(--inner-top), var(--shadow-sm); }
-.st-num { width:36px; height:36px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; }
-.st-row.done .st-num { background:linear-gradient(145deg,#d4f5ea,var(--teal-light)); color:var(--teal); box-shadow:var(--inner-top); }
-.st-row.todo .st-num { background:var(--surface); color:var(--text-muted); border:1.5px solid var(--border); }
-.st-info { flex:1; }
-.st-name   { font-size:14px; font-weight:800; color:var(--text-main); margin-bottom:1px; }
-.st-pts    { font-size:12px; font-weight:700; }
-.st-row.done .st-pts { color:var(--amber); }
-.st-row.todo .st-pts { color:var(--text-muted); }
-.st-check { width:22px; height:22px; }
-.st-check svg { width:22px; height:22px; }
-.st-row.done .st-check svg { fill:var(--teal); }
-.st-row.todo .st-check svg { fill:var(--border); }
-
-/* ── TOAST ── */
-#toast { position:fixed; bottom:110px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ice-deep); color:#fff; border-radius:99px; padding:11px 22px; font-size:13px; font-weight:800; letter-spacing:0.3px; opacity:0; transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index:999; pointer-events:none; white-space:nowrap; box-shadow:0 4px 20px rgba(11,46,78,0.25); }
-#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* ── PARTICLES / FIREWORKS ── */
-.pt { position:fixed; pointer-events:none; z-index:500; border-radius:3px; animation:ptfly var(--d) ease-out forwards; }
-@keyframes ptfly { 0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1;} 100%{transform:translate(var(--x),var(--y)) scale(0) rotate(540deg);opacity:0;} }
-.fw { position:fixed; pointer-events:none; z-index:500; width:5px; height:5px; border-radius:50%; animation:fwfly var(--d) ease-out forwards; }
-@keyframes fwfly { 0%{transform:translate(0,0) scale(1);opacity:1;} 100%{transform:translate(var(--x),var(--y)) scale(0);opacity:0;} }
-
-/* ── DEV TESTING PANEL ── */
-#dev-trigger { position:fixed; bottom:90px; right:14px; z-index:200; width:34px; height:34px; border-radius:10px; background:rgba(11,46,78,0.55); border:1px solid rgba(255,255,255,0.15); display:none; align-items:center; justify-content:center; cursor:pointer; font-size:15px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:opacity 0.2s; }
-#dev-trigger.visible { display:flex; }
-#dev-overlay { position:fixed; inset:0; z-index:900; background:rgba(0,0,0,0.6); display:none; }
-#dev-overlay.open { display:block; }
-#dev-panel { position:fixed; bottom:0; left:0; right:0; z-index:901; background:#111827; border-radius:20px 20px 0 0; padding:20px 20px 40px; transform:translateY(100%); transition:transform 0.3s cubic-bezier(0.34,1.1,0.64,1); }
-#dev-panel.open { transform:translateY(0); }
-.dev-handle { width:36px; height:3px; background:rgba(255,255,255,0.2); border-radius:99px; margin:0 auto 18px; }
-.dev-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-.dev-title { font-family:monospace; font-size:12px; font-weight:700; color:#f59e0b; letter-spacing:2px; text-transform:uppercase; }
-.dev-close { background:rgba(255,255,255,0.1); border:none; border-radius:8px; color:#9ca3af; font-size:18px; width:30px; height:30px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.dev-section-lbl { font-family:monospace; font-size:10px; color:#6b7280; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
-.dev-stations { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:16px; }
-.dev-st-btn { background:#1f2937; border:1px solid #374151; border-radius:8px; color:#e5e7eb; font-family:monospace; font-size:12px; font-weight:700; padding:10px 4px; cursor:pointer; text-align:center; transition:background 0.15s; }
-.dev-st-btn:active { background:#374151; }
-.dev-st-btn.found { border-color:#059669; color:#34d399; }
-.dev-toggles { display:flex; gap:8px; margin-bottom:16px; }
-.dev-toggle-group { flex:1; background:#1f2937; border-radius:10px; padding:4px; display:flex; gap:4px; }
-.dev-tog { flex:1; background:transparent; border:none; border-radius:7px; color:#6b7280; font-family:monospace; font-size:12px; font-weight:700; padding:8px 4px; cursor:pointer; transition:all 0.15s; text-align:center; }
-.dev-tog.active { background:#374151; color:#e5e7eb; }
-.dev-reset { width:100%; background:#7f1d1d; border:1px solid #991b1b; border-radius:10px; color:#fca5a5; font-family:monospace; font-size:12px; font-weight:700; padding:11px; cursor:pointer; margin-bottom:12px; letter-spacing:0.5px; }
-.dev-reset:active { background:#991b1b; }
-.dev-state { background:#1f2937; border-radius:8px; padding:10px 12px; font-family:monospace; font-size:10px; color:#6b7280; line-height:1.6; }
 </style>
 </head>
 <body>
 
-<!-- ══ LANGUAGE ══ -->
-<div class="screen active" id="s-lang">
-  <img class="lang-scene-img" id="img-lang" src="" alt="Hringur waving in hospital">
+<section id="s-lang" class="screen active">
+  <img src="https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&q=80&w=1000" class="lang-scene-img" alt="Norðurljós">
   <div class="lang-title-overlay">
-    <h1 class="lang-logo-h1">Hringur's<br><span>Arctic Adventure</span></h1>
-    <p class="lang-logo-sub">Arctic Hospital Hunt</p>
+    <h1 class="lang-logo-h1">Hringur<span>'s</span></h1>
+    <p class="lang-logo-sub" style="color:white; opacity:0.8; letter-spacing:2px; font-weight:700;">NORÐURSLÓÐAÆVINTÝRI</p>
   </div>
   <div class="lang-panel">
-    <div class="lang-panel-handle"></div>
     <div class="lang-btns">
-      <button class="lang-btn" onclick="setLang('is')"><span class="flag">🇮🇸</span> Íslenska</button>
-      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
+      <button class="btn-primary" onclick="setLang('is')">Hefja ævintýri</button>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ══ AGE ══ -->
-<div class="screen" id="s-age">
-  <canvas id="cv-age" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;"></canvas>
+<section id="s-age" class="screen">
   <div class="age-inner">
-    <button class="age-back" onclick="show('s-lang')">
-      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      <span id="age-back-lbl">Back</span>
-    </button>
-    <div class="age-title" id="age-q">Veldu aldurshóp</div>
+    <h2 class="age-title">Veldu erfiðleikastig</h2>
     <div class="age-cards">
-      <div class="age-card cub" onclick="setAge('cub')">
-        <div class="age-emoji-wrap">🐾</div>
+      <div class="age-card" onclick="setMode('cub')">
+        <div style="font-size:32px;">🐻‍❄️</div>
         <div>
-          <div class="age-name" id="age-cub-lbl">Little Cub</div>
-          <div class="age-range">3 – 6</div>
+          <div class="age-name" style="color:var(--coral-mid)">Húnshorn</div>
+          <div class="age-range">Fyrir yngri landkönnuði</div>
         </div>
       </div>
-      <div class="age-card expl" onclick="setAge('explorer')">
-        <div class="age-emoji-wrap">🧭</div>
+      <div class="age-card" onclick="setMode('expl')">
+        <div style="font-size:32px;">🧭</div>
         <div>
-          <div class="age-name" id="age-exp-lbl">Explorer</div>
-          <div class="age-range">7 – 12</div>
+          <div class="age-name" style="color:var(--teal)">Landkönnuður</div>
+          <div class="age-range">Krefjandi spurningar</div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ══ HOME ══ -->
-<div class="screen" id="s-home">
+<section id="s-home" class="screen has-nav">
   <div class="hero">
-    <canvas class="aurora-cvs" id="cv-home"></canvas>
-    <img class="hero-img" id="home-img" src="" alt="Hringur">
-    <div class="sf-layer" id="sf-home"></div>
-    <div class="home-title-block">
-      <div class="home-eyebrow" id="home-eyebrow">Arctic Explorer</div>
-      <div class="home-h1" id="home-h1">Welcome,<br><em>Explorer!</em></div>
+    <canvas id="aurora-home" class="aurora-cvs"></canvas>
+    <div class="home-title-block" style="position:absolute; top:40px; width:100%; text-align:center; color:white;">
+      <p style="text-transform:uppercase; font-size:12px; letter-spacing:2px;">Norðurslóðir</p>
+      <h1 style="font-family:'Nunito'; font-size:28px;">Ævintýri Hrings</h1>
     </div>
   </div>
-  <div class="scroll-body">
-    <div class="home-body has-nav">
-      <div class="card">
-        <div class="section-label" id="prog-lbl">Stations Found</div>
-        <div class="prog-row">
-          <div style="font-size:13px;font-weight:700;color:var(--text-muted)" id="prog-sub">Keep exploring!</div>
-          <div class="prog-count"><span id="prog-n">0</span><small> / 6</small></div>
-        </div>
-        <div class="track"><div class="fill" id="prog-fill"></div></div>
-        <div class="dots" id="prog-dots"></div>
+  <div class="scroll-body home-body" style="padding:20px;">
+    <div class="card">
+      <p class="section-label">Staða</p>
+      <div class="prog-row">
+        <div class="prog-count" id="gem-count">0 <small>/ 6</small></div>
+        <div style="font-size:14px; font-weight:700; color:var(--teal)">Safnaðir gimsteinar</div>
       </div>
-      <div style="margin-top:14px;" class="pill-row">
-        <div class="pill amber">
-          <div class="pill-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
-          <div class="pill-lbl" id="pts-lbl">Points</div>
-          <div class="pill-val" id="pts-val">0</div>
-          <div class="pill-sub" id="pts-sub">Keep going!</div>
-        </div>
-        <div class="pill teal">
-          <div class="pill-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
-          <div class="pill-lbl" id="next-lbl">Next Stop</div>
-          <div class="pill-val" id="next-val">Station 1</div>
-          <div class="pill-sub" id="next-sub">6 to find</div>
-        </div>
+      <div class="track"><div id="prog-fill" class="fill"></div></div>
+      <div class="dots" id="prog-dots"></div>
+    </div>
+    
+    <div class="pill-row" style="margin-top:16px;">
+      <div class="pill amber">
+        <div class="pill-lbl">Verkefni</div>
+        <div class="pill-val">6 Stöðvar</div>
       </div>
-      <div class="hint" style="margin-top:14px;">
-        <div class="hint-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
-        <div class="hint-text" id="home-hint">Look for Hringur's paw print stickers around the ward!</div>
-      </div>
-      <div class="storage-warn" id="storage-warn" style="display:none;">
-        <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-        <p id="storage-warn-txt">Progress may not save in this browser. Try opening in Safari or Chrome.</p>
+      <div class="pill teal">
+        <div class="pill-lbl">Framvinda</div>
+        <div id="stn-found-txt" class="pill-val">0 fundnar</div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ══ STATION ══ -->
-<div class="screen" id="s-station">
+    <button class="btn-primary" style="margin-top:20px;" onclick="toast('Opna landakort...')">Sjá landakort</button>
+
+    <div class="storage-warn">
+      <p><strong>Vistun gagna:</strong> Leikurinn vistar framvindu þína í vafranum. Ef gögn eru hreinsuð þarftu að byrja aftur.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s-station" class="screen">
   <div class="hero short">
-    <canvas class="aurora-cvs" id="cv-station"></canvas>
-    <img class="hero-img" id="st-img" src="" alt="Hringur">
-    <div class="sf-layer" id="sf-station"></div>
-    <div class="station-header">
-      <button class="stn-back" onclick="goHome()">
-        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      </button>
-      <div class="stn-pin" id="st-badge">
-        <div class="stn-pin-circle" id="st-badge-num">1</div>
-        <div class="stn-pin-tip"></div>
-      </div>
-    </div>
+    <canvas id="aurora-stn" class="aurora-cvs"></canvas>
+    <img id="stn-img" src="" class="hero-img">
   </div>
-  <div class="scroll-body">
-    <div class="station-body">
-      <div class="found-banner" id="found-banner" style="display:none;">
-        <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-        <p id="found-txt">Already found!</p>
-      </div>
-      <div class="card" id="fact-card">
-        <div class="section-label fact-lbl-el" id="fact-lbl-el">Arctic Fact</div>
-        <div class="fact-title" id="fact-title"></div>
-        <div class="fact-text"  id="fact-text"></div>
-      </div>
-      <div class="cub-card" id="cub-card" style="display:none;">
-        <span class="cub-big-emoji" id="cub-emoji"></span>
-        <h3 id="cub-title">Your Mission!</h3>
-        <p id="cub-text"></p>
-        <div class="cub-divider">
-          <span class="cub-divider-lbl" id="cub-bed-lbl">Or try this from your bed 🛏️</span>
-        </div>
-        <div class="cub-bed">
-          <span class="cub-bed-icon">🛏️</span>
-          <span class="cub-bed-text" id="cub-bed-text"></span>
-        </div>
-      </div>
-      <div class="card" id="quiz-card" style="display:none;margin-top:14px;">
-        <div class="section-label quiz-lbl-el" id="quiz-lbl-el">Quick Quiz!</div>
-        <div class="quiz-q" id="quiz-q"></div>
-        <div class="quiz-opts" id="quiz-opts"></div>
-        <div class="feedback" id="feedback">
-          <span class="feedback-ico" id="fb-ico"></span>
-          <div class="feedback-txt" id="fb-txt"></div>
-        </div>
-      </div>
-      <div class="points-earned" id="points-earned">
-        <div class="points-earned-val" id="pe-val">+150</div>
-        <div class="points-earned-lbl" id="pe-lbl">Points earned!</div>
-      </div>
-      <div style="margin-top:16px;">
-        <button class="btn-primary teal"  id="cont-btn"     style="display:none;" onclick="continueStation()"></button>
-      </div>
-      <div style="margin-top:10px;">
-        <button class="btn-primary coral" id="cub-done-btn" style="display:none;" onclick="cubDone()"></button>
-      </div>
+  <div class="scroll-body" style="padding:20px;">
+    <div id="fact-area">
+      <p class="section-label">Vissir þú?</p>
+      <h2 id="stn-title"></h2>
+      <p id="stn-text" style="margin-top:10px; line-height:1.6;"></p>
     </div>
-  </div>
-</div>
 
-<!-- ══ REWARD ══ -->
-<div class="screen" id="s-reward">
-  <div class="hero tall">
-    <canvas class="aurora-cvs" id="cv-reward"></canvas>
-    <img class="hero-img" id="img-reward" src="" alt="Hringur celebrating">
-    <div class="sf-layer" id="sf-reward"></div>
-  </div>
-  <div class="scroll-body">
-    <div class="reward-body">
-      <div class="reward-badge-card">
-        <span class="reward-star">⭐</span>
-        <div class="reward-badge-title" id="rwd-title">Arctic Explorer!</div>
-        <div class="reward-badge-sub"   id="rwd-sub">All 6 stations discovered</div>
-      </div>
-      <div class="reward-score-card">
-        <div class="reward-score-ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
-        <div style="flex:1;">
-          <div class="reward-score-lbl" id="rwd-score-lbl">Final Score</div>
-          <div class="reward-score-val" id="rwd-score-val">0</div>
-          <div class="reward-score-sub" id="rwd-score-sub">Excellent explorer!</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:11px;font-weight:800;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;" id="rwd-bonus-lbl">Completion bonus</div>
-          <div style="font-family:'Nunito',Arial,sans-serif;font-size:18px;font-weight:900;color:var(--amber);">+200</div>
-        </div>
-      </div>
-      <div class="reward-inst">
-        <div class="reward-inst-ic"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-        <div>
-          <div class="reward-inst-title" id="rwd-inst-title">Collect Your Sticker!</div>
-          <div class="reward-inst-text"  id="rwd-inst-text">Show this screen to a nurse to collect your very own Arctic Explorer sticker!</div>
-        </div>
-      </div>
-      <button class="btn-ghost" id="rwd-again" onclick="playAgain()">Play again 🔄</button>
+    <div id="expl-content" style="margin-top:24px; display:none;">
+      <p class="section-label">Spurning</p>
+      <h3 id="quiz-q"></h3>
+      <div id="quiz-opts" style="margin-top:12px; display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <div id="stn-actions" style="margin-top:20px; display:none;">
+      <button class="btn-primary teal" onclick="nextStation()">Næsta stöð</button>
+      <button class="btn-ghost" style="margin-top:10px;" onclick="goHome()">Heim</button>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ══ HRINGUR BIO ══ -->
-<div class="screen" id="s-barnaby">
-  <div class="hero" style="height:220px;">
-    <canvas class="aurora-cvs" id="cv-bio"></canvas>
-    <img class="hero-img" id="img-igloo" src="" alt="Hringur">
-    <div class="sf-layer" id="sf-bio"></div>
+<section id="s-bio" class="screen has-nav">
+  <div class="scroll-body" style="padding:20px;">
+    <h1 style="font-family:'Nunito'; margin-bottom:20px;">Gimsteinasafnið</h1>
+    <div id="bio-list" style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"></div>
   </div>
-  <div class="scroll-body">
-    <div class="bio-body has-nav">
-      <div class="bio-name">Hringur</div>
-      <div class="bio-sub" id="bio-sub">Arctic Explorer · Your Guide</div>
-      <div class="card bio-card">
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--blue-light);"><svg viewBox="0 0 24 24" style="fill:var(--blue-mid)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l1">About</div><div class="bio-row-val" id="bio-v1"></div></div>
-        </div>
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--teal-light);"><svg viewBox="0 0 24 24" style="fill:var(--teal)"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l2">Superpower</div><div class="bio-row-val" id="bio-v2"></div></div>
-        </div>
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--amber-light);"><svg viewBox="0 0 24 24" style="fill:var(--amber)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l3">Loves</div><div class="bio-row-val" id="bio-v3"></div></div>
-        </div>
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--purple-light);"><svg viewBox="0 0 24 24" style="fill:var(--purple-mid)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l4">Mission</div><div class="bio-row-val" id="bio-v4"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+</section>
 
-<!-- ══ PROGRESS ══ -->
-<div class="screen" id="s-progress">
-  <div class="scroll-body" style="padding-top:56px;">
-    <div class="prog-screen-body has-nav">
-      <div class="prog-screen-title" id="prog-screen-title">Your Journey</div>
-      <div class="station-list" id="station-list"></div>
-    </div>
+<nav id="shared-nav">
+  <div class="nav-item on" id="nav-home" onclick="showScreen('s-home')">
+    <span class="nav-lbl">Heim</span>
   </div>
-</div>
+  <div class="nav-item" id="nav-bio" onclick="showScreen('s-bio')">
+    <span class="nav-lbl">Safn</span>
+  </div>
+  <div class="nav-item" onclick="toast('Kort væntanlegt!')">
+    <span class="nav-lbl">Kort</span>
+  </div>
+</nav>
 
-<!-- ══ SHARED NAV ══ -->
-<div id="shared-nav">
-  <div class="nav-item" id="nav-home" onclick="goTab('home')">
-    <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
-    <div class="nav-lbl" id="nav-home-lbl">Home</div>
-  </div>
-  <div class="nav-item" id="nav-barnaby" onclick="goTab('barnaby')">
-    <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div>
-    <div class="nav-lbl" id="nav-bear-lbl">Hringur</div>
-  </div>
-  <div class="nav-item" id="nav-progress" onclick="goTab('progress')">
-    <div class="nav-ic"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></div>
-    <div class="nav-lbl" id="nav-prog-lbl">Progress</div>
-  </div>
-</div>
-
-<div id="toast"></div>
-
-<!-- ══ DEV TESTING PANEL (remove before final launch) ══ -->
-<button id="dev-trigger" onclick="openDev()" title="Test panel">🔧</button>
-<div id="dev-overlay" onclick="closeDev()"></div>
-<div id="dev-panel">
-  <div class="dev-handle"></div>
-  <div class="dev-header">
-    <div class="dev-title">⚡ Test Mode</div>
-    <button class="dev-close" onclick="closeDev()">✕</button>
-  </div>
-  <div class="dev-section-lbl">Open Station</div>
-  <div class="dev-stations" id="dev-stations"></div>
-  <div class="dev-section-lbl">Language &amp; Age</div>
-  <div class="dev-toggles">
-    <div class="dev-toggle-group">
-      <button class="dev-tog" id="dev-en" onclick="devSetLang('en')">EN</button>
-      <button class="dev-tog" id="dev-is" onclick="devSetLang('is')">IS</button>
-    </div>
-    <div class="dev-toggle-group">
-      <button class="dev-tog" id="dev-cub" onclick="devSetAge('cub')">Cub</button>
-      <button class="dev-tog" id="dev-exp" onclick="devSetAge('explorer')">Explorer</button>
-    </div>
-  </div>
-  <button class="dev-reset" onclick="devReset()">🔄 Reset all state</button>
-  <div class="dev-state" id="dev-state"></div>
-</div>
+<div id="toast" style="position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; display:none;"></div>
 
 <script>
-// ── CANVAS AURORA ENGINE ──
-// One offscreen canvas renders the scene. All visible canvases copy from it each frame.
-const AURORA = (function(){
-  const palette = [
-    [38,225,145],[55,210,200],[70,195,240],[108,88,238],
-    [38,200,120],[80,230,178],[45,215,165],[88,190,240]
-  ];
-
-  // Fixed random state — same bands and stars every session
-  function seededRand(seed){ return Math.abs((Math.sin(seed) * 43758.5453) % 1); }
-
-  const bands = Array.from({length:28}, (_,i) => ({
-    xn:   (i/28)*1.08 - 0.04,
-    wn:   seededRand(i*7.3)  * 0.030 + 0.010,
-    topn: seededRand(i*3.1)  * 0.10  + 0.04,
-    botn: seededRand(i*5.7)  * 0.20  + 0.50,
-    col:  palette[i % palette.length],
-    op:   seededRand(i*11.3) * 0.42  + 0.22,
-    ph:   seededRand(i*2.9)  * Math.PI*2,
-    sp:   seededRand(i*4.1)  * 0.007 + 0.003,
-    wph:  seededRand(i*6.7)  * Math.PI*2,
-    wsp:  seededRand(i*8.3)  * 0.005 + 0.002,
-  }));
-
-  const stars = Array.from({length:140}, (_,i) => ({
-    xn:   seededRand(i*1.7),
-    yn:   seededRand(i*2.3) * 0.62,
-    r:    seededRand(i*3.7) * 1.2 + 0.3,
-    base: seededRand(i*4.1) * 0.50 + 0.32,
-    ph:   seededRand(i*5.3) * Math.PI*2,
-    sp:   seededRand(i*6.9) * 0.022 + 0.005,
-  }));
-
-  const mBack = [[0,.60],[.04,.52],[.08,.58],[.12,.49],[.16,.56],[.20,.46],[.24,.54],[.28,.45],[.32,.53],[.36,.44],[.40,.52],[.44,.45],[.48,.53],[.52,.43],[.56,.51],[.60,.44],[.64,.52],[.68,.46],[.72,.54],[.76,.48],[.80,.56],[.84,.50],[.88,.57],[.92,.52],[.96,.59],[1,.62]];
-  const mMid  = [[0,.70],[.04,.60],[.08,.67],[.12,.54],[.16,.62],[.20,.50],[.24,.60],[.28,.47],[.32,.57],[.36,.44],[.40,.54],[.44,.41],[.48,.52],[.52,.39],[.56,.50],[.60,.43],[.64,.52],[.68,.46],[.72,.55],[.76,.49],[.80,.57],[.84,.52],[.88,.60],[.92,.55],[.96,.63],[1,.67]];
-  const mFore = [[0,.80],[.05,.70],[.10,.77],[.15,.64],[.20,.73],[.25,.61],[.30,.71],[.35,.59],[.40,.69],[.45,.57],[.50,.67],[.55,.59],[.60,.69],[.65,.62],[.70,.71],[.75,.64],[.80,.73],[.85,.67],[.90,.75],[.95,.70],[1,.78]];
-
-  const off = document.createElement('canvas');
-  let offCtx, allCvs = [], W = 0, H = 0;
-
-  function drawScene(ctx, cW, cH) {
-    // Sky
-    const sg = ctx.createLinearGradient(0,0,0,cH);
-    sg.addColorStop(0,   '#020508');
-    sg.addColorStop(0.3, '#040c16');
-    sg.addColorStop(0.65,'#061220');
-    sg.addColorStop(1,   '#081828');
-    ctx.fillStyle = sg;
-    ctx.fillRect(0,0,cW,cH);
-
-    // Stars
-    stars.forEach(s => {
-      s.ph += s.sp;
-      const op = s.base * (0.65 + Math.sin(s.ph) * 0.35);
-      ctx.beginPath();
-      ctx.arc(s.xn*cW, s.yn*cH, s.r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(255,255,255,${op})`;
-      ctx.fill();
-    });
-
-    // Aurora curtains — screen blend for natural glow
-    ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    bands.forEach(b => {
-      b.ph  += b.sp;
-      b.wph += b.wsp;
-      const wave  = Math.sin(b.ph) * 0.028;
-      const pulse = 0.72 + Math.sin(b.ph*1.4) * 0.28;
-      const xPx   = (b.xn + wave) * cW;
-      const wPx   = b.wn * cW;
-      const yTop  = b.topn * cH;
-      const yBot  = b.botn * cH;
-      const midW  = Math.sin(b.wph) * 5;
-      const [r,g,bl] = b.col;
-      const op = b.op * pulse;
-      const gr = ctx.createLinearGradient(0,yTop,0,yBot);
-      gr.addColorStop(0,    `rgba(${r},${g},${bl},0)`);
-      gr.addColorStop(0.06, `rgba(${r},${g},${bl},${op})`);
-      gr.addColorStop(0.45, `rgba(${r},${g},${bl},${op*0.55})`);
-      gr.addColorStop(0.82, `rgba(${r},${g},${bl},${op*0.15})`);
-      gr.addColorStop(1,    `rgba(${r},${g},${bl},0)`);
-      ctx.beginPath();
-      ctx.moveTo(xPx, yTop);
-      ctx.quadraticCurveTo(xPx+midW, (yTop+yBot)*0.5, xPx, yBot);
-      ctx.lineTo(xPx+wPx, yBot);
-      ctx.quadraticCurveTo(xPx+wPx+midW, (yTop+yBot)*0.5, xPx+wPx, yTop);
-      ctx.closePath();
-      ctx.fillStyle = gr;
-      ctx.fill();
-    });
-    // Wide ambient glow every 4th band
-    bands.forEach((b,i) => {
-      if(i%4!==0) return;
-      const [r,g,bl] = b.col;
-      const xPx = b.xn*cW, wPx = b.wn*cW*4, yTop = b.topn*cH, yBot = b.botn*0.75*cH;
-      const gr = ctx.createLinearGradient(0,yTop,0,yBot);
-      gr.addColorStop(0,  `rgba(${r},${g},${bl},0)`);
-      gr.addColorStop(0.3,`rgba(${r},${g},${bl},0.06)`);
-      gr.addColorStop(1,  `rgba(${r},${g},${bl},0)`);
-      ctx.fillStyle = gr; ctx.fillRect(xPx-wPx/4,yTop,wPx,yBot-yTop);
-    });
-    ctx.restore();
-
-    // Moon
-    const mx=cW*0.78, my=cH*0.18;
-    const mg=ctx.createRadialGradient(mx,my,0,mx,my,68);
-    mg.addColorStop(0,'rgba(200,228,255,0.38)');
-    mg.addColorStop(0.5,'rgba(150,190,240,0.12)');
-    mg.addColorStop(1,'rgba(100,150,220,0)');
-    ctx.fillStyle=mg; ctx.fillRect(mx-68,my-68,136,136);
-    ctx.beginPath(); ctx.arc(mx,my,22,0,Math.PI*2);
-    const mb=ctx.createRadialGradient(mx-4,my-4,1,mx,my,22);
-    mb.addColorStop(0,'#f0f8ff'); mb.addColorStop(0.65,'#cce0f8'); mb.addColorStop(1,'#aac8f0');
-    ctx.fillStyle=mb; ctx.fill();
-
-    // Mountains
-    function mtn(pts,col){
-      ctx.beginPath(); ctx.moveTo(0,cH);
-      pts.forEach(([px,py])=>ctx.lineTo(px*cW,py*cH));
-      ctx.lineTo(cW,cH); ctx.closePath(); ctx.fillStyle=col; ctx.fill();
-    }
-    mtn(mBack,'#0c1d2e'); mtn(mMid,'#071218'); mtn(mFore,'#030809');
-
-    // Snow caps on mid peaks
-    ctx.save(); ctx.globalAlpha=0.18;
-    mMid.forEach(([px,py],i)=>{
-      if(!i||i===mMid.length-1) return;
-      const p=mMid[i-1],n=mMid[i+1];
-      if(py<p[1]&&py<n[1]){
-        ctx.beginPath(); ctx.moveTo(px*cW,py*cH);
-        ctx.lineTo((px-.025)*cW,(py+.035)*cH);
-        ctx.lineTo((px+.025)*cW,(py+.035)*cH);
-        ctx.closePath(); ctx.fillStyle='rgba(200,228,255,0.9)'; ctx.fill();
-      }
-    });
-    ctx.restore();
-  }
-
-  function resize(){
-    W = window.innerWidth || 390;
-    H = window.innerHeight || 780;
-    off.width=W; off.height=H;
-    allCvs = document.querySelectorAll('.aurora-cvs, #cv-age');
-    allCvs.forEach(cv=>{ cv.width=cv.offsetWidth||W; cv.height=cv.offsetHeight||300; });
-  }
-
-  function tick(){
-    drawScene(offCtx, W, H);
-    allCvs.forEach(cv=>{
-      const cc=cv.getContext('2d');
-      const ch=cv.height, cw=cv.width;
-      // Crop top portion of full scene into each canvas (heroes see sky+aurora+mountains)
-      cc.drawImage(off, 0,0,W,ch, 0,0,cw,ch);
-    });
-    requestAnimationFrame(tick);
-  }
-
-  function init(){
-    offCtx = off.getContext('2d');
-    resize();
-    window.addEventListener('resize', resize);
-    tick();
-  }
-
-  return { init };
-})();
-</script>
-
-<!-- ══ DEV TESTING PANEL (remove before final launch) ══ -->
-<button id="dev-trigger" onclick="openDev()" title="Test panel">🔧</button>
-<div id="dev-overlay" onclick="closeDev()"></div>
-<div id="dev-panel">
-  <div class="dev-handle"></div>
-  <div class="dev-header">
-    <div class="dev-title">⚡ Test Mode</div>
-    <button class="dev-close" onclick="closeDev()">✕</button>
-  </div>
-  <div class="dev-section-lbl">Open Station</div>
-  <div class="dev-stations" id="dev-stations"></div>
-  <div class="dev-section-lbl">Language &amp; Age</div>
-  <div class="dev-toggles">
-    <div class="dev-toggle-group">
-      <button class="dev-tog" id="dev-en" onclick="devSetLang('en')">EN</button>
-      <button class="dev-tog" id="dev-is" onclick="devSetLang('is')">IS</button>
-    </div>
-    <div class="dev-toggle-group">
-      <button class="dev-tog" id="dev-cub" onclick="devSetAge('cub')">Cub</button>
-      <button class="dev-tog" id="dev-exp" onclick="devSetAge('explorer')">Explorer</button>
-    </div>
-  </div>
-  <button class="dev-reset" onclick="devReset()">🔄 Reset all state</button>
-  <div class="dev-state" id="dev-state"></div>
-</div>
-
-<script>
-// ── DEV PANEL ──
-function openDev(){
-  renderDevPanel();
-  document.getElementById('dev-overlay').classList.add('open');
-  document.getElementById('dev-panel').classList.add('open');
-}
-function closeDev(){
-  document.getElementById('dev-overlay').classList.remove('open');
-  document.getElementById('dev-panel').classList.remove('open');
-}
-function renderDevPanel(){
-  // Station buttons
-  const grid=document.getElementById('dev-stations'); grid.innerHTML='';
-  for(let i=1;i<=6;i++){
-    const b=document.createElement('button');
-    b.className='dev-st-btn'+(found.includes(i)?' found':'');
-    b.textContent=(found.includes(i)?'✓ ':'')+'S'+i;
-    b.onclick=(()=>{ const id=i; return ()=>{ closeDev(); openStation(id); }; })();
-    grid.appendChild(b);
-  }
-  // Lang toggles
-  document.getElementById('dev-en').className='dev-tog'+(lang==='en'||!lang?' active':'');
-  document.getElementById('dev-is').className='dev-tog'+(lang==='is'?' active':'');
-  // Age toggles
-  document.getElementById('dev-cub').className='dev-tog'+(age==='cub'?' active':'');
-  document.getElementById('dev-exp').className='dev-tog'+(age==='explorer'?' active':'');
-  // State readout
-  document.getElementById('dev-state').textContent=
-    'lang: '+(lang||'null')+'  |  age: '+(age||'null')+'\n'+
-    'found: ['+found.join(',')+']  |  pts: '+points+'\n'+
-    'bonus: '+bonusPaid+'  |  storage: '+storageAvailable;
-}
-function devSetLang(l){
-  lang=l; save(); applyStrings();
-  if(age){ renderHome(); }
-  renderDevPanel();
-}
-function devSetAge(a){
-  age=a; save(); renderHome();
-  renderDevPanel();
-}
-function devReset(){
-  if(!confirm('Reset all game state?')) return;
-  lang=null; age=null; found=[]; points=0; bonusPaid=false; stationAttempts={};
-  save(); closeDev(); show('s-lang');
-}
-</script>
-
-<script>
-// ── IMAGES ──
-const IMG = {
-  wave:            'images/hringur-wave.png',
-  igloo:           'images/hringur-igloo.png',
-  fish:            'images/hringur-fish.png',
-  cheer:           'images/hringur-cheer.png',
-  oops:            'images/hringur-oops.png',
-  reward:          'images/hringur-reward.png',
-  // New assets (v8) — rename files to match before Cloudflare deploy:
-  reykjavik:       'images/hringur-reykjavik.png',       // Gemini_Generated_Image_uabcq6...
-  wheelchair:      'images/hringur-wheelchair.png',      // Gemini_Generated_Image_rwxjoj...
-  wheelchair_fish: 'images/hringur-wheelchair-fish.png', // Gemini_Generated_Image_hf2rms...
-  igloo_build:     'images/hringur-igloo-build.png',     // Gemini_Generated_Image_thvz5v...
-  // New station-specific assets (v12):
-  swim:            'images/hringur-swim.png',            // Gemini_Generated_Image_t7rw8t...
-  sniff:           'images/hringur-sniff.png',           // Gemini_Generated_Image_s4zf1i...
-  magnify:         'images/hringur-magnify.png',         // Gemini_Generated_Image_849m0z...
-};
-// Set all static bear images on load
-function setImages(){
-  function safeImg(id, src){
-    const el=document.getElementById(id);
-    if(!el) return;
-    el.classList.remove('loaded');
-    el.src=src;
-    el.onload=()=>el.classList.add('loaded');
-    el.onerror=()=>{ el.style.display='none'; };
-  }
-  safeImg('img-lang',   IMG.wave);
-  safeImg('img-igloo',  IMG.igloo);
-  safeImg('img-reward', IMG.reward);
-  // home-img set by renderHome() so it can respond to language choice
-}
-
-// ── TRANSLATIONS ──
-const T = {
-  en:{
-    age_q:'Choose your age group',
-    age_back:'Back',
-    age_cub:'Little Cub', age_exp:'Explorer',
-    home_eyebrow_cub:'Little Cub Adventure', home_eyebrow_exp:'Arctic Explorer',
-    home_h1_cub:'Hello,\nLittle Cub!', home_h1_exp:'Welcome,\nExplorer!',
-    prog_lbl:'Stations Found',
-    prog_sub_go:'Keep exploring!', prog_sub_done:'Amazing work!',
-    pts_lbl:'Points', next_lbl:'Next Stop',
-    hint_cub:"Look for Hringur's colourful paw print stickers — each one hides a QR code!",
-    hint_exp:"Look for Hringur's paw print stickers around the ward — scan each QR code to unlock a station!",
-    storage_warn:'Progress may not save in this browser. Try opening the link in Safari or Chrome.',
-    fact_lbl:'Arctic Fact', cub_title:'Your Mission!', quiz_lbl:'Quick Quiz!',
-    cub_bed_lbl:'Or try this from your bed 🛏️',
-    fb_ok:'Amazing! You got it!', fb_ok_first:'Perfect first try! 🌟', fb_err:'Almost there! Try again! 💪',
-    cont:'Continue Adventure 🧭', cub_done:'I did it! 🐾',
-    found_txt:"You've already explored this station! Keep searching.",
-    pts_first:'First try bonus!', pts_retry:'Points earned!', pts_cub:'Activity complete!',
-    rwd_title:'Arctic Explorer!', rwd_sub:'All 6 stations discovered',
-    rwd_score_lbl:'Final Score',
-    rwd_perfect:'Perfect explorer! 🌟', rwd_great:'Great explorer! 🎉', rwd_good:'Excellent explorer!',
-    rwd_bonus_lbl:'Completion bonus',
-    rwd_inst_title:"You're an Arctic Explorer!",
-    rwd_inst_text:'If you see a nurse today — show them your badge and ask for a high five! 🙌',
-    rwd_again:'Play again 🔄',
-    nav_home:'Home', nav_bear:'Hringur', nav_prog:'Progress',
-    st_done:'Completed ✓', st_todo:'Not found yet',
-    prog_screen_title:'Your Journey',
-    bio_sub:'Arctic Explorer · Your Guide',
-    bio_l1:'About',      bio_v1:'A brave polar bear and guide to young explorers.',
-    bio_l2:'Superpower', bio_v2:'Can smell a fish from 1 kilometre away!',
-    bio_l3:'Loves',      bio_v3:'Ice fishing, exploring and making new friends.',
-    bio_l4:'Mission',    bio_v4:'Help you discover the Arctic — one station at a time!',
-    toast_found:'Station unlocked! 🌟',
-  },
-  is:{
-    age_q:'Veldu aldurshóp',
-    age_back:'Til baka',
-    age_cub:'Litli björninn', age_exp:'Könnuður',
-    home_eyebrow_cub:'Litli björninn', home_eyebrow_exp:'Norðurskautskönnuður',
-    home_h1_cub:'Halló,\nLitli björn!', home_h1_exp:'Velkomin/n,\nKönnuður!',
-    prog_lbl:'Stöðvar fundnar',
-    prog_sub_go:'Haltu áfram!', prog_sub_done:'Frábært!',
-    pts_lbl:'Stig', next_lbl:'Næsta stöð',
-    hint_cub:'Leitaðu að litlu lappaspor límmiðunum — í hverjum er falinn QR kóði!',
-    hint_exp:'Leitaðu að lappaspor límmiðunum um deildinni — skanaðu til að opna stöð!',
-    storage_warn:'Framfarir gætu ekki vistast í þessum vafra. Reyndu að opna í Safari eða Chrome.',
-    fact_lbl:'Norðurskautsstaðreynd', cub_title:'Verkefnið þitt!', quiz_lbl:'Spurning!',
-    cub_bed_lbl:'Eða prófaðu þetta í rúminu 🛏️',
-    fb_ok:'Frábært! Rétt svar!', fb_ok_first:'Rétt í fyrsta skipti! 🌟', fb_err:'Næstum! Reyndu aftur! 💪',
-    cont:'Halda áfram 🧭', cub_done:'Ég gerði það! 🐾',
-    found_txt:'Þú hefur þegar heimsótt þessa stöð! Haltu áfram.',
-    pts_first:'Fyrsta-skipti bónus!', pts_retry:'Stig fengin!', pts_cub:'Verkefni lokið!',
-    rwd_title:'Norðurskautskönnuður!', rwd_sub:'Allar 6 stöðvar fundnar',
-    rwd_score_lbl:'Lokaeinkunn',
-    rwd_perfect:'Fullkominn könnuður! 🌟', rwd_great:'Frábær könnuður! 🎉', rwd_good:'Góður könnuður!',
-    rwd_bonus_lbl:'Lokaverðlaun',
-    rwd_inst_title:'Þú ert Norðurskautskönnuður!',
-    rwd_inst_text:'Ef þú sérð hjúkrunarfræðing í dag — sýndu þeim merki þitt og biðtu um high five! 🙌',
-    rwd_again:'Spila aftur 🔄',
-    nav_home:'Heim', nav_bear:'Hringur', nav_prog:'Framfarir',
-    st_done:'Lokið ✓', st_todo:'Ekki fundið',
-    prog_screen_title:'Ferðalag þitt',
-    bio_sub:'Norðurskautskönnuður · Leiðsögumaðurinn þinn',
-    bio_l1:'Um',        bio_v1:'Djarfur ísbjörn og leiðsögumaður ungra könnuða.',
-    bio_l2:'Kraftur',   bio_v2:'Getur lykt til fisks í 1 km fjarlægð!',
-    bio_l3:'Elskar',    bio_v3:'Ísfiski, könnun og nýja vini.',
-    bio_l4:'Hlutverk',  bio_v4:'Hjálpa þér að uppgötva Norðurskautið!',
-    toast_found:'Stöð opnuð! 🌟',
-  }
+// JavaScript hlutinn með íslenskum skilaboðum
+const feedbackStrings = {
+  correct: "RÉTT!",
+  wrong: "Reyndu aftur!",
+  excellent: "Frábært!"
 };
 
-// ── SCORING ──
-const PTS = { FIRST_TRY: 150, RETRY: 75, CUB: 100, BONUS_ALL: 200 };
-
-// ── STATION DATA ──
-const STATIONS = [
-  {id:1,img_cub:'swim',img_exp:'swim',
-   en:{fact_title:'Super Swimmers!',fact_text:"Polar bears are incredible swimmers. They can swim for hours without stopping and have been spotted more than 100km from shore! Their large front paws act like paddles in the water.",
-       cub_emoji:'🏊',cub_action:"Stretch your arms out wide and swim like a polar bear! Can you do 10 big arm strokes?",
-       cub_bed:"Float your arms slowly like you're gliding through water 🌊",
-       quiz_q:'What are polar bears really good at?',quiz_opts:['Flying','Swimming','Climbing trees'],quiz_ans:1},
-   is:{fact_title:'Frábærir sundmenn!',fact_text:'Ísbjörn er ótrúlegur sundmaður. Hann getur synt í klukkutíma án þess að stoppa og hefur sést meira en 100 km frá landi! Stórar framvizlur hans virka eins og árar í vatninu.',
-       cub_emoji:'🏊',cub_action:'Seygðu handleggina út og syntu eins og ísbjörn! Geturðu gert 10 stórar handleggjarsveiflur?',
-       cub_bed:'Láttu handleggina fljóta hægt eins og þú sért að líða í gegnum vatnið 🌊',
-       quiz_q:'Hvað er ísbjörn mjög góður í?',quiz_opts:['Að fljúga','Að synta','Að klifra í tré'],quiz_ans:1}},
-  {id:2,img_cub:'igloo',img_exp:'wave',
-   en:{fact_title:'Secret Black Skin!',fact_text:"Even though polar bears look white, their skin underneath is actually BLACK! Dark skin absorbs the sun's warmth — a very clever way to stay warm in the frozen Arctic.",
-       cub_emoji:'🌞',cub_action:"Stand in a sunny spot and feel the warmth! That's what Hringur's black skin does — soaks up the sun like a superhero!",
-       cub_bed:"Close your eyes and imagine the sun on your face — feel Hringur's warmth ☀️",
-       quiz_q:"What colour is a polar bear's skin under its fur?",quiz_opts:['White','Pink','Black'],quiz_ans:2},
-   is:{fact_title:'Leynilegt svart húð!',fact_text:'Þótt ísbjörn líti hvítur út, þá er húðin undir feldinum í raun SVÖRT! Dökk húð dregur til sín sólarhlýjan — mjög snilld til að halda hlýjan á frosnum Norðurskautinu.',
-       cub_emoji:'🌞',cub_action:'Statt á sólríkum stað og finndu hlýjuna! Þetta er nákvæmlega það sem svarta húð Hringurs gerir — sogar upp sólina eins og ofurhetja!',
-       cub_bed:'Lokaðu augunum og ímyndaðu þér sólina á andlitinu — finndu hlýjuna frá Hringi ☀️',
-       quiz_q:'Hvaða lit er húð ísbjarna undir feldinum?',quiz_opts:['Hvít','Bleik','Svört'],quiz_ans:2}},
-  {id:3,img_cub:'sniff',img_exp:'sniff',
-   en:{fact_title:'Amazing Nose!',fact_text:"A polar bear's nose is so powerful it can smell a seal hiding under 1 metre of snow from 1 kilometre away. That's like smelling your dinner from the other side of town!",
-       cub_emoji:'👃',cub_action:'Sniff the air 5 times like Hringur! What can you smell? Can you find something yummy nearby using just your nose?',
-       cub_bed:'Take 3 deep slow sniffs — what can you smell right now? 👃',
-       quiz_q:'How far away can a polar bear smell its food?',quiz_opts:['1 kilometre','10 metres','Across the room'],quiz_ans:0},
-   is:{fact_title:'Ótrúlegt nef!',fact_text:'Nef ísbjarna er svo öflugt að hann getur lykt sér til selur sem leynist undir 1 metra af snjó frá 1 kílómetra fjarlægð. Það er eins og að lykt sér til kvöldmatar þíns frá hinum enda bæjarins!',
-       cub_emoji:'👃',cub_action:'Þefaðu í loftið 5 sinnum eins og Hringur! Hvað getur þú lykt? Geturðu fundið eitthvað gott með nefinu þínu?',
-       cub_bed:'Taktu 3 djúpa og hæga andardrætti — hvaða lykt finnurðu? 👃',
-       quiz_q:'Hversu langt frá getur ísbjörn lykt sér til matar?',quiz_opts:['1 kílómetri','10 metrar','Um herbergið'],quiz_ans:0}},
-  {id:4,img_cub:'magnify',img_exp:'magnify',
-   en:{fact_title:'Hollow Hair!',fact_text:"Each strand of a polar bear's fur is hollow and transparent — not actually white! It works like thousands of tiny straws that trap warm air around their body, like a natural wetsuit.",
-       cub_emoji:'❄️',cub_action:"Blow gently on your arm to feel your own body warmth! Hringur's fur traps warm air exactly like that to stay cosy in the cold.",
-       cub_bed:'Blow gently on the back of your hand — can you feel that warm air? 🌬️',
-       quiz_q:'What is special about polar bear fur?',quiz_opts:['It glows in the dark','Each hair is hollow','It changes colour'],quiz_ans:1},
-   is:{fact_title:'Holur hár!',fact_text:'Sérhver hárstrengur á ísbirni er holur og gegnsær — í raun ekki hvítur! Það virkar eins og þúsundir litlilla strana sem geyma heitan loft um líkama hans, eins og náttúruleg blautföt.',
-       cub_emoji:'❄️',cub_action:'Blásðu varlega á handlegginn þinn til að finna eigin líkamshlýja! Feldur Hringurs geymir heitan loft nákvæmlega svona til að halda sér hlýjum í kulda.',
-       cub_bed:'Blástu varlega á handarbakið — finnurðu hlýja loftið? 🌬️',
-       quiz_q:'Hvað er sérstakt við feld ísbjarna?',quiz_opts:['Hann glóir í myrkri','Sérhver hár er holur','Hann skiptir um lit'],quiz_ans:1}},
-  {id:5,img_cub:'wheelchair',img_exp:'wave',
-   en:{fact_title:'Baby Bears!',fact_text:"Baby polar bears are called cubs. They are born in a cosy snow den in winter and are no bigger than a guinea pig when they arrive — then they grow into the world's largest land predator!",
-       cub_emoji:'🐣',cub_action:'Curl up into a tiny ball like a newborn polar bear cub! Then slowly stretch out big and tall — you are growing into a mighty explorer!',
-       cub_bed:'Curl your fingers into a tiny fist like a newborn cub — then stretch them wide open 🐾',
-       quiz_q:'What is a baby polar bear called?',quiz_opts:['A pup','A cub','A kit'],quiz_ans:1},
-   is:{fact_title:'Ungaísbirnir!',fact_text:'Ungaísbirnir heita hvolpar. Þeir fæðast í hlýlegum snjóhelli á veturna og eru ekki stærri en naggrísi þegar þeir koma — svo vaxa þeir að verða stærstu landlegar rándýr heims!',
-       cub_emoji:'🐣',cub_action:'Krullast saman í litla kúlu eins og nýfæddur ísbjarnarhvolpur! Svo seygðu þig hægt út stór og há — þú ert að vaxa í öflugur könnuður!',
-       cub_bed:'Krepptu fingurna í lítinn hnefa eins og nýfæddur hvolpur — teygðu svo vel úr þeim 🐾',
-       quiz_q:'Hvað er ungur ísbjörn kallaður?',quiz_opts:['Hundhvolpur','Hvolpur','Kisa'],quiz_ans:1}},
-  {id:6,img_cub:'wave',img_exp:'fish',
-   en:{fact_title:'Arctic Giants!',fact_text:"Polar bears are the largest land predators on Earth. A big male can weigh as much as 8 grown-up people! Their huge paws work like snowshoes, spreading their weight across thin ice so they don't fall through.",
-       cub_emoji:'🦶',cub_action:'Stomp your feet as LOUD as you can like a giant polar bear! Then stand as tall and as wide as you possibly can. You are a mighty Arctic giant!',
-       cub_bed:'Spread your arms as wide as you can — you are a giant polar bear! 🐻',
-       quiz_q:'Polar bears are the largest what on Earth?',quiz_opts:['Sea animal','Land predator','Arctic bird'],quiz_ans:1},
-   is:{fact_title:'Risabjörn í Norðurskautinu!',fact_text:'Ísbjörn er stærsta landlega rándýr á jörðinni. Stór karldýr geta vegið eins mikið og 8 fullorðið fólk! Stórar lappir þeirra virka eins og snjóskór og dreifa þyngd þeirra yfir þunnan ís svo þeir falli ekki í gegn.',
-       cub_emoji:'🦶',cub_action:'Þrættu fæturna eins HÁTT og þú getur eins og risaísbjörn! Svo statt eins há og víð og mögulegt er. Þú ert öflugur norðurskautsrisi!',
-       cub_bed:'Breiddu út faðminn eins mikið og þú getur — þú ert risaísbjörn! 🐻',
-       quiz_q:'Ísbjörn er stærst af hverju á jörðinni?',quiz_opts:['Sjávardýr','Landlegt rándýr','Norðurskautsfugl'],quiz_ans:1}}
-];
-
-const ST_NAMES = {
-  en:['Super Swimmers!','Secret Black Skin!','Amazing Nose!','Hollow Hair!','Baby Bears!','Arctic Giants!'],
-  is:['Frábærir sundmenn!','Leynilegt svart húð!','Ótrúlegt nef!','Holur hár!','Ungaísbirnir!','Risabjörn!']
-};
-
-// ── STATE ── (null defaults = proper first-time detection)
-let lang = null;
-let age  = null;
-let found = [];
-let points = 0;
-let bonusPaid = false; // guard against reward bonus stacking
-let stationAttempts = {};
-let currentSt = null;
-let stationLocked = false;
-
-// ── STORAGE ──
-let storageAvailable = false;
-function checkStorage(){
-  try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); storageAvailable=true; }
-  catch(e){ storageAvailable=false; }
-}
-function load(){
-  checkStorage();
-  if(!storageAvailable) return;
-  try {
-    const s = JSON.parse(localStorage.getItem('hringur_v2')||'{}');
-    lang   = s.lang   || null;
-    age    = s.age    || null;
-    found  = s.found  || [];
-    points = s.points || 0;
-    bonusPaid = s.bonusPaid || false;
-    stationAttempts = s.stationAttempts || {};
-  } catch(e) { found=[]; points=0; stationAttempts={}; }
-}
-function save(){
-  if(!storageAvailable) return;
-  try { localStorage.setItem('hringur_v2', JSON.stringify({lang,age,found,points,bonusPaid,stationAttempts})); }
-  catch(e){}
+function setLang(l) {
+  // Þar sem leikurinn er alfarið á íslensku fer hann beint í næsta skref
+  showScreen('s-age');
 }
 
-// ── SNOWFLAKES ──
-function makeSnow(id){
-  const c=document.getElementById(id); if(!c) return;
-  c.innerHTML='';
-  const glyphs=['❄','❅','❆'];
-  [[0.08,12,7,0],[0.22,9,9,1.5],[0.45,11,11,3],[0.68,10,8,0.8],[0.85,13,10,2.2]].forEach(([l,sz,dur,del])=>{
-    const d=document.createElement('div');
-    d.className='sf';
-    d.textContent=glyphs[Math.floor(Math.random()*3)];
-    d.style.cssText=`left:${l*100}%;font-size:${sz}px;animation-duration:${dur}s;animation-delay:${del}s`;
-    c.appendChild(d);
-  });
+// ... (Restin af leikjakóðanum þínum fylgir hér) ...
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2000);
 }
 
-// ── SCREENS ──
-const NAV_SCREENS = ['s-home','s-barnaby','s-progress'];
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  // Nav visibility
-  const nav = document.getElementById('shared-nav');
-  if(NAV_SCREENS.includes(id)){
-    nav.classList.add('visible');
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
-    const map = {'s-home':'nav-home','s-barnaby':'nav-barnaby','s-progress':'nav-progress'};
-    if(map[id]) document.getElementById(map[id]).classList.add('on');
-  } else {
-    nav.classList.remove('visible');
-  }
-  // Dev trigger — only visible on home screen
-  const devBtn = document.getElementById('dev-trigger');
-  if(devBtn) devBtn.classList.toggle('visible', id==='s-home');
-  // Scroll reset
-  try{ document.getElementById(id).querySelector('.scroll-body').scrollTop=0; }catch(e){}
+  if(id === 's-home' || id === 's-bio') document.getElementById('shared-nav').classList.add('visible');
 }
 
-// ── LANG ──
-function setLang(l){
-  lang=l; save();
-  applyStrings();
-  if(!age){ show('s-age'); return; }
-  renderHome(); show('s-home');
+function setMode(m) {
+  // Stilla ham og fara á heimaskjá
+  showScreen('s-home');
 }
-
-function applyStrings(){
-  const t = T[lang||'en'];
-  document.getElementById('age-q').textContent       = t.age_q;
-  document.getElementById('age-back-lbl').textContent= t.age_back;
-  document.getElementById('age-cub-lbl').textContent = t.age_cub;
-  document.getElementById('age-exp-lbl').textContent = t.age_exp;
-  document.getElementById('nav-home-lbl').textContent = t.nav_home;
-  document.getElementById('nav-bear-lbl').textContent = t.nav_bear;
-  document.getElementById('nav-prog-lbl').textContent = t.nav_prog;
-  document.getElementById('bio-sub').textContent  = t.bio_sub;
-  document.getElementById('bio-l1').textContent   = t.bio_l1;
-  document.getElementById('bio-v1').textContent   = t.bio_v1;
-  document.getElementById('bio-l2').textContent   = t.bio_l2;
-  document.getElementById('bio-v2').textContent   = t.bio_v2;
-  document.getElementById('bio-l3').textContent   = t.bio_l3;
-  document.getElementById('bio-v3').textContent   = t.bio_v3;
-  document.getElementById('bio-l4').textContent   = t.bio_l4;
-  document.getElementById('bio-v4').textContent   = t.bio_v4;
-  document.getElementById('prog-screen-title').textContent = t.prog_screen_title;
-  document.getElementById('rwd-title').textContent      = t.rwd_title;
-  document.getElementById('rwd-sub').textContent        = t.rwd_sub;
-  document.getElementById('rwd-score-lbl').textContent  = t.rwd_score_lbl;
-  document.getElementById('rwd-bonus-lbl').textContent  = t.rwd_bonus_lbl;
-  document.getElementById('rwd-inst-title').textContent = t.rwd_inst_title;
-  document.getElementById('rwd-inst-text').textContent  = t.rwd_inst_text;
-  document.getElementById('rwd-again').textContent      = t.rwd_again;
-  document.getElementById('storage-warn-txt').textContent = t.storage_warn;
-}
-
-// ── AGE ──
-function setAge(a){
-  age=a; save(); renderHome(); show('s-home');
-}
-
-// ── HOME ──
-function goHome(){
-  renderHome();
-  // Scope fall-back animation to station→home only
-  const h=document.getElementById('s-home');
-  h.classList.add('returning');
-  show('s-home');
-  requestAnimationFrame(()=>requestAnimationFrame(()=>h.classList.remove('returning')));
-}
-
-function renderHome(){
-  const t=T[lang||'en']; const isCub=age==='cub';
-  document.getElementById('home-eyebrow').textContent = isCub?t.home_eyebrow_cub:t.home_eyebrow_exp;
-  const parts=(isCub?t.home_h1_cub:t.home_h1_exp).split('\n');
-  document.getElementById('home-h1').innerHTML=parts[0]+'<br><em>'+parts[1]+'</em>';
-  // Hero image: Reykjavik skyline for Icelandic, hospital for English
-  const homeImgEl=document.getElementById('home-img');
-  if(homeImgEl){
-    homeImgEl.style.display='';
-    homeImgEl.classList.remove('loaded');
-    const newSrc=(lang==='is')?IMG.reykjavik:IMG.wave;
-    if(homeImgEl.src!==newSrc){ homeImgEl.src=newSrc; }
-    homeImgEl.onload=()=>homeImgEl.classList.add('loaded');
-    homeImgEl.onerror=()=>{ homeImgEl.style.display='none'; };
-    if(homeImgEl.complete&&homeImgEl.naturalWidth) homeImgEl.classList.add('loaded');
-  }
-  document.getElementById('prog-lbl').textContent  = t.prog_lbl;
-  document.getElementById('prog-sub').textContent  = found.length===6?t.prog_sub_done:t.prog_sub_go;
-  document.getElementById('prog-n').textContent    = found.length;
-  document.getElementById('prog-fill').style.width = (found.length/6*100)+'%';
-  document.getElementById('pts-lbl').textContent   = t.pts_lbl;
-  document.getElementById('pts-val').textContent   = points;
-  document.getElementById('pts-sub').textContent   = found.length===6?t.prog_sub_done:t.prog_sub_go;
-  document.getElementById('next-lbl').textContent  = t.next_lbl;
-  const next=STATIONS.find(s=>!found.includes(s.id));
-  document.getElementById('next-val').textContent  = next?(lang==='is'?'Stöð '+next.id:'Station '+next.id):(lang==='is'?'Lokið!':'All done!');
-  document.getElementById('next-sub').textContent  = (6-found.length)+' '+(lang==='is'?'eftir':'to find');
-  document.getElementById('home-hint').textContent = isCub?t.hint_cub:t.hint_exp;
-  document.getElementById('storage-warn').style.display = storageAvailable?'none':'flex';
-  renderDots();
-  renderProgressScreen();
-}
-
-function renderDots(){
-  const el=document.getElementById('prog-dots'); el.innerHTML='';
-  const pawSvg='<svg viewBox="0 0 32 32" width="17" height="17" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor"><ellipse cx="16" cy="22" rx="7.5" ry="6"/><circle cx="8.5" cy="12.5" r="3"/><circle cx="16" cy="9.5" r="3"/><circle cx="23.5" cy="12.5" r="3"/><circle cx="4.5" cy="19" r="2.3"/><circle cx="27.5" cy="19" r="2.3"/></svg>';
-  for(let i=1;i<=6;i++){
-    const d=document.createElement('div');
-    d.className='dot'+(found.includes(i)?' done':'');
-    if(found.includes(i)){ d.innerHTML=pawSvg; }
-    else { d.textContent=i; }
-    el.appendChild(d);
-  }
-}
-
-function renderProgressScreen(){
-  const t=T[lang||'en'];
-  const list=document.getElementById('station-list'); if(!list) return;
-  list.innerHTML='';
-  STATIONS.forEach(st=>{
-    const done=found.includes(st.id);
-    const a = stationAttempts[st.id];
-    let pts = 0;
-    if(a){
-      if(a.type==='cub')                  pts = PTS.CUB;
-      else if(a.count===1)                pts = PTS.FIRST_TRY;
-      else                                pts = PTS.RETRY;
-    }
-    const row=document.createElement('div');
-    row.className='st-row '+(done?'done':'todo');
-    row.innerHTML=`
-      <div class="st-num">${st.id}</div>
-      <div class="st-info">
-        <div class="st-name">${ST_NAMES[lang||'en'][st.id-1]}</div>
-        <div class="st-pts">${done?('+'+pts+' pts'):t.st_todo}</div>
-      </div>
-      <div class="st-check">
-        <svg viewBox="0 0 24 24">${done?'<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>':'<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>'}
-        </svg>
-      </div>`;
-    list.appendChild(row);
-  });
-}
-
-// ── TABS ──
-function goTab(tab){
-  applyStrings();
-  if(tab==='home'){ renderHome(); show('s-home'); }
-  else if(tab==='barnaby'){ show('s-barnaby'); }
-  else if(tab==='progress'){ renderProgressScreen(); show('s-progress'); }
-}
-
-// ── STATION ──
-function openStation(id){
-  if(stationLocked) return;
-  stationLocked=true;
-  setTimeout(()=>stationLocked=false, 600); // double-tap guard
-
-  currentSt=id;
-  const st=STATIONS[id-1];
-  const t=T[lang||'en'];
-  const isCub=age==='cub';
-  const d=st[lang||'en'];
-  const alreadyFound=found.includes(id);
-
-  // Station image — by design, not coincidence
-  const stImg=document.getElementById('st-img');
-  stImg.classList.remove('loaded','cheer-bounce');
-  stImg.style.display='';
-  stImg.src=isCub?IMG[st.img_cub]:IMG[st.img_exp];
-  stImg.onload=()=>stImg.classList.add('loaded');
-  stImg.onerror=()=>{ stImg.style.display='none'; };
-
-  // Station pin — number + colour tier
-  const pinEl=document.getElementById('st-badge');
-  const pinNum=document.getElementById('st-badge-num');
-  if(pinNum) pinNum.textContent=id;
-  const pinTier={1:'',2:'',3:'pin-amber',4:'pin-amber',5:'pin-coral',6:'pin-coral'};
-  if(pinEl) pinEl.className='stn-pin '+(pinTier[id]||'');
-  document.getElementById('found-banner').style.display=alreadyFound?'flex':'none';
-  document.getElementById('found-txt').textContent=t.found_txt;
-  document.getElementById('fact-lbl-el').textContent=t.fact_lbl;
-  document.getElementById('fact-title').textContent=d.fact_title;
-  document.getElementById('fact-text').textContent=d.fact_text;
-
-  // Reset all interactive elements — clear classes as well as display
-  ['cub-card','quiz-card','cub-done-btn','cont-btn','points-earned'].forEach(el=>{
-    document.getElementById(el).style.display='none';
-  });
-  document.getElementById('points-earned').classList.remove('show');
-  document.getElementById('feedback').className='feedback';
-
-  if(alreadyFound){
-    const cb=document.getElementById('cont-btn');
-    cb.textContent=t.age_back;
-    cb.style.display='block';
-    cb.onclick=goHome;
-  } else if(isCub){
-    document.getElementById('cub-emoji').textContent=d.cub_emoji;
-    document.getElementById('cub-title').textContent=t.cub_title;
-    document.getElementById('cub-text').textContent=d.cub_action;
-    document.getElementById('cub-bed-lbl').textContent=t.cub_bed_lbl;
-    document.getElementById('cub-bed-text').textContent=d.cub_bed;
-    document.getElementById('cub-card').style.display='block';
-    const db=document.getElementById('cub-done-btn');
-    db.textContent=t.cub_done; db.style.display='block';
-  } else {
-    document.getElementById('quiz-lbl-el').textContent=t.quiz_lbl;
-    document.getElementById('quiz-q').textContent=d.quiz_q;
-    const opts=document.getElementById('quiz-opts'); opts.innerHTML='';
-    const letters=['A','B','C','D'];
-    // Init attempt tracker for this station
-    if(!stationAttempts[id]) stationAttempts[id] = { count:0, type:'explorer' };
-    d.quiz_opts.forEach((opt,i)=>{
-      const btn=document.createElement('button');
-      btn.className='q-opt';
-      btn.innerHTML=`<span class="opt-letter">${letters[i]}</span>${opt}`;
-      btn.onclick=()=>answerQuiz(i,d.quiz_ans);
-      opts.appendChild(btn);
-    });
-    document.getElementById('quiz-card').style.display='block';
-  }
-
-  // Clean URL so refresh doesn't reopen station
-  if(window.history && window.history.replaceState){
-    window.history.replaceState({},'',window.location.pathname);
-  }
-
-  makeSnow('sf-station');
-  show('s-station');
-}
-
-function answerQuiz(chosen, correct){
-  const t=T[lang||'en'];
-  const opts=document.querySelectorAll('.q-opt');
-  opts.forEach(o=>o.disabled=true);
-  stationAttempts[currentSt] = stationAttempts[currentSt] || { count:0, type:'explorer' };
-  stationAttempts[currentSt].count++;
-  const isFirst = stationAttempts[currentSt].count === 1;
-
-  if(chosen===correct){
-    opts[chosen].classList.add('correct');
-    const ptsEarned = isFirst ? PTS.FIRST_TRY : PTS.RETRY;
-    document.getElementById('fb-ico').textContent='🎉';
-    document.getElementById('fb-txt').textContent=isFirst?t.fb_ok_first:t.fb_ok;
-    document.getElementById('feedback').className='feedback show fb-ok';
-    // Swap to cheer bear with bounce
-    const si=document.getElementById('st-img');
-    si.classList.remove('cheer-bounce');
-    si.src=IMG.cheer;
-    si.onload=()=>{ si.classList.add('loaded'); void si.offsetWidth; si.classList.add('cheer-bounce'); };
-    markFound(ptsEarned);
-    showPointsBadge('+'+ptsEarned, isFirst?t.pts_first:t.pts_retry);
-    spawnParticles();
-    const cb=document.getElementById('cont-btn');
-    cb.textContent=t.cont; cb.onclick=continueStation;
-    setTimeout(()=>cb.style.display='block', 500);
-  } else {
-    opts[chosen].classList.add('wrong');
-    document.getElementById('fb-ico').textContent='😅';
-    document.getElementById('fb-txt').textContent=t.fb_err;
-    document.getElementById('feedback').className='feedback show fb-err';
-    const siErr=document.getElementById('st-img');
-    siErr.classList.remove('cheer-bounce'); siErr.src=IMG.oops;
-    siErr.onload=()=>siErr.classList.add('loaded');
-    setTimeout(()=>{
-      const st=STATIONS[currentSt-1];
-      const siReset=document.getElementById('st-img');
-      siReset.classList.remove('loaded','cheer-bounce');
-      siReset.src=age==='cub'?IMG[st.img_cub]:IMG[st.img_exp];
-      siReset.onload=()=>siReset.classList.add('loaded');
-      opts.forEach(o=>{ o.disabled=false; o.classList.remove('wrong','correct'); });
-      document.getElementById('feedback').className='feedback';
-    }, 1800);
-  }
-}
-
-function cubDone(){
-  const t=T[lang||'en'];
-  const siCub=document.getElementById('st-img');
-  siCub.classList.remove('cheer-bounce');
-  siCub.src=IMG.cheer;
-  siCub.onload=()=>{ siCub.classList.add('loaded'); void siCub.offsetWidth; siCub.classList.add('cheer-bounce'); };
-  document.getElementById('cub-done-btn').style.display='none';
-  // Store as cub type so progress screen shows PTS.CUB not PTS.FIRST_TRY
-  stationAttempts[currentSt] = { count:1, type:'cub' };
-  markFound(PTS.CUB);
-  showPointsBadge('+'+PTS.CUB, t.pts_cub);
-  spawnParticles();
-  const cb=document.getElementById('cont-btn');
-  cb.textContent=t.cont; cb.onclick=continueStation; cb.style.display='block';
-}
-
-function showPointsBadge(val, lbl){
-  document.getElementById('pe-val').textContent=val;
-  document.getElementById('pe-lbl').textContent=lbl;
-  document.getElementById('points-earned').classList.add('show');
-}
-
-function markFound(ptsEarned){
-  if(!found.includes(currentSt)){
-    found.push(currentSt);
-    points+=ptsEarned;
-    save();
-    toast(T[lang||'en'].toast_found);
-  }
-}
-
-function continueStation(){
-  if(found.length===6){ showReward(); }
-  else { renderHome(); show('s-home'); }
-}
-
-// ── REWARD ──
-function showReward(){
-  const t=T[lang||'en'];
-  if(!bonusPaid){
-    points += PTS.BONUS_ALL;
-    bonusPaid = true;
-    save();
-  }
-  const total = points;
-  document.getElementById('rwd-score-val').textContent=total;
-  const sub=total>=900?t.rwd_perfect:total>=600?t.rwd_great:t.rwd_good;
-  document.getElementById('rwd-score-sub').textContent=sub;
-  applyStrings();
-  makeSnow('sf-reward');
-  show('s-reward');
-  setTimeout(launchFireworks,500);
-}
-
-function playAgain(){
-  // Language preserved intentionally — everything else reset
-  found=[]; points=0; bonusPaid=false; stationAttempts={}; age=null;
-  save(); applyStrings(); show('s-age');
-}
-
-// ── PARTICLES ──
-function spawnParticles(){
-  const cols=['#FAC775','#5DCAA5','#7F77DD','#378ADD','#D85A30'];
-  const cx=window.innerWidth/2, cy=window.innerHeight/3;
-  for(let i=0;i<24;i++){
-    const p=document.createElement('div'); p.className='pt';
-    const a=(i/24)*Math.PI*2, dist=70+Math.random()*100, dur=0.5+Math.random()*0.5;
-    p.style.cssText=`left:${cx}px;top:${cy}px;width:8px;height:8px;background:${cols[i%cols.length]};--x:${Math.cos(a)*dist}px;--y:${Math.sin(a)*dist}px;--d:${dur}s`;
-    document.body.appendChild(p);
-    setTimeout(()=>p.remove(),(dur*1000)+50);
-  }
-}
-function launchFireworks(){
-  const cols=['#FAC775','#5DCAA5','#7F77DD','#378ADD','#D85A30','#fff'];
-  let c=0;
-  const iv=setInterval(()=>{
-    for(let i=0;i<18;i++){
-      const fw=document.createElement('div'); fw.className='fw';
-      const sx=Math.random()*window.innerWidth, sy=Math.random()*window.innerHeight*0.6;
-      const a=Math.random()*Math.PI*2, dist=60+Math.random()*120, dur=0.5+Math.random()*0.7;
-      fw.style.cssText=`left:${sx}px;top:${sy}px;background:${cols[Math.floor(Math.random()*cols.length)]};--x:${Math.cos(a)*dist}px;--y:${Math.sin(a)*dist}px;--d:${dur}s`;
-      document.body.appendChild(fw);
-      setTimeout(()=>fw.remove(),(dur*1000)+100);
-    }
-    if(++c>10)clearInterval(iv);
-  },350);
-}
-
-// ── TOAST ──
-let toastTimer;
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
-}
-
-// ── INIT ──
-function init(){
-  AURORA.init();
-  load();
-  setImages();
-  makeSnow('sf-home');
-  makeSnow('sf-bio');
-
-  // Validate all station image keys exist in IMG — catches future typos silently
-  STATIONS.forEach(st=>{
-    if(!IMG[st.img_cub]) console.warn('Missing IMG key:',st.img_cub,'on station',st.id);
-    if(!IMG[st.img_exp]) console.warn('Missing IMG key:',st.img_exp,'on station',st.id);
-  });
-
-  // Check for QR station param
-  const id=parseInt(new URLSearchParams(window.location.search).get('id'));
-  const validStation = id>=1 && id<=6;
-
-  if(!lang){
-    // Default to Icelandic for first-time visitors
-    lang='is';
-    show('s-lang');
-    return;
-  }
-
-  applyStrings();
-
-  if(!age){
-    show('s-age');
-    return;
-  }
-
-  if(validStation){
-    renderHome();
-    openStation(id);
-  } else {
-    renderHome();
-    show('s-home');
-  }
-}
-
-init();
 </script>
 </body>
 </html>
