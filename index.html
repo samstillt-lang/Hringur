@@ -132,7 +132,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .nav-item.on .nav-lbl { color:var(--ice-deep); }
 .nav-item.on .nav-lbl::before { content:'• '; color:var(--teal-mid); }
 /* Pad scrollable screens above fixed nav */
-.has-nav { padding-bottom:96px; }
+.has-nav { padding-bottom:140px; }
 
 /* ── LANG SCREEN ── */
 #s-lang { justify-content:flex-end; align-items:stretch; background:var(--ice-deep); }
@@ -184,7 +184,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .home-body { padding:24px 20px 20px; }
 
 /* ── STATION ── */
-.station-header { display:flex; align-items:center; gap:12px; padding:10px 14px; background:#fff; border-bottom:1px solid var(--border); flex-shrink:0; position:relative; z-index:5; }
+.station-header { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--surface); flex-shrink:0; position:relative; z-index:5; }
 .station-header .back-btn { position:static; flex-shrink:0; }
 .station-header .station-badge { margin:0 auto; }
 .back-btn { position:absolute; top:14px; left:14px; z-index:20; width:38px; height:38px; border-radius:12px; background:rgba(255,255,255,0.88); backdrop-filter:blur(8px); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-sm); }
@@ -224,7 +224,6 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
   display:flex; align-items:flex-start; gap:12px;
   text-align:left;
 }
-.cub-bed-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
 .cub-bed-text { font-size:16px; font-weight:500; color:var(--text-main); line-height:1.7; }
 
 /* ── QUIZ ── */
@@ -261,7 +260,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .reward-badge-card { background:linear-gradient(135deg,#fffbe6,#fef3c0); border:2px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:0 0 40px rgba(250,199,117,0.2); }
 .reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
 @keyframes starPop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
-.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:28px; font-weight:900; color:var(--ice-deep); margin-bottom:4px; }
+.reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:clamp(20px, 6.2vw, 28px); font-weight:900; color:var(--ice-deep); margin-bottom:4px; line-height:1.15; word-break:break-word; overflow-wrap:break-word; hyphens:auto; }
 .reward-badge-sub   { font-size:14px; font-weight:700; color:var(--amber); }
 .reward-score-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:16px; }
 .reward-score-ic { width:52px; height:52px; border-radius:16px; background:var(--amber-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -349,11 +348,10 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
     <div class="lang-panel-handle"></div>
     <div class="lang-panel-title">
       <h1 class="lang-panel-h1">Hringur's<br><span>Arctic Adventure</span></h1>
-      <p class="lang-panel-sub">Arctic Hospital Hunt</p>
     </div>
     <div class="lang-btns">
-      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
       <button class="lang-btn" onclick="setLang('is')"><span class="flag">🇮🇸</span> Íslenska</button>
+      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
     </div>
   </div>
 </div>
@@ -393,7 +391,6 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
     <div class="sf-layer" id="sf-home"></div>
   </div>
   <div class="home-title-strip">
-    <div class="home-eyebrow" id="home-eyebrow">Arctic Explorer</div>
     <div class="home-h1" id="home-h1">Welcome,<br><em>Explorer!</em></div>
   </div>
   <div class="scroll-body">
@@ -462,10 +459,9 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
         <h3 id="cub-title">Your Mission!</h3>
         <p id="cub-text"></p>
         <div class="cub-divider">
-          <span class="cub-divider-lbl" id="cub-bed-lbl">Or try this from your bed 🛏️</span>
+          <span class="cub-divider-lbl" id="cub-bed-lbl">Or try this from your bed</span>
         </div>
         <div class="cub-bed">
-          <span class="cub-bed-icon">🛏️</span>
           <span class="cub-bed-text" id="cub-bed-text"></span>
         </div>
       </div>
@@ -719,7 +715,7 @@ const T = {
     hint_exp:"Look for Hringur's paw print stickers around the ward — scan each QR code to unlock a station!",
     storage_warn:'Progress may not save in this browser. Try opening the link in Safari or Chrome.',
     fact_lbl:'Arctic Fact', cub_title:'Your Mission!', quiz_lbl:'Quick Quiz!',
-    cub_bed_lbl:'Or try this from your bed 🛏️',
+    cub_bed_lbl:'Or try this from your bed',
     fb_ok:'Amazing! You got it!', fb_ok_first:'Perfect first try! 🌟', fb_err:'Almost there! Try again! 💪',
     cont:'Continue Adventure 🧭', cub_done:'I did it! 🐾',
     found_txt:"You've already explored this station! Keep searching.",
@@ -754,7 +750,7 @@ const T = {
     hint_exp:'Leitaðu að lappasporslímmiðunum á deildinni — skanaðu til að opna stöð!',
     storage_warn:'Framfarir gætu ekki vistast í þessum vafra. Reyndu að opna í Safari eða Chrome.',
     fact_lbl:'Norðurskautsstaðreynd', cub_title:'Verkefnið þitt!', quiz_lbl:'Spurning!',
-    cub_bed_lbl:'Eða prófaðu þetta í rúminu 🛏️',
+    cub_bed_lbl:'Eða prófaðu þetta í rúminu',
     fb_ok:'Frábært! Rétt svar!', fb_ok_first:'Rétt í fyrsta skipti! 🌟', fb_err:'Næstum! Reyndu aftur! 💪',
     cont:'Halda áfram 🧭', cub_done:'Ég gerði það! 🐾',
     found_txt:'Þú hefur þegar heimsótt þessa stöð! Haltu áfram.',
@@ -924,7 +920,7 @@ function setLang(l){
 }
 
 function applyStrings(){
-  const t = T[lang||'en'];
+  const t = T[lang||'is'];
   document.getElementById('age-q').textContent       = t.age_q;
   document.getElementById('age-back-lbl').textContent= t.age_back;
   document.getElementById('age-cub-lbl').textContent = t.age_cub;
@@ -968,8 +964,9 @@ function goHome(){
 }
 
 function renderHome(){
-  const t=T[lang||'en']; const isCub=age==='cub';
-  document.getElementById('home-eyebrow').textContent = isCub?t.home_eyebrow_cub:t.home_eyebrow_exp;
+  const t=T[lang||'is']; const isCub=age==='cub';
+  const ebEl = document.getElementById('home-eyebrow');
+  if (ebEl) ebEl.textContent = isCub?t.home_eyebrow_cub:t.home_eyebrow_exp;
   const parts=(isCub?t.home_h1_cub:t.home_h1_exp).split('\n');
   document.getElementById('home-h1').innerHTML=parts[0]+'<br><em>'+parts[1]+'</em>';
   // Hero image: Reykjavik skyline for Icelandic, hospital for English
@@ -1009,7 +1006,7 @@ function renderDots(){
 }
 
 function renderProgressScreen(){
-  const t=T[lang||'en'];
+  const t=T[lang||'is'];
   const list=document.getElementById('station-list'); if(!list) return;
   list.innerHTML='';
   STATIONS.forEach(st=>{
@@ -1026,8 +1023,8 @@ function renderProgressScreen(){
     row.innerHTML=`
       <div class="st-num">${st.id}</div>
       <div class="st-info">
-        <div class="st-name">${ST_NAMES[lang||'en'][st.id-1]}</div>
-        <div class="st-pts">${done?('+'+pts+' pts'):t.st_todo}</div>
+        <div class="st-name">${ST_NAMES[lang||'is'][st.id-1]}</div>
+        <div class="st-pts">${done?('+'+pts+' '+t.pts_lbl.toLowerCase()):t.st_todo}</div>
       </div>
       <div class="st-check">
         <svg viewBox="0 0 24 24">${done?'<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>':'<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>'}
@@ -1053,9 +1050,9 @@ function openStation(id){
 
   currentSt=id;
   const st=STATIONS[id-1];
-  const t=T[lang||'en'];
+  const t=T[lang||'is'];
   const isCub=age==='cub';
-  const d=st[lang||'en'];
+  const d=st[lang||'is'];
   const alreadyFound=found.includes(id);
 
   // Station image — by design, not coincidence. Fade in/out to prevent
@@ -1137,7 +1134,7 @@ function openStation(id){
 }
 
 function answerQuiz(chosen, correct){
-  const t=T[lang||'en'];
+  const t=T[lang||'is'];
   const opts=document.querySelectorAll('.q-opt');
   opts.forEach(o=>o.disabled=true);
   stationAttempts[currentSt] = stationAttempts[currentSt] || { count:0, type:'explorer' };
@@ -1174,7 +1171,7 @@ function answerQuiz(chosen, correct){
 }
 
 function cubDone(){
-  const t=T[lang||'en'];
+  const t=T[lang||'is'];
   document.getElementById('st-img').src=IMG.cheer;
   document.getElementById('cub-done-btn').style.display='none';
   // Store as cub type so progress screen shows PTS.CUB not PTS.FIRST_TRY
@@ -1197,7 +1194,7 @@ function markFound(ptsEarned){
     found.push(currentSt);
     points+=ptsEarned;
     save();
-    toast(T[lang||'en'].toast_found);
+    toast(T[lang||'is'].toast_found);
   }
 }
 
@@ -1208,7 +1205,7 @@ function continueStation(){
 
 // ── REWARD ──
 function showReward(){
-  const t=T[lang||'en'];
+  const t=T[lang||'is'];
   if(!bonusPaid){
     points += PTS.BONUS_ALL;
     bonusPaid = true;
