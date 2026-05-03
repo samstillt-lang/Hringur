@@ -55,8 +55,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .hero.tall  { height:420px; }
 /* hero-img fills the full hero as environment background */
 .hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1; transition:opacity 0.22s ease-out; }
-/* aurora overlays the image — atmospheric depth layer */
-.aurora { position:absolute; inset:0; overflow:hidden; z-index:2; }
+/* aurora overlay disabled — northern lights removed by request, snow effect kept */
+.aurora { display:none; }
 .ab { position:absolute; left:-20%; width:140%; border-radius:50%; opacity:0.38; animation:adrift 9s ease-in-out infinite alternate; }
 .ab1 { top:3%;  height:70px; background:linear-gradient(90deg,transparent,rgba(80,210,160,0.75),transparent); animation-delay:0s; }
 .ab2 { top:10%; height:50px; background:linear-gradient(90deg,transparent,rgba(150,130,230,0.55),rgba(100,170,230,0.4),transparent); animation-delay:2.5s; }
@@ -746,19 +746,19 @@ const T = {
     age_back:'Til baka',
     age_cub:'Litli björninn', age_exp:'Könnuður',
     home_eyebrow_cub:'Litli björninn', home_eyebrow_exp:'Norðurskautskönnuður',
-    home_h1_cub:'Halló,\nLitli björn!', home_h1_exp:'Velkomin/n,\nKönnuður!',
+    home_h1_cub:'Halló,\nLitli björn!', home_h1_exp:'Velkomin,\nKönnuður!',
     prog_lbl:'Stöðvar fundnar',
     prog_sub_go:'Haltu áfram!', prog_sub_done:'Frábært!',
     pts_lbl:'Stig', next_lbl:'Næsta stöð',
-    hint_cub:'Leitaðu að litlu lappaspor límmiðunum — í hverjum er falinn QR kóði!',
-    hint_exp:'Leitaðu að lappaspor límmiðunum um deildinni — skanaðu til að opna stöð!',
+    hint_cub:'Leitaðu að litlu lappasporslímmiðunum — í hverjum er falinn QR kóði!',
+    hint_exp:'Leitaðu að lappasporslímmiðunum á deildinni — skanaðu til að opna stöð!',
     storage_warn:'Framfarir gætu ekki vistast í þessum vafra. Reyndu að opna í Safari eða Chrome.',
     fact_lbl:'Norðurskautsstaðreynd', cub_title:'Verkefnið þitt!', quiz_lbl:'Spurning!',
     cub_bed_lbl:'Eða prófaðu þetta í rúminu 🛏️',
     fb_ok:'Frábært! Rétt svar!', fb_ok_first:'Rétt í fyrsta skipti! 🌟', fb_err:'Næstum! Reyndu aftur! 💪',
     cont:'Halda áfram 🧭', cub_done:'Ég gerði það! 🐾',
     found_txt:'Þú hefur þegar heimsótt þessa stöð! Haltu áfram.',
-    pts_first:'Fyrsta-skipti bónus!', pts_retry:'Stig fengin!', pts_cub:'Verkefni lokið!',
+    pts_first:'Bónus fyrir fyrsta skiptið!', pts_retry:'Stig fengin!', pts_cub:'Verkefni lokið!',
     rwd_title:'Norðurskautskönnuður!', rwd_sub:'Allar 6 stöðvar fundnar',
     rwd_score_lbl:'Lokaeinkunn',
     rwd_perfect:'Fullkominn könnuður! 🌟', rwd_great:'Frábær könnuður! 🎉', rwd_good:'Góður könnuður!',
@@ -771,8 +771,8 @@ const T = {
     prog_screen_title:'Ferðalag þitt',
     bio_sub:'Norðurskautskönnuður · Leiðsögumaðurinn þinn',
     bio_l1:'Um',        bio_v1:'Djarfur ísbjörn sem elskar að kanna Norðurskautið — og hjálpa ungum könnuðum eins og þér!',
-    bio_l2:'Kraftur',   bio_v2:'Getur lykt til fisks í 1 kílómetra fjarlægð og synt í klukkutíma án þess að stoppa!',
-    bio_l3:'Elskar',    bio_v3:'Ísfiski, að kanna ný staði og gera nýja vini á ævintýrum sínum!',
+    bio_l2:'Kraftur',   bio_v2:'Getur fundið lykt af fiski í 1 kílómetra fjarlægð og synt í klukkutíma án þess að stoppa!',
+    bio_l3:'Elskar',    bio_v3:'Ísveiði, að kanna ný staði og gera nýja vini á ævintýrum sínum!',
     bio_l4:'Hlutverk',  bio_v4:'Hjálpa hverjum ungum könnuði að uppgötva leyndarmál Norðurskautsins — eina stöð í einu!',
     toast_found:'Stöð opnuð! 🌟',
   }
@@ -788,44 +788,44 @@ const STATIONS = [
        cub_emoji:'🏊',cub_action:"Stretch your arms out wide and swim like a polar bear! Can you do 10 big arm strokes?",
        cub_bed:"Float your arms slowly like you're gliding through water 🌊",
        quiz_q:'What are polar bears really good at?',quiz_opts:['Flying','Swimming','Climbing trees'],quiz_ans:1},
-   is:{fact_title:'Frábærir sundmenn!',fact_text:'Ísbjörn er ótrúlegur sundmaður. Hann getur synt í klukkutíma án þess að stoppa og hefur sést meira en 100 km frá landi! Stórar framvizlur hans virka eins og árar í vatninu.',
-       cub_emoji:'🏊',cub_action:'Seygðu handleggina út og syntu eins og ísbjörn! Geturðu gert 10 stórar handleggjarsveiflur?',
+   is:{fact_title:'Frábærir sundmenn!',fact_text:'Ísbjörn er ótrúlegur sundmaður. Hann getur synt í klukkutíma án þess að stoppa og hefur sést meira en 100 km frá landi! Stórar framlappir hans virka eins og árar í vatninu.',
+       cub_emoji:'🏊',cub_action:'Teygðu handleggina út og syntu eins og ísbjörn! Geturðu gert 10 stórar handleggjarsveiflur?',
        cub_bed:'Láttu handleggina fljóta hægt eins og þú sért að líða í gegnum vatnið 🌊',
-       quiz_q:'Hvað er ísbjörn mjög góður í?',quiz_opts:['Að fljúga','Að synta','Að klifra í tré'],quiz_ans:1}},
+       quiz_q:'Hvað er ísbjörn mjög góður í?',quiz_opts:['Að fljúga','Að synda','Að klifra í tré'],quiz_ans:1}},
   {id:2,img_cub:'sun_cub',img_exp:'sun_exp',
    en:{fact_title:'Secret Black Skin!',fact_text:"Even though polar bears look white, their skin underneath is actually BLACK! Dark skin absorbs the sun's warmth — a very clever way to stay warm in the frozen Arctic.",
        cub_emoji:'🌞',cub_action:"Stand in a sunny spot and feel the warmth! That's what Hringur's black skin does — soaks up the sun like a superhero!",
        cub_bed:"Close your eyes and imagine the sun on your face — feel Hringur's warmth ☀️",
        quiz_q:"What colour is a polar bear's skin under its fur?",quiz_opts:['White','Pink','Black'],quiz_ans:2},
-   is:{fact_title:'Leynilegt svart húð!',fact_text:'Þótt ísbjörn líti hvítur út, þá er húðin undir feldinum í raun SVÖRT! Dökk húð dregur til sín sólarhlýjan — mjög snilld til að halda hlýjan á frosnum Norðurskautinu.',
-       cub_emoji:'🌞',cub_action:'Statt á sólríkum stað og finndu hlýjuna! Þetta er nákvæmlega það sem svarta húð Hringurs gerir — sogar upp sólina eins og ofurhetja!',
+   is:{fact_title:'Leynileg svört húð!',fact_text:'Þótt ísbjörn líti hvítur út, þá er húðin undir feldinum í raun SVÖRT! Dökk húð dregur til sín sólarhlýjuna — mjög snjöll leið til að halda á sér hita á frosnu Norðurskautinu.',
+       cub_emoji:'🌞',cub_action:'Stattu á sólríkum stað og finndu hlýjuna! Þetta er nákvæmlega það sem svarta húð Hringurs gerir — sogar upp sólina eins og ofurhetja!',
        cub_bed:'Lokaðu augunum og ímyndaðu þér sólina á andlitinu — finndu hlýjuna frá Hringi ☀️',
-       quiz_q:'Hvaða lit er húð ísbjarna undir feldinum?',quiz_opts:['Hvít','Bleik','Svört'],quiz_ans:2}},
+       quiz_q:'Hvaða litur er á húð ísbjarna undir feldinum?',quiz_opts:['Hvít','Bleik','Svört'],quiz_ans:2}},
   {id:3,img_cub:'smell_cub',img_exp:'smell_exp',
    en:{fact_title:'Amazing Nose!',fact_text:"A polar bear's nose is so powerful it can smell a seal hiding under 1 metre of snow from 1 kilometre away. That's like smelling your dinner from the other side of town!",
        cub_emoji:'👃',cub_action:'Sniff the air 5 times like Hringur! What can you smell? Can you find something yummy nearby using just your nose?',
        cub_bed:'Take 3 deep slow sniffs — what can you smell right now? 👃',
        quiz_q:'How far away can a polar bear smell its food?',quiz_opts:['1 kilometre','10 metres','Across the room'],quiz_ans:0},
-   is:{fact_title:'Ótrúlegt nef!',fact_text:'Nef ísbjarna er svo öflugt að hann getur lykt sér til selur sem leynist undir 1 metra af snjó frá 1 kílómetra fjarlægð. Það er eins og að lykt sér til kvöldmatar þíns frá hinum enda bæjarins!',
-       cub_emoji:'👃',cub_action:'Þefaðu í loftið 5 sinnum eins og Hringur! Hvað getur þú lykt? Geturðu fundið eitthvað gott með nefinu þínu?',
+   is:{fact_title:'Ótrúlegt nef!',fact_text:'Nef ísbjarna er svo öflugt að hann getur fundið lykt af sel sem leynist undir 1 metra af snjó frá 1 kílómetra fjarlægð. Það er eins og að finna lykt af kvöldmatnum þínum frá hinum enda bæjarins!',
+       cub_emoji:'👃',cub_action:'Þefaðu í loftið 5 sinnum eins og Hringur! Hvaða lykt finnurðu? Geturðu fundið eitthvað gott með nefinu þínu?',
        cub_bed:'Taktu 3 djúpa og hæga andardrætti — hvaða lykt finnurðu? 👃',
-       quiz_q:'Hversu langt frá getur ísbjörn lykt sér til matar?',quiz_opts:['1 kílómetri','10 metrar','Um herbergið'],quiz_ans:0}},
+       quiz_q:'Hversu langt frá getur ísbjörn fundið lykt af mat?',quiz_opts:['1 kílómetri','10 metrar','Um herbergið'],quiz_ans:0}},
   {id:4,img_cub:'fur_cub',img_exp:'fur_exp',
    en:{fact_title:'Hollow Hair!',fact_text:"Each strand of a polar bear's fur is hollow and transparent — not actually white! It works like thousands of tiny straws that trap warm air around their body, like a natural wetsuit.",
        cub_emoji:'❄️',cub_action:"Blow gently on your arm to feel your own body warmth! Hringur's fur traps warm air exactly like that to stay cosy in the cold.",
        cub_bed:'Blow gently on the back of your hand — can you feel that warm air? 🌬️',
        quiz_q:'What is special about polar bear fur?',quiz_opts:['It glows in the dark','Each hair is hollow','It changes colour'],quiz_ans:1},
-   is:{fact_title:'Holur hár!',fact_text:'Sérhver hárstrengur á ísbirni er holur og gegnsær — í raun ekki hvítur! Það virkar eins og þúsundir litlilla strana sem geyma heitan loft um líkama hans, eins og náttúruleg blautföt.',
-       cub_emoji:'❄️',cub_action:'Blásðu varlega á handlegginn þinn til að finna eigin líkamshlýja! Feldur Hringurs geymir heitan loft nákvæmlega svona til að halda sér hlýjum í kulda.',
+   is:{fact_title:'Hol hár!',fact_text:'Sérhver hárstrengur á ísbirni er holur og gegnsær — í raun ekki hvítur! Það virkar eins og þúsundir lítilla stráa sem geyma heitt loft um líkama hans, eins og náttúruleg blautföt.',
+       cub_emoji:'❄️',cub_action:'Blástu varlega á handlegginn þinn til að finna eigin líkamshlýju! Feldur Hringurs geymir heitt loft nákvæmlega svona til að halda sér hlýjum í kulda.',
        cub_bed:'Blástu varlega á handarbakið — finnurðu hlýja loftið? 🌬️',
-       quiz_q:'Hvað er sérstakt við feld ísbjarna?',quiz_opts:['Hann glóir í myrkri','Sérhver hár er holur','Hann skiptir um lit'],quiz_ans:1}},
+       quiz_q:'Hvað er sérstakt við feld ísbjarna?',quiz_opts:['Hann glóir í myrkri','Sérhvert hár er holt','Hann skiptir um lit'],quiz_ans:1}},
   {id:5,img_cub:'den_cub',img_exp:'den_exp',
    en:{fact_title:'Baby Bears!',fact_text:"Baby polar bears are called cubs. They are born in a cosy snow den in winter and are no bigger than a guinea pig when they arrive — then they grow into the world's largest land predator!",
        cub_emoji:'🐣',cub_action:'Curl up into a tiny ball like a newborn polar bear cub! Then slowly stretch out big and tall — you are growing into a mighty explorer!',
        cub_bed:'Curl your fingers into a tiny fist like a newborn cub — then stretch them wide open 🐾',
        quiz_q:'What is a baby polar bear called?',quiz_opts:['A pup','A cub','A kit'],quiz_ans:1},
-   is:{fact_title:'Ungaísbirnir!',fact_text:'Ungaísbirnir heita hvolpar. Þeir fæðast í hlýlegum snjóhelli á veturna og eru ekki stærri en naggrísi þegar þeir koma — svo vaxa þeir að verða stærstu landlegar rándýr heims!',
-       cub_emoji:'🐣',cub_action:'Krullast saman í litla kúlu eins og nýfæddur ísbjarnarhvolpur! Svo seygðu þig hægt út stór og há — þú ert að vaxa í öflugur könnuður!',
+   is:{fact_title:'Ungaísbirnir!',fact_text:'Ungaísbirnir heita hvolpar. Þeir fæðast í hlýlegum snjóhelli á veturna og eru ekki stærri en naggrís þegar þeir koma — svo vaxa þeir að verða stærstu landrándýr í heiminum!',
+       cub_emoji:'🐣',cub_action:'Krullastu saman í litla kúlu eins og nýfæddur ísbjarnarhvolpur! Svo teygðu þig hægt út stór og há — þú ert að vaxa í öflugan könnuð!',
        cub_bed:'Krepptu fingurna í lítinn hnefa eins og nýfæddur hvolpur — teygðu svo vel úr þeim 🐾',
        quiz_q:'Hvað er ungur ísbjörn kallaður?',quiz_opts:['Hundhvolpur','Hvolpur','Kisa'],quiz_ans:1}},
   {id:6,img_cub:'giant_cub',img_exp:'giant_exp',
@@ -833,15 +833,15 @@ const STATIONS = [
        cub_emoji:'🦶',cub_action:'Stomp your feet as LOUD as you can like a giant polar bear! Then stand as tall and as wide as you possibly can. You are a mighty Arctic giant!',
        cub_bed:'Spread your arms as wide as you can — you are a giant polar bear! 🐻',
        quiz_q:'Polar bears are the largest what on Earth?',quiz_opts:['Sea animal','Land predator','Arctic bird'],quiz_ans:1},
-   is:{fact_title:'Risabjörn í Norðurskautinu!',fact_text:'Ísbjörn er stærsta landlega rándýr á jörðinni. Stór karldýr geta vegið eins mikið og 8 fullorðið fólk! Stórar lappir þeirra virka eins og snjóskór og dreifa þyngd þeirra yfir þunnan ís svo þeir falli ekki í gegn.',
-       cub_emoji:'🦶',cub_action:'Þrættu fæturna eins HÁTT og þú getur eins og risaísbjörn! Svo statt eins há og víð og mögulegt er. Þú ert öflugur norðurskautsrisi!',
+   is:{fact_title:'Risabjörn í Norðurskautinu!',fact_text:'Ísbjörn er stærsta landrándýr á jörðinni. Stór karldýr geta vegið eins mikið og 8 fullorðnar manneskjur! Stórar lappir þeirra virka eins og snjóskór og dreifa þyngd þeirra yfir þunnan ís svo þeir falli ekki í gegn.',
+       cub_emoji:'🦶',cub_action:'Stappaðu fótunum eins HÁTT og þú getur eins og risaísbjörn! Svo stattu eins há og víð og mögulegt er. Þú ert öflugur norðurskautsrisi!',
        cub_bed:'Breiddu út faðminn eins mikið og þú getur — þú ert risaísbjörn! 🐻',
-       quiz_q:'Ísbjörn er stærst af hverju á jörðinni?',quiz_opts:['Sjávardýr','Landlegt rándýr','Norðurskautsfugl'],quiz_ans:1}}
+       quiz_q:'Ísbjörn er stærstur af hverju á jörðinni?',quiz_opts:['Sjávardýr','Landlegt rándýr','Norðurskautsfugl'],quiz_ans:1}}
 ];
 
 const ST_NAMES = {
   en:['Super Swimmers!','Secret Black Skin!','Amazing Nose!','Hollow Hair!','Baby Bears!','Arctic Giants!'],
-  is:['Frábærir sundmenn!','Leynilegt svart húð!','Ótrúlegt nef!','Holur hár!','Ungaísbirnir!','Risabjörn!']
+  is:['Frábærir sundmenn!','Leynileg svört húð!','Ótrúlegt nef!','Hol hár!','Ungaísbirnir!','Risabjörn!']
 };
 
 // ── STATE ── (null defaults = proper first-time detection)
