@@ -50,11 +50,11 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .scroll-body::-webkit-scrollbar { display:none; }
 
 /* ── HERO ── */
-.hero { position:relative; height:360px; overflow:hidden; flex-shrink:0; background:var(--ice-deep); mask-image:linear-gradient(180deg,black 68%,transparent 100%); -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%); }
-.hero.short { height:300px; }
+.hero { position:relative; height:280px; overflow:hidden; flex-shrink:0; background:var(--ice-deep); mask-image:linear-gradient(180deg,black 68%,transparent 100%); -webkit-mask-image:linear-gradient(180deg,black 68%,transparent 100%); }
+.hero.short { height:248px; }
 .hero.tall  { height:420px; }
 /* hero-img fills the full hero as environment background */
-.hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1; }
+.hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1; transition:opacity 0.22s ease-out; }
 /* aurora overlays the image — atmospheric depth layer */
 .aurora { position:absolute; inset:0; overflow:hidden; z-index:2; }
 .ab { position:absolute; left:-20%; width:140%; border-radius:50%; opacity:0.38; animation:adrift 9s ease-in-out infinite alternate; }
@@ -142,6 +142,10 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .lang-logo-h1 span { color:var(--teal-mid); }
 .lang-logo-sub { font-size:12px; font-weight:700; color:rgba(255,255,255,0.88); margin-top:7px; letter-spacing:1.5px; text-transform:uppercase; text-shadow:0 1px 8px rgba(0,0,0,0.5); }
 .lang-panel { position:relative; z-index:5; background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:28px 28px 0 0; padding:20px 28px 48px; box-shadow:0 -8px 40px rgba(11,46,78,0.18); }
+.lang-panel-title { text-align:center; margin-bottom:18px; }
+.lang-panel-h1 { font-family:'Nunito',Arial,sans-serif; font-size:28px; font-weight:900; color:var(--ice-deep); line-height:1.1; letter-spacing:-0.5px; }
+.lang-panel-h1 span { color:var(--teal-mid); }
+.lang-panel-sub { font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--text-muted); margin-top:6px; }
 .lang-panel-handle { width:40px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 20px; }
 .lang-btns { display:flex; flex-direction:column; gap:12px; }
 .lang-btn { display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.96); border:1.5px solid var(--border); border-radius:var(--r-md); padding:16px 20px; font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:800; color:var(--ice-deep); cursor:pointer; box-shadow:var(--shadow-sm); transition:all 0.15s; }
@@ -169,6 +173,10 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .age-range { font-size:13px; font-weight:700; color:var(--text-muted); }
 
 /* ── HOME ── */
+.home-title-strip { padding:18px 20px 6px; text-align:center; flex-shrink:0; background:transparent; }
+.home-title-strip .home-eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--text-sub); margin-bottom:4px; text-shadow:none; }
+.home-title-strip .home-h1 { font-family:'Nunito',Arial,sans-serif; font-size:28px; font-weight:900; color:var(--ice-deep); line-height:1.2; letter-spacing:-0.3px; text-shadow:none; }
+.home-title-strip .home-h1 em { font-style:normal; color:var(--teal-mid); }
 .home-title-block { position:absolute; top:38px; left:0; right:0; text-align:center; z-index:10; padding:0 20px; pointer-events:none; }
 .home-eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.92); margin-bottom:4px; text-shadow:0 1px 6px rgba(0,0,0,0.45); }
 .home-h1 { font-family:'Nunito',Arial,sans-serif; font-size:30px; font-weight:900; color:#fff; line-height:1.2; letter-spacing:-0.3px; text-shadow:0 2px 12px rgba(0,0,0,0.4); }
@@ -176,9 +184,11 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .home-body { padding:24px 20px 20px; }
 
 /* ── STATION ── */
+.station-header { display:flex; align-items:center; gap:12px; padding:10px 14px; background:#fff; border-bottom:1px solid var(--border); flex-shrink:0; position:relative; z-index:5; }
+.station-header .back-btn { position:static; flex-shrink:0; }
+.station-header .station-badge { margin:0 auto; }
 .back-btn { position:absolute; top:14px; left:14px; z-index:20; width:38px; height:38px; border-radius:12px; background:rgba(255,255,255,0.88); backdrop-filter:blur(8px); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-sm); }
 .back-btn svg { width:20px; height:20px; fill:var(--ice-deep); }
-.station-badge-wrap { position:absolute; top:14px; left:0; right:0; display:flex; justify-content:center; z-index:10; }
 .station-badge { background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border:2px solid var(--teal-mid); border-radius:99px; padding:8px 20px; font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--teal); box-shadow:var(--shadow-sm); }
 .station-badge.badge-amber { border-color:var(--amber-mid); color:var(--amber); }
 .station-badge.badge-coral { border-color:var(--coral-mid); color:var(--coral); }
@@ -335,12 +345,12 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 <!-- ══ LANGUAGE ══ -->
 <div class="screen active" id="s-lang">
   <img class="lang-scene-img" id="img-lang" src="" alt="Hringur waving in hospital">
-  <div class="lang-title-overlay">
-    <h1 class="lang-logo-h1">Hringur's<br><span>Arctic Adventure</span></h1>
-    <p class="lang-logo-sub">Arctic Hospital Hunt</p>
-  </div>
   <div class="lang-panel">
     <div class="lang-panel-handle"></div>
+    <div class="lang-panel-title">
+      <h1 class="lang-panel-h1">Hringur's<br><span>Arctic Adventure</span></h1>
+      <p class="lang-panel-sub">Arctic Hospital Hunt</p>
+    </div>
     <div class="lang-btns">
       <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
       <button class="lang-btn" onclick="setLang('is')"><span class="flag">🇮🇸</span> Íslenska</button>
@@ -381,10 +391,10 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
     <img class="hero-img" id="home-img" src="" alt="Hringur">
     <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
     <div class="sf-layer" id="sf-home"></div>
-    <div class="home-title-block">
-      <div class="home-eyebrow" id="home-eyebrow">Arctic Explorer</div>
-      <div class="home-h1" id="home-h1">Welcome,<br><em>Explorer!</em></div>
-    </div>
+  </div>
+  <div class="home-title-strip">
+    <div class="home-eyebrow" id="home-eyebrow">Arctic Explorer</div>
+    <div class="home-h1" id="home-h1">Welcome,<br><em>Explorer!</em></div>
   </div>
   <div class="scroll-body">
     <div class="home-body has-nav">
@@ -425,16 +435,16 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 <!-- ══ STATION ══ -->
 <div class="screen" id="s-station">
+  <div class="station-header">
+    <button class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </button>
+    <div class="station-badge" id="st-badge">Station 1</div>
+  </div>
   <div class="hero short">
     <img class="hero-img" id="st-img" src="" alt="Hringur">
     <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
     <div class="sf-layer" id="sf-station"></div>
-    <div class="station-badge-wrap">
-      <button class="back-btn" onclick="goHome()" style="position:relative;top:auto;left:auto;">
-        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      </button>
-      <div class="station-badge" id="st-badge" style="margin-left:10px;">Station 1</div>
-    </div>
   </div>
   <div class="scroll-body">
     <div class="station-body">
@@ -1048,9 +1058,24 @@ function openStation(id){
   const d=st[lang||'en'];
   const alreadyFound=found.includes(id);
 
-  // Station image — by design, not coincidence
+  // Station image — by design, not coincidence. Fade in/out to prevent
+  // a flash of the previous image (e.g. cheer/oops left over from last station).
   const stImg=document.getElementById('st-img');
-  stImg.src=isCub?IMG[st.img_cub]:IMG[st.img_exp];
+  const newSrc=isCub?IMG[st.img_cub]:IMG[st.img_exp];
+  const currentFile=(stImg.src||'').split('/').pop();
+  const newFile=newSrc.split('/').pop();
+  if(currentFile !== newFile){
+    stImg.style.opacity='0';
+    const reveal=()=>{ stImg.style.opacity='1'; stImg.onload=null; };
+    stImg.onload=reveal;
+    stImg.src=newSrc;
+    if(stImg.complete && stImg.naturalWidth>0){
+      // Already cached — reveal next frame to avoid same-paint race
+      requestAnimationFrame(reveal);
+    }
+  } else {
+    stImg.style.opacity='1';
+  }
   stImg.onerror=()=>{ stImg.style.display='none'; };
 
   // Badge — text + colour tier (stations 1-2 teal, 3-4 amber, 5-6 coral)
