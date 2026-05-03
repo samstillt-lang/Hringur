@@ -131,8 +131,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .nav-lbl { font-size:10px; font-weight:800; letter-spacing:0.3px; color:var(--text-muted); }
 .nav-item.on .nav-lbl { color:var(--ice-deep); }
 .nav-item.on .nav-lbl::before { content:'• '; color:var(--teal-mid); }
-/* Pad scrollable screens above fixed nav */
-.has-nav { padding-bottom:160px; }
+/* Pad scrollable screens above fixed nav (rule moved below body classes to win source-order specificity) */
 
 /* ── LANG SCREEN ── */
 #s-lang { justify-content:flex-end; align-items:stretch; background:var(--ice-deep); }
@@ -288,6 +287,9 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 /* ── PROGRESS SCREEN ── */
 .prog-screen-body { padding:20px 20px 24px; }
+/* Override padding-bottom on every screen body that sits above the fixed nav.
+   Declared AFTER body classes so its padding-bottom wins source-order specificity. */
+.has-nav { padding-bottom:160px; }
 .prog-screen-title { font-family:'Nunito',Arial,sans-serif; font-size:26px; font-weight:900; color:var(--ice-deep); margin-bottom:16px; }
 .station-list { display:flex; flex-direction:column; gap:10px; }
 .st-row { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-sm); }
