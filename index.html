@@ -79,6 +79,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .dots { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
 .dot { aspect-ratio:1; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--text-muted); transition:border-color 0.2s, background 0.2s; }
 .dot.done { border-color:var(--teal-mid); background:var(--teal-light); color:var(--teal); animation:gemPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+.dot.tappable { cursor:pointer; }
+.dot.tappable:active { transform:scale(0.92); }
 @keyframes gemPop { 0%{transform:scale(0); opacity:0;} 60%{transform:scale(1.18);} 100%{transform:scale(1); opacity:1;} }
 
 /* ── PILLS ── */
@@ -257,6 +259,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 /* ── REWARD ── */
 .reward-body { padding:24px 20px 32px; }
 .reward-badge-card { background:linear-gradient(135deg,#fffbe6,#fef3c0); border:2px solid var(--amber-mid); border-radius:var(--r-lg); padding:28px 20px; text-align:center; margin-bottom:14px; box-shadow:0 0 40px rgba(250,199,117,0.2); }
+.reward-actions { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
 .reward-star { font-size:56px; display:block; margin-bottom:12px; animation:starPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
 @keyframes starPop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
 .reward-badge-title { font-family:'Nunito',Arial,sans-serif; font-size:clamp(20px, 6.2vw, 28px); font-weight:900; color:var(--ice-deep); margin-bottom:4px; line-height:1.15; word-break:break-word; overflow-wrap:break-word; hyphens:auto; }
@@ -287,6 +290,30 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 
 /* ── PROGRESS SCREEN ── */
 .prog-screen-body { padding:20px 20px 24px; }
+/* ── AUDIO PLAY BUTTON ── */
+.audio-btn { background:rgba(255,255,255,0.92); border:1.5px solid var(--border); border-radius:50%; width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; box-shadow:var(--shadow-sm); transition:transform 0.12s, background 0.15s; padding:0; line-height:1; }
+.audio-btn:active { transform:scale(0.9); background:var(--teal-light); }
+.card-with-audio { position:relative; }
+.card-with-audio > .audio-btn { position:absolute; top:14px; right:14px; }
+.cub-card.card-with-audio > .audio-btn { top:18px; right:18px; }
+
+/* ── COMPLETION BADGE ── */
+.completion-badge { background:linear-gradient(135deg, #d8f5e3, #b9ecc8); border:2px solid var(--teal-mid); border-radius:var(--r-lg); padding:24px 20px; text-align:center; margin-bottom:20px; box-shadow:0 0 30px rgba(93,202,165,0.25); position:relative; overflow:hidden; }
+.cb-star-row { display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:8px; }
+.cb-star { font-size:54px; display:inline-block; filter:drop-shadow(0 0 10px rgba(255,200,80,0.6)); animation:cbPulse 2.4s ease-in-out infinite; }
+.cb-sparkle { font-size:22px; opacity:0.85; animation:cbSparkle 1.8s ease-in-out infinite; }
+.cb-sparkle:last-child { animation-delay:0.9s; }
+@keyframes cbPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.07);} }
+@keyframes cbSparkle { 0%,100%{transform:scale(0.8); opacity:0.6;} 50%{transform:scale(1.1); opacity:1;} }
+.cb-title { font-family:'Nunito',Arial,sans-serif; font-size:clamp(20px, 5.6vw, 24px); font-weight:900; color:var(--ice-deep); margin:6px 0 16px; line-height:1.2; word-break:break-word; }
+.cb-meta { display:flex; justify-content:space-around; gap:12px; padding:12px 8px; background:rgba(255,255,255,0.55); border-radius:var(--r-md); margin-bottom:12px; }
+.cb-meta-item { flex:1; min-width:0; }
+.cb-meta-lbl { font-size:10px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-sub); margin-bottom:4px; }
+.cb-meta-val { font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; color:var(--ice-deep); line-height:1.1; }
+.cb-replay-line { font-size:13px; font-weight:700; color:var(--text-sub); margin-bottom:14px; }
+.cb-replay-line strong { color:var(--ice-deep); font-weight:900; }
+.cb-btn { background:rgba(255,255,255,0.85); border:1.5px solid var(--teal-mid); border-radius:var(--r-md); padding:11px 22px; font-family:'Nunito',Arial,sans-serif; font-size:14px; font-weight:800; color:var(--teal); cursor:pointer; transition:all 0.15s; }
+.cb-btn:active { transform:scale(0.96); background:var(--teal-light); }
 /* Override padding-bottom on every screen body that sits above the fixed nav.
    Declared AFTER body classes so its padding-bottom wins source-order specificity. */
 .has-nav { padding-bottom:160px; }
@@ -451,12 +478,14 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
         <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
         <p id="found-txt">Already found!</p>
       </div>
-      <div class="card" id="fact-card">
+      <div class="card card-with-audio" id="fact-card">
+        <button class="audio-btn" onclick="playStationAudio('fact')" aria-label="Read aloud">🔊</button>
         <div class="section-label fact-lbl-el" id="fact-lbl-el">Arctic Fact</div>
         <div class="fact-title" id="fact-title"></div>
         <div class="fact-text"  id="fact-text"></div>
       </div>
-      <div class="cub-card" id="cub-card" style="display:none;">
+      <div class="cub-card card-with-audio" id="cub-card" style="display:none;">
+        <button class="audio-btn" onclick="playStationAudio('cub')" aria-label="Read aloud">🔊</button>
         <span class="cub-big-emoji" id="cub-emoji"></span>
         <h3 id="cub-title">Your Mission!</h3>
         <p id="cub-text"></p>
@@ -467,7 +496,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
           <span class="cub-bed-text" id="cub-bed-text"></span>
         </div>
       </div>
-      <div class="card" id="quiz-card" style="display:none;margin-top:14px;">
+      <div class="card card-with-audio" id="quiz-card" style="display:none;margin-top:14px;">
+        <button class="audio-btn" onclick="playStationAudio('quiz')" aria-label="Read aloud">🔊</button>
         <div class="section-label quiz-lbl-el" id="quiz-lbl-el">Quick Quiz!</div>
         <div class="quiz-q" id="quiz-q"></div>
         <div class="quiz-opts" id="quiz-opts"></div>
@@ -516,14 +546,18 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
           <div style="font-family:'Nunito',Arial,sans-serif;font-size:18px;font-weight:900;color:var(--amber);">+200</div>
         </div>
       </div>
-      <div class="reward-inst">
+      <div class="reward-inst card-with-audio">
+        <button class="audio-btn" onclick="playAudio('reward')" aria-label="Read aloud">🔊</button>
         <div class="reward-inst-ic"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
         <div>
           <div class="reward-inst-title" id="rwd-inst-title">Collect Your Sticker!</div>
           <div class="reward-inst-text"  id="rwd-inst-text">Show this screen to a nurse to collect your very own Arctic Explorer sticker!</div>
         </div>
       </div>
-      <button class="btn-ghost" id="rwd-again" onclick="playAgain()">Play again 🔄</button>
+      <div class="reward-actions">
+        <button class="btn-primary teal" id="rwd-home" onclick="backHomeKeepProgress()">Back to Home</button>
+        <button class="btn-ghost" id="rwd-again" onclick="startNewRun()">Play again 🔄</button>
+      </div>
     </div>
   </div>
 </div>
@@ -565,6 +599,28 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 <div class="screen" id="s-progress">
   <div class="scroll-body" style="padding-top:56px;">
     <div class="prog-screen-body has-nav">
+      <div class="completion-badge" id="completion-badge" style="display:none;">
+        <div class="cb-star-row">
+          <span class="cb-sparkle">✨</span>
+          <span class="cb-star">⭐</span>
+          <span class="cb-sparkle">✨</span>
+        </div>
+        <div class="cb-title" id="cb-title">You completed the game!</div>
+        <div class="cb-meta">
+          <div class="cb-meta-item">
+            <div class="cb-meta-lbl" id="cb-score-lbl">Final score</div>
+            <div class="cb-meta-val" id="cb-score-val">0</div>
+          </div>
+          <div class="cb-meta-item">
+            <div class="cb-meta-lbl" id="cb-date-lbl">Completed</div>
+            <div class="cb-meta-val" id="cb-date-val">—</div>
+          </div>
+        </div>
+        <div class="cb-replay-line" id="cb-replay-line" style="display:none;">
+          <span id="cb-count-lbl">Times completed</span>: <strong id="cb-count-val">1</strong>
+        </div>
+        <button class="cb-btn" id="cb-btn" onclick="startNewRun()">Play again</button>
+      </div>
       <div class="prog-screen-title" id="prog-screen-title">Your Journey</div>
       <div class="station-list" id="station-list"></div>
     </div>
@@ -729,6 +785,12 @@ const T = {
     rwd_inst_title:"You're an Arctic Explorer!",
     rwd_inst_text:'If you see a nurse today, show them your badge for a sticker — or ask a parent to help you find one!',
     rwd_again:'Play again 🔄',
+    rwd_home:'Back to Home 🏠',
+    badge_complete_title:'You completed the game!',
+    badge_score_lbl:'Final score',
+    badge_date_lbl:'Completed',
+    badge_count_lbl:'Times completed',
+    badge_replay_btn:'Play again',
     nav_home:'Home', nav_bear:'Hringur', nav_prog:'Progress',
     st_done:'Completed ✓', st_todo:'Not found yet',
     prog_screen_title:'Your Journey',
@@ -764,6 +826,12 @@ const T = {
     rwd_inst_title:'Þú ert Norðurskautskönnuður!',
     rwd_inst_text:'Ef þú sérð hjúkrunarfræðing í dag — sýndu þeim merki þitt til að fá límmiða! Foreldrar geta líka hjálpað þér að finna einn.',
     rwd_again:'Spila aftur 🔄',
+    rwd_home:'Aftur heim 🏠',
+    badge_complete_title:'Þú kláraðir leikinn!',
+    badge_score_lbl:'Lokastig',
+    badge_date_lbl:'Klárað',
+    badge_count_lbl:'Sinnum kláraður',
+    badge_replay_btn:'Spila aftur',
     nav_home:'Heim', nav_bear:'Hringur', nav_prog:'Framfarir',
     st_done:'Lokið ✓', st_todo:'Ekki fundið',
     prog_screen_title:'Ferðalag þitt',
@@ -849,6 +917,7 @@ let found = [];
 let points = 0;
 let bonusPaid = false; // guard against reward bonus stacking
 let stationAttempts = {};
+let completedRuns = []; // [{date: ISO string, score: number}] — survives "Play again" reset
 let currentSt = null;
 let stationLocked = false;
 
@@ -869,11 +938,12 @@ function load(){
     points = s.points || 0;
     bonusPaid = s.bonusPaid || false;
     stationAttempts = s.stationAttempts || {};
-  } catch(e) { found=[]; points=0; stationAttempts={}; }
+    completedRuns = s.completedRuns || [];
+  } catch(e) { found=[]; points=0; stationAttempts={}; completedRuns=[]; }
 }
 function save(){
   if(!storageAvailable) return;
-  try { localStorage.setItem('hringur_v2', JSON.stringify({lang,age,found,points,bonusPaid,stationAttempts})); }
+  try { localStorage.setItem('hringur_v2', JSON.stringify({lang,age,found,points,bonusPaid,stationAttempts,completedRuns})); }
   catch(e){}
 }
 
@@ -947,6 +1017,8 @@ function applyStrings(){
   document.getElementById('rwd-inst-title').textContent = t.rwd_inst_title;
   document.getElementById('rwd-inst-text').textContent  = t.rwd_inst_text;
   document.getElementById('rwd-again').textContent      = t.rwd_again;
+  const rwdHomeEl = document.getElementById('rwd-home');
+  if (rwdHomeEl) rwdHomeEl.textContent = t.rwd_home;
   document.getElementById('storage-warn-txt').textContent = t.storage_warn;
 }
 
@@ -1000,15 +1072,49 @@ function renderDots(){
   const pawSvg='<svg viewBox="0 0 32 32" width="17" height="17" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor"><ellipse cx="16" cy="22" rx="7.5" ry="6"/><circle cx="8.5" cy="12.5" r="3"/><circle cx="16" cy="9.5" r="3"/><circle cx="23.5" cy="12.5" r="3"/><circle cx="4.5" cy="19" r="2.3"/><circle cx="27.5" cy="19" r="2.3"/></svg>';
   for(let i=1;i<=6;i++){
     const d=document.createElement('div');
-    d.className='dot'+(found.includes(i)?' done':'');
-    if(found.includes(i)){ d.innerHTML=pawSvg; }
-    else { d.textContent=i; }
+    const isFound = found.includes(i);
+    d.className='dot'+(isFound?' done tappable':'');
+    if(isFound){
+      d.innerHTML=pawSvg;
+      d.onclick = ((id)=>()=>openStation(id))(i);
+    } else {
+      d.textContent=i;
+    }
     el.appendChild(d);
   }
 }
 
 function renderProgressScreen(){
   const t=T[lang||'is'];
+  // Completion badge — show only if user has completed at least once
+  const cb = document.getElementById('completion-badge');
+  if (cb) {
+    if (completedRuns.length > 0) {
+      const latest = completedRuns[completedRuns.length - 1];
+      const localeTag = (lang||'is') === 'is' ? 'is-IS' : 'en-GB';
+      let dateStr = '—';
+      try {
+        dateStr = new Date(latest.date).toLocaleDateString(localeTag, { day:'numeric', month:'long', year:'numeric' });
+      } catch(e){}
+      document.getElementById('cb-title').textContent = t.badge_complete_title;
+      document.getElementById('cb-score-lbl').textContent = t.badge_score_lbl;
+      document.getElementById('cb-score-val').textContent = latest.score;
+      document.getElementById('cb-date-lbl').textContent = t.badge_date_lbl;
+      document.getElementById('cb-date-val').textContent = dateStr;
+      document.getElementById('cb-btn').textContent = t.badge_replay_btn;
+      const replayLine = document.getElementById('cb-replay-line');
+      if (completedRuns.length > 1) {
+        document.getElementById('cb-count-lbl').textContent = t.badge_count_lbl;
+        document.getElementById('cb-count-val').textContent = completedRuns.length;
+        replayLine.style.display = 'block';
+      } else {
+        replayLine.style.display = 'none';
+      }
+      cb.style.display = 'block';
+    } else {
+      cb.style.display = 'none';
+    }
+  }
   const list=document.getElementById('station-list'); if(!list) return;
   list.innerHTML='';
   STATIONS.forEach(st=>{
@@ -1127,9 +1233,12 @@ function openStation(id){
   }
 
   // Clean URL so refresh doesn't reopen station
-  if(window.history && window.history.replaceState){
-    window.history.replaceState({},'',window.location.pathname);
-  }
+  // (try/catch — Claude/iframe srcdoc previews block History API; production works fine)
+  try {
+    if(window.history && window.history.replaceState){
+      window.history.replaceState({},'',window.location.pathname);
+    }
+  } catch(e) {/* preview-environment SecurityError; harmless */}
 
   makeSnow('sf-station');
   show('s-station');
@@ -1211,6 +1320,7 @@ function showReward(){
   if(!bonusPaid){
     points += PTS.BONUS_ALL;
     bonusPaid = true;
+    completedRuns.push({ date: new Date().toISOString(), score: points });
     save();
   }
   const total = points;
@@ -1223,10 +1333,37 @@ function showReward(){
   setTimeout(launchFireworks,500);
 }
 
-function playAgain(){
-  // Language preserved intentionally — everything else reset
-  found=[]; points=0; bonusPaid=false; stationAttempts={}; age=null;
-  save(); applyStrings(); show('s-age');
+function startNewRun(){
+  // Reset progress, KEEP completedRuns + lang + age. Goes home (not age picker — keeps friction low).
+  found=[]; points=0; bonusPaid=false; stationAttempts={};
+  save();
+  renderHome();
+  show('s-home');
+}
+
+function backHomeKeepProgress(){
+  // No reset — game state is preserved (all 6 still found). User can re-tap stations from home.
+  renderHome();
+  show('s-home');
+}
+
+// ── AUDIO ──
+// Plays audio/${lang}/${key}.mp3 if it exists; silently no-ops when missing.
+// Buttons are wired in HTML now — drop MP3 files into /audio/is/ and /audio/en/ later to activate.
+let _currentAudio = null;
+function playAudio(key){
+  try {
+    if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  } catch(e){}
+  const l = lang || 'is';
+  const a = new Audio(`audio/${l}/${key}.mp3`);
+  _currentAudio = a;
+  a.addEventListener('ended', () => { if (_currentAudio === a) _currentAudio = null; });
+  a.play().catch(() => { /* file missing or playback blocked — fail silent */ });
+}
+function playStationAudio(kind){
+  if (!currentSt) return;
+  playAudio(`${kind}_${currentSt}`);
 }
 
 // ── PARTICLES ──
