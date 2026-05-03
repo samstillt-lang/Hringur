@@ -920,6 +920,7 @@ let stationAttempts = {};
 let completedRuns = []; // [{date: ISO string, score: number}] — survives "Play again" reset
 let currentSt = null;
 let stationLocked = false;
+let pendingStationId = null; // Set from QR ?id=N at boot — opens that station once setup completes
 
 // ── STORAGE ──
 let storageAvailable = false;
@@ -988,6 +989,14 @@ function setLang(l){
   lang=l; save();
   applyStrings();
   if(!age){ show('s-age'); return; }
+  // Both lang and age now set — if a QR scan was waiting through setup, honour it
+  if(pendingStationId !== null){
+    const sid = pendingStationId;
+    pendingStationId = null;
+    renderHome();
+    openStation(sid);
+    return;
+  }
   renderHome(); show('s-home');
 }
 
@@ -1024,7 +1033,16 @@ function applyStrings(){
 
 // ── AGE ──
 function setAge(a){
-  age=a; save(); renderHome(); show('s-home');
+  age=a; save();
+  // If a QR scan was waiting through setup, open that station now instead of home
+  if(pendingStationId !== null){
+    const sid = pendingStationId;
+    pendingStationId = null;
+    renderHome();
+    openStation(sid);
+    return;
+  }
+  renderHome(); show('s-home');
 }
 
 // ── HOME ──
@@ -1416,12 +1434,13 @@ function init(){
     if(!IMG[st.img_exp]) console.warn('Missing IMG key:',st.img_exp,'on station',st.id);
   });
 
-  // Check for QR station param
+  // Check for QR station param — remember through setup if needed
   const id=parseInt(new URLSearchParams(window.location.search).get('id'));
   const validStation = id>=1 && id<=6;
+  if(validStation) pendingStationId = id;
 
   if(!lang){
-    // Truly first-time visitor
+    // Truly first-time visitor — pendingStationId stays cached for setLang to consume
     show('s-lang');
     return;
   }
@@ -1429,13 +1448,17 @@ function init(){
   applyStrings();
 
   if(!age){
+    // Lang set but age not — pendingStationId stays cached for setAge to consume
     show('s-age');
     return;
   }
 
-  if(validStation){
+  // Setup complete. If a QR scan brought us here, open that station; otherwise home.
+  if(pendingStationId !== null){
+    const sid = pendingStationId;
+    pendingStationId = null;
     renderHome();
-    openStation(id);
+    openStation(sid);
   } else {
     renderHome();
     show('s-home');
