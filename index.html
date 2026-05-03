@@ -287,6 +287,19 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
 .bio-row-ic svg { width:16px; height:16px; }
 .bio-row-label { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); margin-bottom:2px; }
 .bio-row-val   { font-size:14px; font-weight:700; color:var(--text-main); line-height:1.5; }
+/* Story cards (v9) — quest setup: Who Hringur is + What he needs */
+.bio-story { padding:18px 20px; margin-bottom:12px; display:flex; align-items:flex-start; gap:14px; }
+.bio-story:last-child { margin-bottom:0; }
+.bio-story-ic { width:44px; height:44px; border-radius:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:22px; }
+.bio-story-ic.who  { background:var(--blue-light); }
+.bio-story-ic.need { background:var(--teal-light); }
+.bio-story-content { flex:1; min-width:0; }
+.bio-story-h { font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:900; color:var(--ice-deep); margin-bottom:6px; line-height:1.25; }
+.bio-story-b { font-size:14px; font-weight:600; color:var(--text-sub); line-height:1.6; }
+
+/* ── FISH CAUGHT BEAT (v9) ── */
+.fish-caught { display:none; margin-top:10px; border-radius:var(--r-md); padding:12px 16px; background:linear-gradient(135deg,var(--blue-light),var(--teal-light)); border:1px solid rgba(55,138,221,0.18); text-align:center; font-family:'Nunito',Arial,sans-serif; font-size:15px; font-weight:800; color:var(--blue); }
+.fish-caught.show { display:block; animation:pointsPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
 
 /* ── PROGRESS SCREEN ── */
 .prog-screen-body { padding:20px 20px 24px; }
@@ -425,7 +438,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
   <div class="scroll-body">
     <div class="home-body has-nav">
       <div class="card">
-        <div class="section-label" id="prog-lbl">Stations Found</div>
+        <div class="section-label" id="prog-lbl">Fish Caught</div>
         <div class="prog-row">
           <div style="font-size:13px;font-weight:700;color:var(--text-muted)" id="prog-sub">Keep exploring!</div>
           <div class="prog-count"><span id="prog-n">0</span><small> / 6</small></div>
@@ -442,7 +455,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
         </div>
         <div class="pill teal">
           <div class="pill-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
-          <div class="pill-lbl" id="next-lbl">Next Stop</div>
+          <div class="pill-lbl" id="next-lbl">Next Fish</div>
           <div class="pill-val" id="next-val">Station 1</div>
           <div class="pill-sub" id="next-sub">6 to find</div>
         </div>
@@ -510,6 +523,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
         <div class="points-earned-val" id="pe-val">+150</div>
         <div class="points-earned-lbl" id="pe-lbl">Points earned!</div>
       </div>
+      <div class="fish-caught" id="fish-caught"></div>
       <div style="margin-top:16px;">
         <button class="btn-primary teal"  id="cont-btn"     style="display:none;" onclick="continueStation()"></button>
       </div>
@@ -531,8 +545,8 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
     <div class="reward-body">
       <div class="reward-badge-card">
         <span class="reward-star">⭐</span>
-        <div class="reward-badge-title" id="rwd-title">Arctic Explorer!</div>
-        <div class="reward-badge-sub"   id="rwd-sub">All 6 stations discovered</div>
+        <div class="reward-badge-title" id="rwd-title">Hringur made it home!</div>
+        <div class="reward-badge-sub"   id="rwd-sub">All cubs fed and happy 🐟</div>
       </div>
       <div class="reward-score-card">
         <div class="reward-score-ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
@@ -571,24 +585,20 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
   </div>
   <div class="scroll-body">
     <div class="bio-body has-nav">
-      <div class="bio-name">Hringur</div>
-      <div class="bio-sub" id="bio-sub">Arctic Explorer · Your Guide</div>
-      <div class="card bio-card">
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--blue-light);"><svg viewBox="0 0 24 24" style="fill:var(--blue-mid)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l1">About</div><div class="bio-row-val" id="bio-v1"></div></div>
+      <div class="bio-name" id="bio-name">Meet Hringur</div>
+      <div class="bio-sub" id="bio-sub">A polar bear who needs your help</div>
+      <div class="card bio-story">
+        <div class="bio-story-ic who">🐻‍❄️</div>
+        <div class="bio-story-content">
+          <div class="bio-story-h" id="bio-card1-h">Who is Hringur?</div>
+          <div class="bio-story-b" id="bio-card1-b"></div>
         </div>
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--teal-light);"><svg viewBox="0 0 24 24" style="fill:var(--teal)"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l2">Superpower</div><div class="bio-row-val" id="bio-v2"></div></div>
-        </div>
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--amber-light);"><svg viewBox="0 0 24 24" style="fill:var(--amber)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l3">Loves</div><div class="bio-row-val" id="bio-v3"></div></div>
-        </div>
-        <div class="bio-row">
-          <div class="bio-row-ic" style="background:var(--purple-light);"><svg viewBox="0 0 24 24" style="fill:var(--purple-mid)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
-          <div><div class="bio-row-label" id="bio-l4">Mission</div><div class="bio-row-val" id="bio-v4"></div></div>
+      </div>
+      <div class="card bio-story">
+        <div class="bio-story-ic need">🐟</div>
+        <div class="bio-story-content">
+          <div class="bio-story-h" id="bio-card2-h">What he needs</div>
+          <div class="bio-story-b" id="bio-card2-b"></div>
         </div>
       </div>
     </div>
@@ -621,7 +631,7 @@ html, body { height:100%; overflow:hidden; background:var(--surface); font-famil
         </div>
         <button class="cb-btn" id="cb-btn" onclick="startNewRun()">Play again</button>
       </div>
-      <div class="prog-screen-title" id="prog-screen-title">Your Journey</div>
+      <div class="prog-screen-title" id="prog-screen-title">Your Catch</div>
       <div class="station-list" id="station-list"></div>
     </div>
   </div>
@@ -766,11 +776,11 @@ const T = {
     age_cub:'Little Cub', age_exp:'Explorer',
     home_eyebrow_cub:'Little Cub Adventure', home_eyebrow_exp:'Arctic Explorer',
     home_h1_cub:'Hello,\nLittle Cub!', home_h1_exp:'Welcome,\nExplorer!',
-    prog_lbl:'Stations Found',
+    prog_lbl:'Fish Caught',
     prog_sub_go:'Keep exploring!', prog_sub_done:'Amazing work!',
-    pts_lbl:'Points', next_lbl:'Next Stop',
-    hint_cub:"Look for Hringur's colourful paw print stickers — each one hides a QR code!",
-    hint_exp:"Look for Hringur's paw print stickers around the ward — scan each QR code to unlock a station!",
+    pts_lbl:'Points', next_lbl:'Next Fish',
+    hint_cub:"Look for little paw prints — each one is a fish for Hringur's cubs!",
+    hint_exp:"Find the paw prints around the ward — catch a fish at each one!",
     storage_warn:'Progress may not save in this browser. Try opening the link in Safari or Chrome.',
     fact_lbl:'Arctic Fact', cub_title:'Your Mission!', quiz_lbl:'Quick Quiz!',
     cub_bed_lbl:'Or try this from your bed',
@@ -778,7 +788,8 @@ const T = {
     cont:'Continue Adventure 🧭', cub_done:'I did it! 🐾',
     found_txt:"You've already explored this station! Keep searching.",
     pts_first:'First try bonus!', pts_retry:'Points earned!', pts_cub:'Activity complete!',
-    rwd_title:'Arctic Explorer!', rwd_sub:'All 6 stations discovered',
+    fish_caught:'🐟 You caught a fish for the cubs!',
+    rwd_title:'Hringur made it home!', rwd_sub:'All cubs fed and happy 🐟',
     rwd_score_lbl:'Final Score',
     rwd_perfect:'Perfect explorer! 🌟', rwd_great:'Great explorer! 🎉', rwd_good:'Excellent explorer!',
     rwd_bonus_lbl:'Completion bonus',
@@ -793,12 +804,13 @@ const T = {
     badge_replay_btn:'Play again',
     nav_home:'Home', nav_bear:'Hringur', nav_prog:'Progress',
     st_done:'Completed ✓', st_todo:'Not found yet',
-    prog_screen_title:'Your Journey',
-    bio_sub:'Arctic Explorer · Your Guide',
-    bio_l1:'About',      bio_v1:"A brave polar bear who loves exploring the Arctic — and helping young adventurers like you!",
-    bio_l2:'Superpower', bio_v2:'Can smell a fish from 1 kilometre away and swim for hours without stopping!',
-    bio_l3:'Loves',      bio_v3:'Ice fishing, exploring new places, and making new friends on his adventures!',
-    bio_l4:'Mission',    bio_v4:'Help every young explorer discover the secrets of the Arctic — one station at a time!',
+    prog_screen_title:'Your Catch',
+    bio_name:'Meet Hringur',
+    bio_sub:'A polar bear who needs your help',
+    bio_card1_h:'Who is Hringur?',
+    bio_card1_b:"Hringur is a brave polar bear who lives in the arctic. His little cubs are waiting at home in their cosy igloo.",
+    bio_card2_h:'What he needs',
+    bio_card2_b:"The cubs are hungry, and Hringur is far from home! Can you help him catch 6 fish to bring back? Every paw print you find is a fish for the cubs. 🐾🐟",
     toast_found:'Station unlocked! 🌟',
   },
   is:{
@@ -807,11 +819,11 @@ const T = {
     age_cub:'Litli björninn', age_exp:'Könnuður',
     home_eyebrow_cub:'Litli björninn', home_eyebrow_exp:'Norðurskautskönnuður',
     home_h1_cub:'Halló,\nLitli björn!', home_h1_exp:'Velkomin,\nKönnuður!',
-    prog_lbl:'Stöðvar fundnar',
+    prog_lbl:'Veiddir fiskar',
     prog_sub_go:'Haltu áfram!', prog_sub_done:'Frábært!',
-    pts_lbl:'Stig', next_lbl:'Næsta stöð',
-    hint_cub:'Leitaðu að litlu lappasporslímmiðunum — í hverjum er falinn QR kóði!',
-    hint_exp:'Leitaðu að lappasporslímmiðunum á deildinni — skanaðu til að opna stöð!',
+    pts_lbl:'Stig', next_lbl:'Næsti fiskur',
+    hint_cub:'Leitaðu að litlum fótsporum — hvert spor er fiskur handa hvolpum Hringurs!',
+    hint_exp:'Finndu fótsporin á deildinni - þau hjálpa þér að veiða fiska.',
     storage_warn:'Framfarir gætu ekki vistast í þessum vafra. Reyndu að opna í Safari eða Chrome.',
     fact_lbl:'Norðurskautsstaðreynd', cub_title:'Verkefnið þitt!', quiz_lbl:'Spurning!',
     cub_bed_lbl:'Eða prófaðu þetta í rúminu',
@@ -819,7 +831,8 @@ const T = {
     cont:'Halda áfram 🧭', cub_done:'Ég gerði það! 🐾',
     found_txt:'Þú hefur þegar heimsótt þessa stöð! Haltu áfram.',
     pts_first:'Bónus fyrir fyrsta skiptið!', pts_retry:'Stig fengin!', pts_cub:'Verkefni lokið!',
-    rwd_title:'Norðurskautskönnuður!', rwd_sub:'Allar 6 stöðvar fundnar',
+    fish_caught:'🐟 Þú veiddir fisk fyrir hvolpana!',
+    rwd_title:'Hringur komst heim!', rwd_sub:'Allir hvolpar saddir og glaðir 🐟',
     rwd_score_lbl:'Lokaeinkunn',
     rwd_perfect:'Fullkominn könnuður! 🌟', rwd_great:'Frábær könnuður! 🎉', rwd_good:'Góður könnuður!',
     rwd_bonus_lbl:'Lokaverðlaun',
@@ -834,12 +847,13 @@ const T = {
     badge_replay_btn:'Spila aftur',
     nav_home:'Heim', nav_bear:'Hringur', nav_prog:'Framfarir',
     st_done:'Lokið ✓', st_todo:'Ekki fundið',
-    prog_screen_title:'Ferðalag þitt',
-    bio_sub:'Norðurskautskönnuður · Leiðsögumaðurinn þinn',
-    bio_l1:'Um',        bio_v1:'Djarfur ísbjörn sem elskar að kanna Norðurskautið — og hjálpa ungum könnuðum eins og þér!',
-    bio_l2:'Kraftur',   bio_v2:'Getur fundið lykt af fiski í 1 kílómetra fjarlægð og synt í klukkutíma án þess að stoppa!',
-    bio_l3:'Elskar',    bio_v3:'Ísveiði, að kanna ný staði og gera nýja vini á ævintýrum sínum!',
-    bio_l4:'Hlutverk',  bio_v4:'Hjálpa hverjum ungum könnuði að uppgötva leyndarmál Norðurskautsins — eina stöð í einu!',
+    prog_screen_title:'Aflinn þinn',
+    bio_name:'Kynnstu Hringi',
+    bio_sub:'Ísbjörn sem þarfnast hjálpar þinnar',
+    bio_card1_h:'Hver er Hringur?',
+    bio_card1_b:'Hringur er hugrakkur ísbjörn sem býr á norðurslóðum. Litlu hvolparnir hans bíða heima í hlýja snjóhellinum.',
+    bio_card2_h:'Hvað hann þarf',
+    bio_card2_b:'Hvolparnir eru svangir og Hringur er langt að heiman! Geturðu hjálpað honum að veiða 6 fiska handa þeim? Hvert fótspor sem þú finnur er fiskur handa hvolpunum. 🐾🐟',
     toast_found:'Stöð opnuð! 🌟',
   }
 };
@@ -896,11 +910,11 @@ const STATIONS = [
        quiz_q:'Hvað er ungur ísbjörn kallaður?',quiz_opts:['Hundhvolpur','Hvolpur','Kisa'],quiz_ans:1}},
   {id:6,img_cub:'giant_cub',img_exp:'giant_exp',
    en:{fact_title:'Arctic Giants!',fact_text:"Polar bears are the largest land predators on Earth. A big male can weigh as much as 8 grown-up people! Their huge paws work like snowshoes, spreading their weight across thin ice so they don't fall through.",
-       cub_emoji:'🦶',cub_action:'Stomp your feet as LOUD as you can like a giant polar bear! Then stand as tall and as wide as you possibly can. You are a mighty Arctic giant!',
+       cub_emoji:'🦶',cub_action:'Stomp your feet softly like a polar bear walking on snow! Then stand as tall and as wide as you possibly can. You are a mighty Arctic giant!',
        cub_bed:'Spread your arms as wide as you can — you are a giant polar bear! 🐻',
        quiz_q:'Polar bears are the largest what on Earth?',quiz_opts:['Sea animal','Land predator','Arctic bird'],quiz_ans:1},
    is:{fact_title:'Risabjörn í Norðurskautinu!',fact_text:'Ísbjörn er stærsta landrándýr á jörðinni. Stór karldýr geta vegið eins mikið og 8 fullorðnar manneskjur! Stórar lappir þeirra virka eins og snjóskór og dreifa þyngd þeirra yfir þunnan ís svo þeir falli ekki í gegn.',
-       cub_emoji:'🦶',cub_action:'Stappaðu fótunum eins HÁTT og þú getur eins og risaísbjörn! Svo stattu eins há og víð og mögulegt er. Þú ert öflugur norðurskautsrisi!',
+       cub_emoji:'🦶',cub_action:'Stappaðu fótunum mjúklega eins og ísbjörn sem gengur á snjó! Svo stattu eins há og víð og mögulegt er. Þú ert öflugur norðurskautsrisi!',
        cub_bed:'Breiddu út faðminn eins mikið og þú getur — þú ert risaísbjörn! 🐻',
        quiz_q:'Ísbjörn er stærstur af hverju á jörðinni?',quiz_opts:['Sjávardýr','Landlegt rándýr','Norðurskautsfugl'],quiz_ans:1}}
 ];
@@ -1009,15 +1023,12 @@ function applyStrings(){
   document.getElementById('nav-home-lbl').textContent = t.nav_home;
   document.getElementById('nav-bear-lbl').textContent = t.nav_bear;
   document.getElementById('nav-prog-lbl').textContent = t.nav_prog;
+  document.getElementById('bio-name').textContent = t.bio_name;
   document.getElementById('bio-sub').textContent  = t.bio_sub;
-  document.getElementById('bio-l1').textContent   = t.bio_l1;
-  document.getElementById('bio-v1').textContent   = t.bio_v1;
-  document.getElementById('bio-l2').textContent   = t.bio_l2;
-  document.getElementById('bio-v2').textContent   = t.bio_v2;
-  document.getElementById('bio-l3').textContent   = t.bio_l3;
-  document.getElementById('bio-v3').textContent   = t.bio_v3;
-  document.getElementById('bio-l4').textContent   = t.bio_l4;
-  document.getElementById('bio-v4').textContent   = t.bio_v4;
+  document.getElementById('bio-card1-h').textContent = t.bio_card1_h;
+  document.getElementById('bio-card1-b').textContent = t.bio_card1_b;
+  document.getElementById('bio-card2-h').textContent = t.bio_card2_h;
+  document.getElementById('bio-card2-b').textContent = t.bio_card2_b;
   document.getElementById('prog-screen-title').textContent = t.prog_screen_title;
   document.getElementById('rwd-title').textContent      = t.rwd_title;
   document.getElementById('rwd-sub').textContent        = t.rwd_sub;
@@ -1087,13 +1098,14 @@ function renderHome(){
 
 function renderDots(){
   const el=document.getElementById('prog-dots'); el.innerHTML='';
-  const pawSvg='<svg viewBox="0 0 32 32" width="17" height="17" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor"><ellipse cx="16" cy="22" rx="7.5" ry="6"/><circle cx="8.5" cy="12.5" r="3"/><circle cx="16" cy="9.5" r="3"/><circle cx="23.5" cy="12.5" r="3"/><circle cx="4.5" cy="19" r="2.3"/><circle cx="27.5" cy="19" r="2.3"/></svg>';
+  // Fish SVG (v9): body + triangular tail + small eye — replaces paw print
+  const fishSvg='<svg viewBox="0 0 32 32" width="18" height="18" xmlns="http://www.w3.org/2000/svg" style="fill:currentColor"><path d="M3 16 C3 11 8 8 14 8 C19 8 22 11 23 14 L29 9 L29 23 L23 18 C22 21 19 24 14 24 C8 24 3 21 3 16 Z"/><circle cx="9" cy="14" r="1.4" fill="#ffffff"/></svg>';
   for(let i=1;i<=6;i++){
     const d=document.createElement('div');
     const isFound = found.includes(i);
     d.className='dot'+(isFound?' done tappable':'');
     if(isFound){
-      d.innerHTML=pawSvg;
+      d.innerHTML=fishSvg;
       d.onclick = ((id)=>()=>openStation(id))(i);
     } else {
       d.textContent=i;
@@ -1213,10 +1225,11 @@ function openStation(id){
   document.getElementById('fact-text').textContent=d.fact_text;
 
   // Reset all interactive elements — clear classes as well as display
-  ['cub-card','quiz-card','cub-done-btn','cont-btn','points-earned'].forEach(el=>{
+  ['cub-card','quiz-card','cub-done-btn','cont-btn','points-earned','fish-caught'].forEach(el=>{
     document.getElementById(el).style.display='none';
   });
   document.getElementById('points-earned').classList.remove('show');
+  document.getElementById('fish-caught').classList.remove('show');
   document.getElementById('feedback').className='feedback';
 
   if(alreadyFound){
@@ -1279,6 +1292,7 @@ function answerQuiz(chosen, correct){
     document.getElementById('st-img').src=IMG.cheer;
     markFound(ptsEarned);
     showPointsBadge('+'+ptsEarned, isFirst?t.pts_first:t.pts_retry);
+    showFishCaught();
     spawnParticles();
     const cb=document.getElementById('cont-btn');
     cb.textContent=t.cont; cb.onclick=continueStation;
@@ -1307,9 +1321,16 @@ function cubDone(){
   stationAttempts[currentSt] = { count:1, type:'cub' };
   markFound(PTS.CUB);
   showPointsBadge('+'+PTS.CUB, t.pts_cub);
+  showFishCaught();
   spawnParticles();
   const cb=document.getElementById('cont-btn');
   cb.textContent=t.cont; cb.onclick=continueStation; cb.style.display='block';
+}
+
+function showFishCaught(){
+  const el=document.getElementById('fish-caught');
+  el.textContent=T[lang||'is'].fish_caught;
+  el.classList.add('show');
 }
 
 function showPointsBadge(val, lbl){
